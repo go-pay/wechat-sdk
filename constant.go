@@ -1,4 +1,4 @@
-package wxsdk
+package wx
 
 const (
 	NULL     = ""
