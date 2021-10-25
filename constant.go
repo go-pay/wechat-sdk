@@ -1,4 +1,4 @@
-package gopay
+package wxsdk
 
 const (
 	NULL     = ""

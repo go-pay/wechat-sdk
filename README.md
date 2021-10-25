@@ -3,13 +3,13 @@
 ### 微信 Golang 版本SDK
 
 [![Github](https://img.shields.io/github/followers/iGoogle-ink?label=Follow&style=social)](https://github.com/iGoogle-ink)
-[![Github](https://img.shields.io/github/forks/go-pay/wx-sdk?label=Fork&style=social)](https://github.com/go-pay/gopay/fork)
+[![Github](https://img.shields.io/github/forks/go-pay/wx-sdk?label=Fork&style=social)](https://github.com/go-pay/wx-sdk/fork)
 
 [![Golang](https://img.shields.io/badge/golang-1.16-brightgreen.svg)](https://golang.google.cn)
 [![GoDoc](https://img.shields.io/badge/doc-pkg.go.dev-informational.svg)](https://pkg.go.dev/github.com/go-pay/wx-sdk)
-[![Drone CI](https://cloud.drone.io/api/badges/go-pay/gopay/status.svg)](https://cloud.drone.io/go-pay/wx-sdk)
-[![GitHub Release](https://img.shields.io/github/v/release/go-pay/gopay)](https://github.com/go-pay/wx-sdk/releases)
-[![License](https://img.shields.io/github/license/go-pay/gopay)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Drone CI](https://cloud.drone.io/api/badges/go-pay/wx-sdk/status.svg)](https://cloud.drone.io/go-pay/wx-sdk)
+[![GitHub Release](https://img.shields.io/github/v/release/go-pay/wx-sdk)](https://github.com/go-pay/wx-sdk/releases)
+[![License](https://img.shields.io/github/license/go-pay/wx-sdk)](https://www.apache.org/licenses/LICENSE-2.0)
 
 
 ## License
