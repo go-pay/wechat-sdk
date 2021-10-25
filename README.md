@@ -1,4 +1,4 @@
-# WX-SDK
+# Wechat-SDK
 
 ### 微信 Golang 版本SDK
 
@@ -10,7 +10,6 @@
 [![Drone CI](https://cloud.drone.io/api/badges/go-pay/wx-sdk/status.svg)](https://cloud.drone.io/go-pay/wx-sdk)
 [![GitHub Release](https://img.shields.io/github/v/release/go-pay/wx-sdk)](https://github.com/go-pay/wx-sdk/releases)
 [![License](https://img.shields.io/github/license/go-pay/wx-sdk)](https://www.apache.org/licenses/LICENSE-2.0)
-
 
 ## License
 

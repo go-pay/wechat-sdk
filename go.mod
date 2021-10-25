@@ -1,3 +1,3 @@
-module github.com/go-pay/wx-sdk
+module github.com/go-pay/wechat-sdk
 
 go 1.16
