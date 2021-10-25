@@ -1,0 +1,40 @@
+kind: pipeline
+type: docker
+name: wx-sdk
+
+clone:
+  depth: 1
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: helloworld
+    pull: if-not-exists
+    image: hello-world
+
+  - name: ci_1.16
+    pull: if-not-exists
+    image: golang:1.16
+    environment:
+      GO111MODULE: "on"
+      GOPROXY: "https://goproxy.cn,direct"
+      GOSUMDB: "off"
+      CGO_ENABLED: "0"
+      GOOS: "linux"
+    depends_on:
+      - helloworld
+    commands:
+      - go version
+      - go env
+      - go mod tidy
+      - go test ./...
+
+trigger:
+  branch:
+    - main
+  event:
+    - push
+    - pull_request
+    - tag
