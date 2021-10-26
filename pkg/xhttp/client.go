@@ -50,7 +50,7 @@ func NewClient() (client *Client) {
 		},
 		Transport:     nil,
 		Header:        make(http.Header),
-		requestType:   TypeUrlencoded,
+		requestType:   TypeJSON,
 		unmarshalType: string(TypeJSON),
 	}
 	return client

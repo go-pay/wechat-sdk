@@ -21,8 +21,8 @@ func (s *SDK) getAccessToken() (err error) {
 		}
 	}()
 
-	at := new(AccessToken)
 	path := "/cgi-bin/token?grant_type=client_credential&appid=" + s.appid + "&secret=" + s.secret
+	at := new(AccessToken)
 	if err = s.doRequestGet(s.ctx, path, at); err != nil {
 		return
 	}

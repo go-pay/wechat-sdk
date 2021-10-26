@@ -1,7 +1,6 @@
 package wechat
 
 const (
-	NULL     = ""
 	Success  = 0
 	DebugOff = 0
 	DebugOn  = 1

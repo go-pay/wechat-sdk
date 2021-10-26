@@ -13,8 +13,8 @@ var (
 	ctx    = context.Background()
 	wxsdk  *SDK
 	err    error
-	Appid  = "wxdaa2ab9ef87b5497"
-	Secret = "65f42f625a788ed52f6e2e159304879c"
+	Appid  = ""
+	Secret = ""
 )
 
 func TestMain(m *testing.M) {

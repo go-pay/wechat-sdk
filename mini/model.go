@@ -20,3 +20,10 @@ type PaidUnionId struct {
 	Errcode int    `json:"errcode,omitempty"` // 错误码
 	Errmsg  string `json:"errmsg,omitempty"`  // 错误信息
 }
+
+type CheckEncryptedResult struct {
+	Vaild      bool   `json:"vaild"`             // 是否是合法的数据
+	CreateTime int    `json:"create_time"`       // 加密数据生成的时间戳
+	Errcode    int    `json:"errcode,omitempty"` // 错误码
+	Errmsg     string `json:"errmsg,omitempty"`  // 错误信息
+}
