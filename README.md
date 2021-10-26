@@ -16,7 +16,7 @@
 # 一、安装
 
 ```bash
-go get github.com/go-pay/wecaht-sdk
+go get github.com/go-pay/wechat-sdk
 ```
 
 #### 查看 Wechat-SDK 版本
