@@ -1,15 +1,5 @@
 package mini
 
-const (
-	BaseHost   WechatHost = "https://api.weixin.qq.com"
-	BaseHost2  WechatHost = "https://api2.weixin.qq.com"
-	BaseHostSH WechatHost = "https://sh.api.weixin.qq.com"
-	BaseHostSZ WechatHost = "https://sz.api.weixin.qq.com"
-	BaseHostHK WechatHost = "https://hk.api.weixin.qq.com"
-)
-
-type WechatHost string
-
 type Code2Session struct {
 	Openid     string `json:"openid,omitempty"`      // 用户唯一标识
 	SessionKey string `json:"session_key,omitempty"` // 会话密钥

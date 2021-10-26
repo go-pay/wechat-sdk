@@ -14,27 +14,34 @@ func (s *SDK) getAccessToken() (err error) {
 	defer func() {
 		if err != nil {
 			// reset default refresh internal
-			s.refreshInternal = time.Second * 20
+			s.RefreshInternal = time.Second * 20
+			if s.callback != nil {
+				go s.callback("", 0, err)
+			}
 		}
 	}()
 
 	at := new(AccessToken)
-	path := "/cgi-bin/token?grant_type=client_credential&appid=" + s.Appid + "&secret=" + s.Secret
+	path := "/cgi-bin/token?grant_type=client_credential&appid=" + s.appid + "&secret=" + s.secret
 	if err = s.doRequestGet(s.ctx, path, at); err != nil {
-		return err
+		return
 	}
 	if at.Errcode != wechat.Success {
-		return fmt.Errorf("errcode(%d), errmsg(%s)", at.Errcode, at.Errmsg)
+		err = fmt.Errorf("errcode(%d), errmsg(%s)", at.Errcode, at.Errmsg)
+		return
 	}
 	s.accessToken = at.AccessToken
-	s.refreshInternal = time.Second * time.Duration(at.ExpiresIn)
+	s.RefreshInternal = time.Second * time.Duration(at.ExpiresIn)
+	if s.callback != nil {
+		go s.callback(at.AccessToken, at.ExpiresIn, nil)
+	}
 	return nil
 }
 
 func (s *SDK) autoRefreshAccessToken() {
 	for {
 		// every one hour, request new access token, default 10s
-		time.Sleep(s.refreshInternal / 2)
+		time.Sleep(s.RefreshInternal / 2)
 		err := s.getAccessToken()
 		if err != nil {
 			xlog.Errorf("get access token error, after 10s retry: %+v", err)
@@ -43,9 +50,12 @@ func (s *SDK) autoRefreshAccessToken() {
 	}
 }
 
-func (s *SDK) GetAccessToken() (at AccessToken) {
-	return AccessToken{
-		AccessToken: s.accessToken,
-		ExpiresIn:   int(s.refreshInternal),
-	}
+// SetAccessTokenCallback access token callback listener
+func (s *SDK) SetAccessTokenCallback(fn func(accessToken string, expireIn int, err error)) {
+	s.callback = fn
+}
+
+// GetAccessToken get access token string
+func (s *SDK) GetAccessToken() (at string) {
+	return s.accessToken
 }

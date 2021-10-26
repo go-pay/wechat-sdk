@@ -15,25 +15,31 @@ import (
 type SDK struct {
 	sync.RWMutex
 	ctx             context.Context
-	Appid           string
-	Secret          string
-	Host            WechatHost
+	appid           string
+	secret          string
 	accessToken     string
-	refreshInternal time.Duration
+	callback        func(accessToken string, expireIn int, err error)
+	Host            string
+	RefreshInternal time.Duration
 	DebugSwitch     wechat.DebugSwitch
 }
 
 // NewSDK 初始化微信小程序 SDK
 //	appid：小程序 appid
 //	secret：小程序 appSecret
-func NewSDK(appid, secret string) (sdk *SDK, err error) {
+//	accessToken：微信小程序AccessToken，若此参数为空，则自动获取并自动维护刷新
+func NewSDK(appid, secret string, accessToken ...string) (sdk *SDK, err error) {
 	sdk = &SDK{
 		ctx:             context.Background(),
-		Appid:           appid,
-		Secret:          secret,
-		Host:            BaseHost,
-		refreshInternal: time.Second * 20,
-		DebugSwitch:     wechat.DebugOff,
+		appid:           appid,
+		secret:          secret,
+		Host:            wechat.HostMap[wechat.HostDefault],
+		RefreshInternal: time.Second * 20,
+		DebugSwitch:     wechat.DebugOn,
+	}
+	if len(accessToken) >= 1 {
+		sdk.accessToken = accessToken[0]
+		return
 	}
 	// 获取AccessToken
 	err = sdk.getAccessToken()
@@ -47,25 +53,26 @@ func NewSDK(appid, secret string) (sdk *SDK, err error) {
 
 // SetHost 设置微信请求Host
 //	上海、深圳、香港 等
-func (s *SDK) SetHost(host WechatHost) (sdk *SDK) {
-	if host != "" {
-		s.Host = host
+func (s *SDK) SetHost(host wechat.Host) (sdk *SDK) {
+	if h, ok := wechat.HostMap[host]; ok {
+		s.Host = h
 	}
 	return s
 }
 
 func (s *SDK) doRequestGet(c context.Context, path string, ptr interface{}) (err error) {
-	uri := string(BaseHost) + path
+	uri := s.Host + path
 	httpClient := xhttp.NewClient()
 	if s.DebugSwitch == wechat.DebugOn {
 		xlog.Debugf("Wechat_SDK_URI: %s", uri)
 	}
+	httpClient.SetTimeout(5 * time.Second)
 	res, bs, err := httpClient.Get(uri).EndBytes(c)
 	if err != nil {
 		return fmt.Errorf("http.request(GET, %s)：%w", uri, err)
 	}
 	if s.DebugSwitch == wechat.DebugOn {
-		xlog.Debugf("Wechat_SDK_Response: %d -> %s", res.StatusCode, string(bs))
+		xlog.Debugf("Wechat_SDK_Response: [%d] -> %s", res.StatusCode, string(bs))
 	}
 	if err = json.Unmarshal(bs, ptr); err != nil {
 		return fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), ptr, err)

@@ -136,7 +136,6 @@ func (c *Client) SendStruct(v interface{}) (client *Client) {
 	return c
 }
 
-// 参数可直接传 gopay.BodyMap
 func (c *Client) SendBodyMap(bm map[string]interface{}) (client *Client) {
 	if bm == nil {
 		return c
@@ -155,7 +154,6 @@ func (c *Client) SendBodyMap(bm map[string]interface{}) (client *Client) {
 	return c
 }
 
-// 参数可直接传 gopay.BodyMap
 func (c *Client) SendMultipartBodyMap(bm map[string]interface{}) (client *Client) {
 	if bm == nil {
 		return c
