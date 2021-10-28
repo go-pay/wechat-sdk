@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"sync"
 	"time"
 
 	"github.com/go-pay/wechat-sdk"
@@ -14,7 +13,6 @@ import (
 )
 
 type SDK struct {
-	sync.RWMutex
 	ctx             context.Context
 	appid           string
 	secret          string
