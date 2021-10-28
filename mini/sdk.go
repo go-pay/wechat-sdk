@@ -36,7 +36,7 @@ func NewSDK(appid, secret string, accessToken ...string) (sdk *SDK, err error) {
 		secret:          secret,
 		Host:            wechat.HostMap[wechat.HostDefault],
 		RefreshInternal: time.Second * 20,
-		DebugSwitch:     wechat.DebugOn,
+		DebugSwitch:     wechat.DebugOff,
 	}
 	if len(accessToken) >= 1 {
 		sdk.accessToken = accessToken[0]
