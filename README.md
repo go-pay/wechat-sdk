@@ -16,7 +16,7 @@
 # 一、安装
 
 ```bash
-go get github.com/go-pay/wechat-sdk
+go get -u github.com/go-pay/wechat-sdk
 ```
 
 #### 查看 Wechat-SDK 版本
@@ -56,11 +56,8 @@ QQ群：
 
 ## 赞赏多少是您的心意，感谢支持！
 
-微信：
-<img width="150" height="150" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang_wx.png"/>
-支付宝：
-<img width="150" height="150" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang_zfb.png"/>
-
+微信赞赏码： <img width="240" height="240" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang.png"/>
+支付宝赞助码： <img width="240" height="240" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang_zfb.png"/>
 
 ## License
 
