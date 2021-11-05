@@ -10,9 +10,10 @@ import (
 )
 
 var (
-	ctx    = context.Background()
-	wxsdk  *SDK
-	err    error
+	ctx   = context.Background()
+	wxsdk *SDK
+	err   error
+	// 测试时，将自己的Appid和Secret填入
 	Appid  = ""
 	Secret = ""
 )
@@ -67,6 +68,14 @@ func TestCode2Session(t *testing.T) {
 		return
 	}
 	xlog.Debugf("at:%+v", session)
+}
+
+func TestVerifyDecryptOpenData(t *testing.T) {
+	rwData := `{"nickName":"Band","gender":1,"language":"zh_CN","city":"Guangzhou","province":"Guangdong","country":"CN","avatarUrl":"http://wx.qlogo.cn/mmopen/vi_32/1vZvI39NWFQ9XM4LtQpFrQJ1xlgZxx3w7bQxKARol6503Iuswjjn6nIGBiaycAjAtpujxyzYsrztuuICqIM5ibXQ/0"}`
+	sign := "75e81ceda165f4ffa64f4068af58c64b8f54b88c"
+	sessionKey := "HyVFkGl5F5OQWJZZaNzBBg=="
+	ok := wxsdk.VerifyDecryptOpenData(rwData, sign, sessionKey)
+	xlog.Debugf("verify result: %v", ok)
 }
 
 func TestDecryptOpenData(t *testing.T) {

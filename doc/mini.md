@@ -19,5 +19,5 @@
     * 获取支付后的UnionId：`sdk.GetPaidUnionid()`
     * 获取支付后的UnionId：`sdk.GetPaidUnionidByTradeNo()`
 * <font color='#07C160' size='4'>开放数据</font>
-    * 开放数据校验：`sdk.VerifyDecryptOpenData()` 开发中
+    * 开放数据校验：`sdk.VerifyDecryptOpenData()`
     * 开放数据解密：`sdk.DecryptOpenData()`

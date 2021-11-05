@@ -3,7 +3,9 @@ package mini
 import (
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/sha1"
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -13,8 +15,16 @@ import (
 	"github.com/go-pay/wechat-sdk/pkg/util"
 )
 
-func (s *SDK) VerifyDecryptOpenData() {
-
+// VerifyDecryptOpenData 数据签名校验
+//	rowData、signature：通过调用接口（如 wx.getUserInfo）获取数据时，接口会同时返回 rawData、signature
+//	sessionKey：会话密钥，通过 sdk.Code2Session() 方法获取到
+//	文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
+func (s *SDK) VerifyDecryptOpenData(rowData, signature, sessionKey string) (ok bool) {
+	signData := rowData + sessionKey
+	hash := sha1.New()
+	hash.Write([]byte(signData))
+	sign := hex.EncodeToString(hash.Sum(nil))
+	return sign == signature
 }
 
 // DecryptOpenData 解密开放数据到结构体
