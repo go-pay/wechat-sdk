@@ -78,6 +78,27 @@ func (s *SDK) doRequestGet(c context.Context, path string, ptr interface{}) (err
 	return
 }
 
+func (s *SDK) doRequestGetByte(c context.Context, path string) (bs []byte, err error) {
+	uri := s.Host + path
+	httpClient := xhttp.NewClient()
+	if s.DebugSwitch == wechat.DebugOn {
+		xlog.Debugf("Wechat_SDK_URI: %s", uri)
+	}
+	res, bs, err := httpClient.Get(uri).EndBytes(c)
+	if err != nil {
+		return nil, fmt.Errorf("http.request(GET, %s)：%w", uri, err)
+	}
+	if s.DebugSwitch == wechat.DebugOn {
+		xlog.Debugf("Wechat_SDK_Response: [%d] -> %s", res.StatusCode, string(bs))
+	}
+	ec := &ErrorCode{}
+	// 如果解析成功，说明获取buffer文件失败
+	if err = json.Unmarshal(bs, ec); err == nil {
+		return nil, fmt.Errorf("errcode(%d)，errmsg(%s)", ec.Errcode, ec.Errmsg)
+	}
+	return
+}
+
 func (s *SDK) doRequestPost(c context.Context, path string, body bm.BodyMap, ptr interface{}) (err error) {
 	uri := s.Host + path
 	httpClient := xhttp.NewClient()

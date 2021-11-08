@@ -1,5 +1,26 @@
 package mini
 
+import "github.com/go-pay/wechat-sdk/pkg/xtime"
+
+const (
+	MsgTypeText     = 0 // 文本消息
+	MsgTypeImage    = 1 // 图片消息
+	MsgTypeLink     = 2 // 图文链接
+	MsgTypeMiniPage = 3 // 小程序卡片
+
+	TypingTyping = 0 // 对用户下发"正在输入"状态，
+	TypingCancel = 1 // 取消对用户的"正在输入"状态
+)
+
+type MsgType int8
+
+type TypingStatus int8
+
+type ErrorCode struct {
+	Errcode int    `json:"errcode,omitempty"` // 错误码
+	Errmsg  string `json:"errmsg,omitempty"`  // 错误信息
+}
+
 type Code2Session struct {
 	Openid     string `json:"openid,omitempty"`      // 用户唯一标识
 	SessionKey string `json:"session_key,omitempty"` // 会话密钥
@@ -52,4 +73,12 @@ type UserInfo struct {
 type watermarkInfo struct {
 	Appid     string `json:"appid,omitempty"`
 	Timestamp int    `json:"timestamp,omitempty"`
+}
+
+type UploadTempMedia struct {
+	MediaId   string     `json:"media_id"`          // 媒体文件上传后，获取标识，3天内有效。
+	Type      string     `json:"type"`              // 文件类型
+	CreatedAt xtime.Time `json:"created_at"`        // 媒体文件上传时间戳
+	Errcode   int        `json:"errcode,omitempty"` // 错误码
+	Errmsg    string     `json:"errmsg,omitempty"`  // 错误信息
 }

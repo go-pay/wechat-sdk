@@ -21,3 +21,8 @@
 * <font color='#07C160' size='4'>开放数据</font>
     * 开放数据校验：`sdk.VerifyDecryptOpenData()`
     * 开放数据解密：`sdk.DecryptOpenData()`
+* <font color='#07C160' size='4'>客服消息</font>
+    * 获取客服消息内的临时素材：`sdk.CSMessageGetTempMedia()`
+    * 发送客服消息给用户：`sdk.CSMessageSend()`
+    * 下发客服当前输入状态给用户：`sdk.CSMessageSetTyping()`
+    * 把媒体文件上传到微信服务器（目前仅支持图片）：`sdk.CSMessageUploadTempMedia()` 开发中。。。

@@ -14,7 +14,7 @@ import (
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/user-info/auth.getPaidUnionId.html
 func (s *SDK) GetPaidUnionid(c context.Context, openid, transactionId string) (unionid *PaidUnionId, err error) {
 	path := "/wxa/getpaidunionid?access_token=" + s.accessToken + "&openid=" + openid + "&transaction_id=" + transactionId
-	unionid = new(PaidUnionId)
+	unionid = &PaidUnionId{}
 	if err = s.doRequestGet(c, path, unionid); err != nil {
 		return nil, err
 	}
@@ -28,7 +28,7 @@ func (s *SDK) GetPaidUnionid(c context.Context, openid, transactionId string) (u
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/user-info/auth.getPaidUnionId.html
 func (s *SDK) GetPaidUnionidByTradeNo(c context.Context, openid, mchid, tradeNo string) (unionid *PaidUnionId, err error) {
 	path := "/wxa/getpaidunionid?access_token=" + s.accessToken + "&openid=" + openid + "&mch_id=" + mchid + "&out_trade_no=" + tradeNo
-	unionid = new(PaidUnionId)
+	unionid = &PaidUnionId{}
 	if err = s.doRequestGet(c, path, unionid); err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (s *SDK) CheckEncryptedData(c context.Context, encryptedData string) (resul
 	h.Write([]byte(encryptedData))
 	body := make(bm.BodyMap)
 	body.Set("encrypted_msg_hash", hex.EncodeToString(h.Sum(nil)))
-	result = new(CheckEncryptedResult)
+	result = &CheckEncryptedResult{}
 	if err = s.doRequestPost(c, path, body, result); err != nil {
 		return nil, err
 	}

@@ -9,7 +9,7 @@ import (
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html
 func (s *SDK) Code2Session(c context.Context, wxCode string) (session *Code2Session, err error) {
 	path := "/sns/jscode2session?appid=" + s.appid + "&secret=" + s.secret + "&js_code=" + wxCode + "&grant_type=authorization_code"
-	session = new(Code2Session)
+	session = &Code2Session{}
 	if err = s.doRequestGet(c, path, session); err != nil {
 		return nil, err
 	}

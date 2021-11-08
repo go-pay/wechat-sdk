@@ -43,11 +43,6 @@ func (bm BodyMap) SetFormFile(key string, file *util.File) BodyMap {
 	return bm
 }
 
-// 获取参数，同 GetString()
-func (bm BodyMap) Get(key string) string {
-	return bm.GetString(key)
-}
-
 // 获取参数转换string
 func (bm BodyMap) GetString(key string) string {
 	if bm == nil {
