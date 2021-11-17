@@ -14,6 +14,8 @@ const (
 	TypeForm              RequestType = "form"
 	TypeFormData          RequestType = "form-data"
 	TypeMultipartFormData RequestType = "multipart-form-data"
+
+	HeaderRequestID = "Request-ID"
 )
 
 var types = map[RequestType]string{

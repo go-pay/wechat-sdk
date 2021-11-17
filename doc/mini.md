@@ -25,4 +25,4 @@
     * 获取客服消息内的临时素材：`sdk.CSMessageGetTempMedia()`
     * 发送客服消息给用户：`sdk.CSMessageSend()`
     * 下发客服当前输入状态给用户：`sdk.CSMessageSetTyping()`
-    * 把媒体文件上传到微信服务器（目前仅支持图片）：`sdk.CSMessageUploadTempMedia()` 开发中。。。
+    * 把媒体文件上传到微信服务器（目前仅支持图片）：`sdk.CSMessageUploadTempMedia()`
