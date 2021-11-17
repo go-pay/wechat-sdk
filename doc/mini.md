@@ -26,3 +26,5 @@
     * 发送客服消息给用户：`sdk.CSMessageSend()`
     * 下发客服当前输入状态给用户：`sdk.CSMessageSetTyping()`
     * 把媒体文件上传到微信服务器（目前仅支持图片）：`sdk.CSMessageUploadTempMedia()`
+* <font color='#07C160' size='4'>统一服务消息</font>
+    * 发送统一服务消息：`sdk.UniformMessageSend()` 未完成
