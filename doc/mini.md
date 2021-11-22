@@ -8,6 +8,45 @@
 
 ---
 
+### 初始化 SDK
+
+```go
+// NewSDK 初始化微信小程序 SDK
+//	appid：小程序 appid
+//	secret：小程序 appSecret
+//	accessToken：微信小程序AccessToken，若此参数为空，则自动获取并自动维护刷新
+wxsdk, err = NewSDK(Appid, Secret)
+if err != nil {
+    xlog.Error(err)
+    return
+}
+
+// 如需替换host节点，通过如下方法
+// wxsdk.SetHost(wechat.HostSH)
+```
+
+### AccessToken 问题处理
+
+> wechat-sdk 已支持获取并自动刷新 AccessToken 的维护，开发者可通过 `sdk.SetAccessTokenCallback()` 方法，间接拿到 AccessToken 等信息。
+
+- 刚初始化完 SDK，AccessToken 通过下面方法获取
+```go
+// New完SDK，首次获取AccessToken请通过此方法获取，之后请通过下面的回调方法获取
+at := wxsdk.GetAccessToken()
+xlog.Infof("at: %s", at)
+```
+- 后续通过注册AT回调方法，获取每次刷新后的 AccessToken
+```go
+// 每次刷新 AccessToken 后，此方法回调返回 AccessToken 和 有效时间（秒）
+wxsdk.SetAccessTokenCallback(func(accessToken string, expireIn int, err error) {
+    if err != nil {
+        xlog.Errorf("refresh access token error(%+v)", err)
+    }
+    xlog.Infof("accessToken: %s", accessToken)
+    xlog.Infof("expireIn: %d", expireIn)
+})
+```
+
 ## 附录：
 
 ### 微信小程序 服务端API
