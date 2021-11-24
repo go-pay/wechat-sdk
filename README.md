@@ -27,12 +27,70 @@ go get -u github.com/go-pay/wechat-sdk
 
 <br>
 
-# 二、文档目录
+# 二、文档说明
 
-> ### 点击查看使用文档
+- ### NewSDK
 
-* #### [微信小程序](https://github.com/go-pay/wechat-sdk/blob/main/doc/mini.md)
-* #### [微信公众号](https://github.com/go-pay/wechat-sdk/blob/main/doc/open.md)
+```go
+import (
+    "github.com/go-pay/wechat-sdk"
+    "github.com/go-pay/wechat-sdk/pkg/xlog"
+)
+
+// NewSDK 初始化微信 SDK
+//  Appid：Appid
+//  Secret：appSecret
+//  accessToken：AccessToken，若此参数为空，则自动获取并自动维护刷新
+wxsdk, err := wechat.NewSDK(Appid, Secret)
+if err != nil {
+    xlog.Error(err)
+    return
+}
+
+// 可替换host节点
+//wxsdk.SetHost(wechat.HostSH)
+// 打开Debug开关，输出日志
+//wxsdk.DebugSwitch = wechat.DebugOn
+```
+
+- ### AccessToken 说明
+
+```go
+// NewSDK 后，首次获取AccessToken请通过此方法获取，之后请通过下面的回调方法获取
+at := wxsdk.GetAccessToken()
+xlog.Infof("at: %s", at)
+
+// 每次刷新 accessToken 后，此方法回调返回 accessToken 和 有效时间（秒）
+wxsdk.SetAccessTokenCallback(func(accessToken string, expireIn int, err error) {
+    if err != nil {
+        xlog.Errorf("refresh access token error(%+v)", err)
+    }
+    xlog.Infof("accessToken: %s", accessToken)
+    xlog.Infof("expireIn: %d", expireIn)
+})
+
+// 若 NewSDK() 时自传 AccessToken，则后续更新替换请调用此方法
+wxsdk.SetAccessToken()
+```
+
+- ### NewMiniSDK
+
+```go
+// New 微信小程序 SDK
+miniSDK := wxsdk.NewMini()
+```
+
+- ### NewOpenSDK
+
+```go
+// New 微信公众号 SDK
+openSDK := wxsdk.NewOpen()
+```
+
+- ### 点击分别查看小程序、公众号使用文档
+
+  * #### [微信小程序](https://github.com/go-pay/wechat-sdk/blob/main/doc/mini.md)
+  * #### [微信公众号](https://github.com/go-pay/wechat-sdk/blob/main/doc/open.md)
 
 ---
 

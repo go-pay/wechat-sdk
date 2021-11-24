@@ -1,28 +1,32 @@
-package mini
+package wechat
 
 import (
 	"context"
 	"os"
 	"testing"
 
-	"github.com/go-pay/wechat-sdk"
+	"github.com/go-pay/wechat-sdk/mini"
+	"github.com/go-pay/wechat-sdk/model"
+	"github.com/go-pay/wechat-sdk/open"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
 )
 
 var (
-	ctx   = context.Background()
-	wxsdk *SDK
-	err   error
+	ctx     = context.Background()
+	wxsdk   *SDK
+	miniSDK *mini.SDK
+	openSDK *open.SDK
+	err     error
 	// 测试时，将自己的Appid和Secret填入
 	Appid  = ""
 	Secret = ""
 )
 
 func TestMain(m *testing.M) {
-	// NewSDK 初始化微信小程序 SDK
-	//	appid：小程序 appid
-	//	secret：小程序 appSecret
-	//	accessToken：微信小程序AccessToken，若此参数为空，则自动获取并自动维护刷新
+	// NewSDK 初始化微信 SDK
+	//	Appid：Appid
+	//	Secret：appSecret
+	//	accessToken：AccessToken，若此参数为空，则自动获取并自动维护刷新
 	wxsdk, err = NewSDK(Appid, Secret)
 	if err != nil {
 		xlog.Error(err)
@@ -30,13 +34,15 @@ func TestMain(m *testing.M) {
 	}
 
 	// 可替换host节点
-	// wxsdk.SetHost(wechat.HostSH)
+	//wxsdk.SetHost(HostSH)
+	// 打开Debug开关，输出日志
+	wxsdk.DebugSwitch = DebugOn
 
 	// New完SDK，首次获取AccessToken请通过此方法获取，之后请通过下面的回调方法获取
 	at := wxsdk.GetAccessToken()
 	xlog.Infof("at: %s", at)
 
-	// 每次刷新 AccessToken 后，此方法回调返回 AccessToken 和 有效时间（秒）
+	// 每次刷新 accessToken 后，此方法回调返回 accessToken 和 有效时间（秒）
 	wxsdk.SetAccessTokenCallback(func(accessToken string, expireIn int, err error) {
 		if err != nil {
 			xlog.Errorf("refresh access token error(%+v)", err)
@@ -45,8 +51,13 @@ func TestMain(m *testing.M) {
 		xlog.Infof("expireIn: %d", expireIn)
 	})
 
-	// 打开Debug开关，输出日志
-	wxsdk.DebugSwitch = wechat.DebugOff
+	// New 微信小程序 SDK
+	miniSDK = wxsdk.NewMini()
+	//miniSDK.DebugSwitch = DebugOn
+
+	// New 微信公众号 SDK
+	openSDK = wxsdk.NewOpen()
+	openSDK.DebugSwitch = DebugOn
 
 	os.Exit(m.Run())
 }
@@ -62,7 +73,7 @@ func TestGetAccessToken(t *testing.T) {
 }
 
 func TestCode2Session(t *testing.T) {
-	session, err := wxsdk.Code2Session(ctx, "wxCode")
+	session, err := miniSDK.Code2Session(ctx, "wxCode")
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -74,8 +85,8 @@ func TestVerifyDecryptOpenData(t *testing.T) {
 	rwData := `{"nickName":"Band","gender":1,"language":"zh_CN","city":"Guangzhou","province":"Guangdong","country":"CN","avatarUrl":"http://wx.qlogo.cn/mmopen/vi_32/1vZvI39NWFQ9XM4LtQpFrQJ1xlgZxx3w7bQxKARol6503Iuswjjn6nIGBiaycAjAtpujxyzYsrztuuICqIM5ibXQ/0"}`
 	sign := "75e81ceda165f4ffa64f4068af58c64b8f54b88c"
 	sessionKey := "HyVFkGl5F5OQWJZZaNzBBg=="
-	ok := wxsdk.VerifyDecryptOpenData(rwData, sign, sessionKey)
-	xlog.Debugf("verify result: %v", ok)
+	ok := miniSDK.VerifyDecryptOpenData(rwData, sign, sessionKey)
+	xlog.Debugf("verify result: %t", ok)
 }
 
 func TestDecryptOpenData(t *testing.T) {
@@ -83,10 +94,10 @@ func TestDecryptOpenData(t *testing.T) {
 	iv := "Cds8j3VYoGvnTp1BrjXdJg=="
 	session := "lyY4HPQbaOYzZdG+JcYK9w=="
 
-	//微信小程序 手机号
-	phone := new(UserPhone)
+	// 微信小程序 手机号
+	phone := new(model.UserPhone)
 
-	err = wxsdk.DecryptOpenData(data, iv, session, phone)
+	err = miniSDK.DecryptOpenData(data, iv, session, phone)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -101,9 +112,9 @@ func TestDecryptOpenData(t *testing.T) {
 	iv2 := "r7BXXKkLb8qrSNn05n0qiA=="
 
 	// 微信小程序 用户信息
-	userInfo := new(UserInfo)
+	userInfo := new(model.UserInfo)
 
-	err = wxsdk.DecryptOpenData(encryptedData, iv2, sessionKey, userInfo)
+	err = miniSDK.DecryptOpenData(encryptedData, iv2, sessionKey, userInfo)
 	if err != nil {
 		xlog.Error(err)
 		return

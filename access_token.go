@@ -1,10 +1,10 @@
-package mini
+package wechat
 
 import (
 	"fmt"
 	"time"
 
-	"github.com/go-pay/wechat-sdk"
+	"github.com/go-pay/wechat-sdk/model"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
 )
 
@@ -21,12 +21,12 @@ func (s *SDK) getAccessToken() (err error) {
 		}
 	}()
 
-	path := "/cgi-bin/token?grant_type=client_credential&appid=" + s.appid + "&secret=" + s.secret
-	at := &AccessToken{}
-	if err = s.doRequestGet(s.ctx, path, at); err != nil {
+	path := "/cgi-bin/token?grant_type=client_credential&Appid=" + s.Appid + "&Secret=" + s.Secret
+	at := &model.AccessToken{}
+	if err = s.DoRequestGet(s.ctx, path, at); err != nil {
 		return
 	}
-	if at.Errcode != wechat.Success {
+	if at.Errcode != Success {
 		err = fmt.Errorf("errcode(%d), errmsg(%s)", at.Errcode, at.Errmsg)
 		return
 	}
@@ -34,6 +34,11 @@ func (s *SDK) getAccessToken() (err error) {
 	s.RefreshInternal = time.Second * time.Duration(at.ExpiresIn)
 	if s.callback != nil {
 		go s.callback(at.AccessToken, at.ExpiresIn, nil)
+	}
+	if len(s.atChanMap) > 0 {
+		for _, v := range s.atChanMap {
+			v <- at.AccessToken
+		}
 	}
 	return nil
 }
