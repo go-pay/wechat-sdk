@@ -65,7 +65,7 @@ func (s *SDK) DecryptOpenData(encryptedData, iv, sessionKey string, ptr interfac
 		plainText = xaes.PKCS7UnPadding(plainText)
 	}
 	if err = json.Unmarshal(plainText, ptr); err != nil {
-		return fmt.Errorf("json.Unmarshal(%m, %+v),error(%w)", string(plainText), ptr, err)
+		return fmt.Errorf("json.Unmarshal(%s, %+v),error(%w)", string(plainText), ptr, err)
 	}
 	return
 }
