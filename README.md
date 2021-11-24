@@ -98,9 +98,7 @@ openSDK := wxsdk.NewOpen()
 
 # 三、其他说明
 
-* 方式接入，请仔细查看参考 `xxx_test.go` 使用方式
-    * `wecaht-sdk/mini/sdk_test.go`
-    * `wecaht-sdk/open/sdk_test.go`
+* 请仔细查看参考 `sdk_test.go` 使用方式
 * 有问题请加QQ群（加群验证答案：gopay），或加微信好友拉群。在此，非常感谢提出宝贵意见和反馈问题的同志们！
 
 QQ群：
