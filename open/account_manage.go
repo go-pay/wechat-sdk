@@ -31,7 +31,7 @@ func (s *SDK) ShortKeyGen(c context.Context, body bm.BodyMap) (skg *model.ShortK
 	return
 }
 
-// ShortKeyFetch 拉取托管的短key
+// ShortKeyFetch 获取托管的短key
 //	注意：errcode = 0 为成功
 //	shortKey：短key
 //	文档：https://developers.weixin.qq.com/doc/offiaccount/Account_Management/KEY_Shortener.html

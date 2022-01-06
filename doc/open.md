@@ -10,7 +10,9 @@
 
 ### 微信公众号 服务端API
 
-* <font color='#07C160' size='4'>XX</font>
-    * xx：`sdk.xx()`
+* <font color='#07C160' size='4'>账号管理</font>
+    * 生成带参数的二维码：`sdk.QRCodeCreate()`
+    * 生成短key托管：`sdk.ShortKeyGen()`
+    * 获取托管的短key：`sdk.ShortKeyFetch()`
 * <font color='#07C160' size='4'>SS</font>
     * ss：`sdk.ss()`
