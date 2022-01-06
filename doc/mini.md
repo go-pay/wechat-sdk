@@ -8,7 +8,9 @@
 
 ---
 
-### Code2Session
+### 具体使用请参考 `doc/mini.md`
+
+#### Code2Session
 
 ```go
 session, err := miniSDK.Code2Session(ctx, "wxCode")
@@ -19,7 +21,7 @@ if err != nil {
 xlog.Debugf("at:%+v", session)
 ```
 
-### 开放数据
+#### 开放数据
 
 - 开放数据校验
 

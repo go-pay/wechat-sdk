@@ -6,6 +6,29 @@
 
 ---
 
+### 具体使用请参考 `doc/open.md`
+
+#### 创建二维码
+
+```go
+body := make(bm.BodyMap)
+// 临时二维码
+body.Set("expire_seconds", 604800).
+	Set("action_name", "QR_SCENE").
+	SetBodyMap("action_info", func(b bm.BodyMap) {
+		b.SetBodyMap("scene", func(b bm.BodyMap) {
+			b.Set("scene_id", 123)
+		})
+	})
+
+rsp, err := openSDK.QRCodeCreate(ctx, body)
+if err != nil {
+	xlog.Error(err)
+	return
+}
+xlog.Infof("rsp:%+v", rsp)
+```
+
 ## 附录：
 
 ### 微信公众号 服务端API
