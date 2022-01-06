@@ -10,6 +10,7 @@ import (
 )
 
 // GetPaidUnionid 用户支付完成后，获取该用户的 UnionId，无需用户授权
+//	注意：errcode = 0 为成功
 //	openid：支付用户唯一标识
 //	transactionId：微信支付订单号
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/user-info/auth.getPaidUnionId.html
@@ -23,6 +24,7 @@ func (s *SDK) GetPaidUnionid(c context.Context, openid, transactionId string) (u
 }
 
 // GetPaidUnionidByTradeNo 用户支付完成后，获取该用户的 UnionId，无需用户授权
+//	注意：errcode = 0 为成功
 //	openid：支付用户唯一标识
 //	mchid：微信支付商户号
 //	tradeNo：微信支付商户订单号
@@ -37,6 +39,7 @@ func (s *SDK) GetPaidUnionidByTradeNo(c context.Context, openid, mchid, tradeNo 
 }
 
 // CheckEncryptedData 检查加密信息是否由微信生成
+//	注意：errcode = 0 为成功
 //	encryptedData：加密数据，无需sha256操作
 //	注意：（当前只支持手机号加密数据），只能检测最近3天生成的加密数据
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/user-info/auth.checkEncryptedData.html

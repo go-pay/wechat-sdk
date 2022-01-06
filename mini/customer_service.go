@@ -21,6 +21,7 @@ func (s *SDK) CSMessageGetTempMedia(c context.Context, mediaId string) (media []
 }
 
 // CSMessageSend 发送客服消息给用户
+//	注意：errcode = 0 为成功
 //	toUser：小程序用户的 OpenID
 //	msgType：消息类型，枚举值：mini.MsgTypeText、mini.MsgTypeImage、mini.MsgTypeLink、mini.MsgTypeMiniPage
 //	msgValue：对应 msgType 的value值，BodyMap key-value 格式传入
@@ -32,29 +33,16 @@ func (s *SDK) CSMessageSend(c context.Context, toUser string, msgType model.MsgT
 	switch msgType {
 	case model.MsgTypeText:
 		body.Set("msgtype", "text").
-			SetBodyMap("text", func(bm bm.BodyMap) {
-				bm.Set("content", msgValue.GetString("content"))
-			})
+			Set("text", msgValue)
 	case model.MsgTypeImage:
 		body.Set("msgtype", "image").
-			SetBodyMap("text", func(bm bm.BodyMap) {
-				bm.Set("media_id", msgValue.GetString("media_id"))
-			})
+			Set("text", msgValue)
 	case model.MsgTypeLink:
 		body.Set("msgtype", "link").
-			SetBodyMap("text", func(bm bm.BodyMap) {
-				bm.Set("title", msgValue.GetString("title")).
-					Set("description", msgValue.GetString("description")).
-					Set("url", msgValue.GetString("url")).
-					Set("thumb_url", msgValue.GetString("thumb_url"))
-			})
+			Set("text", msgValue)
 	case model.MsgTypeMiniPage:
 		body.Set("msgtype", "miniprogrampage").
-			SetBodyMap("text", func(bm bm.BodyMap) {
-				bm.Set("title", msgValue.GetString("title")).
-					Set("pagepath", msgValue.GetString("pagepath")).
-					Set("thumb_media_id", msgValue.GetString("thumb_media_id"))
-			})
+			Set("text", msgValue)
 	}
 	ec = &model.ErrorCode{}
 	if err = s.doRequestPost(c, path, body, ec); err != nil {
@@ -64,6 +52,7 @@ func (s *SDK) CSMessageSend(c context.Context, toUser string, msgType model.MsgT
 }
 
 // CSMessageSetTyping 下发客服当前输入状态给用户
+//	注意：errcode = 0 为成功
 //	toUser：小程序用户的 OpenID
 //	typingStatus：枚举值：mini.TypingTyping、mini.TypingCancel
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/customer-message/customerServiceMessage.setTyping.html
@@ -85,6 +74,7 @@ func (s *SDK) CSMessageSetTyping(c context.Context, toUser string, typingStatus 
 }
 
 // CSMessageUploadTempMedia 把媒体文件上传到微信服务器
+//	注意：errcode = 0 为成功
 //	注意：目前仅支持图片，用于发送客服消息或被动回复用户消息。
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/customer-message/customerServiceMessage.uploadTempMedia.html
 func (s *SDK) CSMessageUploadTempMedia(c context.Context, img *util.File) (media *model.UploadTempMedia, err error) {

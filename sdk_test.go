@@ -35,7 +35,7 @@ func TestMain(m *testing.M) {
 	// 可替换host节点
 	//wxsdk.SetHost(HostSH)
 	// 打开Debug开关，输出日志
-	wxsdk.DebugSwitch = DebugOn
+	wxsdk.DebugSwitch = DebugOff
 
 	// New完SDK，首次获取AccessToken请通过此方法获取，之后请通过下面的回调方法获取
 	at := wxsdk.GetAccessToken()
@@ -56,7 +56,7 @@ func TestMain(m *testing.M) {
 
 	// New 微信公众号 SDK
 	openSDK = wxsdk.NewOpen()
-	openSDK.DebugSwitch = DebugOn
+	openSDK.DebugSwitch = DebugOff
 
 	os.Exit(m.Run())
 }

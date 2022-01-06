@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/go-pay/wechat-sdk/model"
+	"github.com/go-pay/wechat-sdk/pkg/bm"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
 )
 
@@ -14,6 +15,27 @@ func TestCode2Session(t *testing.T) {
 		return
 	}
 	xlog.Debugf("at:%+v", session)
+}
+
+func TestUniformMessageSend(t *testing.T) {
+	body := make(bm.BodyMap)
+	bb := make(bm.BodyMap)
+	bb.Set("appid", "APPID").
+		Set("template_id", "TEMPLATE_ID").SetBodyMap("miniprogram", func(b bm.BodyMap) {
+		b.Set("appid", "xiaochengxuappid12345").Set("pagepath", "index?foo=bar")
+	})
+
+	body.Set("touser", "Openid").
+		Set("mp_template_msg", bb)
+
+	//xlog.Debugf("%s", body.JsonBody())
+
+	rsp, err := miniSDK.UniformMessageSend(ctx, "Openid", body)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("rsp:%+v", rsp)
 }
 
 func TestVerifyDecryptOpenData(t *testing.T) {

@@ -16,7 +16,7 @@ func (s *SDK) UniformMessageSend(c context.Context, toUser string, mpMsg bm.Body
 	path := "/cgi-bin/message/wxopen/template/uniform_send?access_token=" + s.Conf.AccessToken
 	body := make(bm.BodyMap)
 	body.Set("touser", toUser)
-
+	body.Set("mp_template_msg", mpMsg)
 	ec = &model.ErrorCode{}
 	if err = s.doRequestPost(c, path, body, ec); err != nil {
 		return nil, err
