@@ -8,8 +8,9 @@ import (
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
 )
 
-// 获取小程序全局唯一后台接口调用凭据（access_token）
-//	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
+// 获取小程序、公众号全局唯一后台接口调用凭据（access_token）
+//	微信小程序文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
+//	公众号文档：https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Get_access_token.html
 func (s *SDK) getAccessToken() (err error) {
 	defer func() {
 		if err != nil {
@@ -21,7 +22,7 @@ func (s *SDK) getAccessToken() (err error) {
 		}
 	}()
 
-	path := "/cgi-bin/token?grant_type=client_credential&Appid=" + s.Appid + "&Secret=" + s.Secret
+	path := "/cgi-bin/token?grant_type=client_credential&appid=" + s.Appid + "&secret=" + s.Secret
 	at := &model.AccessToken{}
 	if err = s.DoRequestGet(s.ctx, path, at); err != nil {
 		return
