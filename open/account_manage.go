@@ -8,6 +8,7 @@ import (
 )
 
 // QRCodeCreate 生成带参数的二维码
+//	注意：errcode = 0 为成功
 //	注意：expire_seconds 字段不传，代表永久二维码。
 //	文档：https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html
 func (s *SDK) QRCodeCreate(c context.Context, body bm.BodyMap) (qr *model.QRCodeRsp, err error) {

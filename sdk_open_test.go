@@ -63,3 +63,34 @@ func TestShortKeyFetch(t *testing.T) {
 	}
 	xlog.Infof("rsp:%+v", rsp)
 }
+
+func TestUserTagCreate(t *testing.T) {
+	rsp, err := openSDK.UserTagCreate(ctx, "test_tag4")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Infof("rsp:%+v", rsp)
+	xlog.Infof("rsp.Tag:%+v", rsp.Tag)
+}
+
+func TestUserTagList(t *testing.T) {
+	rsp, err := openSDK.UserTagList(ctx)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Infof("rsp:%+v", rsp)
+	for _, v := range rsp.Tags {
+		xlog.Infof("rsp.Tag:%+v", v)
+	}
+}
+
+func TestUserTagUpdate(t *testing.T) {
+	rsp, err := openSDK.UserTagUpdate(ctx, 100, "test_tag_update")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Infof("rsp:%+v", rsp)
+}

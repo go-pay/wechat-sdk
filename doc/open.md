@@ -34,9 +34,9 @@ xlog.Infof("rsp:%+v", rsp)
 ### 微信公众号 服务端API
 
 * <font color='#07C160' size='4'>用户管理</font>
-	* 创建标签：`sdk.ss()`
-	* 获取已创建的标签：`sdk.ss()`
-	* 编辑标签：`sdk.ss()`
+	* 用户标签创建：`sdk.UserTagCreate()`
+	* 获取已创建的用户标签：`sdk.UserTagList()`
+	* 用户标签编辑更新：`sdk.UserTagUpdate()`
 	* 删除标签：`sdk.ss()`
 	* 获取标签下粉丝列表：`sdk.ss()`
 	* 批量为用户打标签：`sdk.ss()`
