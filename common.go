@@ -10,9 +10,9 @@ const (
 const (
 	HostDefault Host = iota
 	HostDefault2
-	HostSH
-	HostSZ
-	HostHK
+	HostSH // 上海
+	HostSZ // 深圳
+	HostHK // 香港
 )
 
 type DebugSwitch int8

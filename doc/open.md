@@ -35,13 +35,13 @@ xlog.Infof("rsp:%+v", rsp)
 
 * <font color='#07C160' size='4'>用户管理</font>
 	* 用户标签创建：`sdk.UserTagCreate()`
-	* 获取已创建的用户标签：`sdk.UserTagList()`
+	* 获取已创建的用户标签列表：`sdk.UserTagList()`
 	* 用户标签编辑更新：`sdk.UserTagUpdate()`
-	* 删除标签：`sdk.ss()`
-	* 获取标签下粉丝列表：`sdk.ss()`
-	* 批量为用户打标签：`sdk.ss()`
-	* 批量为用户取消标签：`sdk.ss()`
-	* 获取用户身上的标签列表：`sdk.ss()`
+	* 用户标签删除：`sdk.UserTagDelete()`
+	* 获取标签下粉丝列表：`sdk.UserTagFansList()`
+	* 批量为用户打标签：`sdk.UserTagBatchTagging()`
+	* 批量为用户取消标签：`sdk.UserTagBatchUnTagging()`
+	* 获取用户身上的标签列表：`sdk.UserTagIdList()`
 * <font color='#07C160' size='4'>账号管理</font>
 	* 生成带参数的二维码：`sdk.QRCodeCreate()`
 	* 生成短key托管：`sdk.ShortKeyGen()`

@@ -23,6 +23,17 @@ go get -u github.com/go-pay/wechat-sdk
 
 [版本更新记录](https://github.com/go-pay/wechat-sdk/blob/main/release_note.txt)
 
+```go
+import (
+    "github.com/go-pay/wechat-sdk"
+    "github.com/go-pay/wechat-sdk/pkg/xlog"
+)
+
+func main() {
+    xlog.Info("Wechat-SDK Version: ", wechat.Version)
+}
+```
+
 ---
 
 <br>

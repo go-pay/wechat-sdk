@@ -41,3 +41,20 @@ type UserTagListRsp struct {
 	Errmsg  string `json:"errmsg,omitempty"`
 	Tags    []*Tag `json:"tags,omitempty"`
 }
+type UserTagFansListRsp struct {
+	Errcode    int       `json:"errcode,omitempty"`
+	Errmsg     string    `json:"errmsg,omitempty"`
+	Count      int       `json:"count"`
+	NextOpenid string    `json:"next_openid,omitempty"`
+	Data       *FansData `json:"data"`
+}
+
+type FansData struct {
+	Openid []string `json:"openid"`
+}
+
+type UserTagIdListRsp struct {
+	Errcode   int    `json:"errcode,omitempty"`
+	Errmsg    string `json:"errmsg,omitempty"`
+	TagidList []int  `json:"tagid_list,omitempty"`
+}

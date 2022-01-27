@@ -131,3 +131,15 @@ func TestBodyMapMarshalSlice(t *testing.T) {
 	bss, _ := xml.Marshal(bm)
 	xlog.Debug("body:", string(bss))
 }
+
+func TestBodyMapSetSlice(t *testing.T) {
+	var ss []string
+	ss = append(ss, "a")
+	ss = append(ss, "b")
+	ss = append(ss, "c")
+	ss = append(ss, "d")
+
+	bm := make(BodyMap)
+	bm.Set("slice", ss)
+	xlog.Info(bm.JsonBody())
+}
