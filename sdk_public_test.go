@@ -3,22 +3,22 @@ package wechat
 import (
 	"testing"
 
-	"github.com/go-pay/wechat-sdk/pkg/bm"
+	"github.com/go-pay/wechat-sdk/pkg/bmap"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
 )
 
 func TestQRCodeCreate(t *testing.T) {
-	body := make(bm.BodyMap)
+	body := make(bmap.BodyMap)
 	// 临时二维码
 	body.Set("expire_seconds", 604800).
 		Set("action_name", "QR_SCENE").
-		SetBodyMap("action_info", func(b bm.BodyMap) {
-			b.SetBodyMap("scene", func(b bm.BodyMap) {
+		SetBodyMap("action_info", func(b bmap.BodyMap) {
+			b.SetBodyMap("scene", func(b bmap.BodyMap) {
 				b.Set("scene_id", 123)
 			})
 		})
 
-	rsp, err := openSDK.QRCodeCreate(ctx, body)
+	rsp, err := publicSDK.QRCodeCreate(ctx, body)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -29,12 +29,12 @@ func TestQRCodeCreate(t *testing.T) {
 
 	// 永久二维码
 	body.Set("action_name", "QR_LIMIT_SCENE").
-		SetBodyMap("action_info", func(b bm.BodyMap) {
-			b.SetBodyMap("scene", func(b bm.BodyMap) {
+		SetBodyMap("action_info", func(b bmap.BodyMap) {
+			b.SetBodyMap("scene", func(b bmap.BodyMap) {
 				b.Set("scene_id", 456)
 			})
 		})
-	rsp2, err := openSDK.QRCodeCreate(ctx, body)
+	rsp2, err := publicSDK.QRCodeCreate(ctx, body)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -43,11 +43,11 @@ func TestQRCodeCreate(t *testing.T) {
 }
 
 func TestShortKeyGen(t *testing.T) {
-	body := make(bm.BodyMap)
+	body := make(bmap.BodyMap)
 	body.Set("long_data", "loooooong data").
 		Set("expire_seconds", 86400)
 
-	rsp, err := openSDK.ShortKeyGen(ctx, body)
+	rsp, err := publicSDK.ShortKeyGen(ctx, body)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -56,7 +56,7 @@ func TestShortKeyGen(t *testing.T) {
 }
 
 func TestShortKeyFetch(t *testing.T) {
-	rsp, err := openSDK.ShortKeyFetch(ctx, "PwOQoY7mfqpXyFn")
+	rsp, err := publicSDK.ShortKeyFetch(ctx, "PwOQoY7mfqpXyFn")
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -65,7 +65,7 @@ func TestShortKeyFetch(t *testing.T) {
 }
 
 func TestUserTagCreate(t *testing.T) {
-	rsp, err := openSDK.UserTagCreate(ctx, "test_tag4")
+	rsp, err := publicSDK.UserTagCreate(ctx, "test_tag4")
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -75,7 +75,7 @@ func TestUserTagCreate(t *testing.T) {
 }
 
 func TestUserTagList(t *testing.T) {
-	rsp, err := openSDK.UserTagList(ctx)
+	rsp, err := publicSDK.UserTagList(ctx)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -87,7 +87,7 @@ func TestUserTagList(t *testing.T) {
 }
 
 func TestUserTagUpdate(t *testing.T) {
-	rsp, err := openSDK.UserTagUpdate(ctx, 100, "test_tag_update")
+	rsp, err := publicSDK.UserTagUpdate(ctx, 100, "test_tag_update")
 	if err != nil {
 		xlog.Error(err)
 		return

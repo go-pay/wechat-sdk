@@ -1,11 +1,11 @@
-package open
+package public
 
 import (
 	"context"
 	"errors"
 
 	"github.com/go-pay/wechat-sdk/model"
-	"github.com/go-pay/wechat-sdk/pkg/bm"
+	"github.com/go-pay/wechat-sdk/pkg/bmap"
 )
 
 // UserTagCreate 用户标签创建
@@ -13,8 +13,8 @@ import (
 //	文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagCreate(c context.Context, tagName string) (ut *model.UserTagRsp, err error) {
 	path := "/cgi-bin/tags/create?access_token=" + s.Conf.AccessToken
-	body := make(bm.BodyMap)
-	body.SetBodyMap("tag", func(b bm.BodyMap) {
+	body := make(bmap.BodyMap)
+	body.SetBodyMap("tag", func(b bmap.BodyMap) {
 		b.Set("name", tagName)
 	})
 	ut = &model.UserTagRsp{}
@@ -41,8 +41,8 @@ func (s *SDK) UserTagList(c context.Context) (utl *model.UserTagListRsp, err err
 //	文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagUpdate(c context.Context, tagId int, tagName string) (ec *model.ErrorCode, err error) {
 	path := "/cgi-bin/tags/update?access_token=" + s.Conf.AccessToken
-	body := make(bm.BodyMap)
-	body.SetBodyMap("tag", func(b bm.BodyMap) {
+	body := make(bmap.BodyMap)
+	body.SetBodyMap("tag", func(b bmap.BodyMap) {
 		b.Set("id", tagId)
 		b.Set("name", tagName)
 	})
@@ -58,8 +58,8 @@ func (s *SDK) UserTagUpdate(c context.Context, tagId int, tagName string) (ec *m
 //	文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagDelete(c context.Context, tagId int) (ec *model.ErrorCode, err error) {
 	path := "/cgi-bin/tags/delete?access_token=" + s.Conf.AccessToken
-	body := make(bm.BodyMap)
-	body.SetBodyMap("tag", func(b bm.BodyMap) {
+	body := make(bmap.BodyMap)
+	body.SetBodyMap("tag", func(b bmap.BodyMap) {
 		b.Set("id", tagId)
 	})
 	ec = &model.ErrorCode{}
@@ -75,7 +75,7 @@ func (s *SDK) UserTagDelete(c context.Context, tagId int) (ec *model.ErrorCode, 
 //	文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagFansList(c context.Context, tagId int, openid string) (utf *model.UserTagFansListRsp, err error) {
 	path := "/cgi-bin/user/tag/get?access_token=" + s.Conf.AccessToken
-	body := make(bm.BodyMap)
+	body := make(bmap.BodyMap)
 	body.Set("tagid", tagId)
 	if openid != "" {
 		body.Set("next_openid", openid)
@@ -95,7 +95,7 @@ func (s *SDK) UserTagBatchTagging(c context.Context, tagId int, openidList []str
 		return nil, errors.New("openid_list is empty")
 	}
 	path := "/cgi-bin/tags/members/batchtagging?access_token=" + s.Conf.AccessToken
-	body := make(bm.BodyMap)
+	body := make(bmap.BodyMap)
 	body.Set("tagid", tagId)
 	body.Set("openid_list", openidList)
 	ec = &model.ErrorCode{}
@@ -113,7 +113,7 @@ func (s *SDK) UserTagBatchUnTagging(c context.Context, tagId int, openidList []s
 		return nil, errors.New("openid_list is empty")
 	}
 	path := "/cgi-bin/tags/members/batchuntagging?access_token=" + s.Conf.AccessToken
-	body := make(bm.BodyMap)
+	body := make(bmap.BodyMap)
 	body.Set("tagid", tagId)
 	body.Set("openid_list", openidList)
 	ec = &model.ErrorCode{}
@@ -131,7 +131,7 @@ func (s *SDK) UserTagIdList(c context.Context, openid string) (uti *model.UserTa
 		return nil, errors.New("openid is empty")
 	}
 	path := "/cgi-bin/tags/getidlist?access_token=" + s.Conf.AccessToken
-	body := make(bm.BodyMap)
+	body := make(bmap.BodyMap)
 	body.Set("openid", openid)
 	uti = &model.UserTagIdListRsp{}
 	if err = s.doRequestPost(c, path, body, uti); err != nil {

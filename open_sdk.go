@@ -7,15 +7,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/go-pay/wechat-sdk/mini"
 	"github.com/go-pay/wechat-sdk/model"
 	"github.com/go-pay/wechat-sdk/pkg/util"
 	"github.com/go-pay/wechat-sdk/pkg/xhttp"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
-	"github.com/go-pay/wechat-sdk/public"
 )
 
-type SDK struct {
+type OpenSDK struct {
 	ctx             context.Context
 	rwMu            sync.RWMutex
 	Appid           string
@@ -28,12 +26,12 @@ type SDK struct {
 	DebugSwitch     DebugSwitch
 }
 
-// NewSDK 初始化微信 SDK
+// NewOpenSDK 初始化微信开放平台 SDK
 //	Appid：Appid
 //	Secret：appSecret
 //	accessToken：AccessToken，若此参数为空，则自动获取并自动维护刷新
-func NewSDK(appid, secret string, accessToken ...string) (sdk *SDK, err error) {
-	sdk = &SDK{
+func NewOpenSDK(appid, secret string, accessToken ...string) (sdk *OpenSDK, err error) {
+	sdk = &OpenSDK{
 		ctx:             context.Background(),
 		Appid:           appid,
 		Secret:          secret,
@@ -46,68 +44,10 @@ func NewSDK(appid, secret string, accessToken ...string) (sdk *SDK, err error) {
 		sdk.accessToken = accessToken[0]
 		return
 	}
-	// 获取AccessToken
-	err = sdk.getAccessToken()
-	if err != nil {
-		return nil, err
-	}
-	// auto refresh access token
-	go sdk.autoRefreshAccessToken()
 	return
 }
 
-// SetAccessToken 若 NewSDK() 时自传 AccessToken，则后续更新替换请调用此方法
-func (s *SDK) SetAccessToken(accessToken string) {
-	s.accessToken = accessToken
-	if len(s.atChanMap) > 0 {
-		for _, v := range s.atChanMap {
-			v <- accessToken
-		}
-	}
-}
-
-// SetHost 设置微信请求Host
-//	上海、深圳、香港 等
-func (s *SDK) SetHost(host Host) (sdk *SDK) {
-	if h, ok := HostMap[host]; ok {
-		s.Host = h
-	}
-	return s
-}
-
-// NewPublic new 微信公众号
-func (s *SDK) NewPublic() (o *public.SDK) {
-	s.rwMu.Lock()
-	defer s.rwMu.Unlock()
-	s.atChanMap[model.Open] = make(chan string, 1)
-
-	c := &model.Config{
-		Appid:       s.Appid,
-		Secret:      s.Secret,
-		AccessToken: s.accessToken,
-		Host:        s.Host,
-	}
-
-	return public.New(c, int8(s.DebugSwitch), s.atChanMap[model.Mini])
-}
-
-// NewMini new 微信小程序
-func (s *SDK) NewMini() (m *mini.SDK) {
-	s.rwMu.Lock()
-	defer s.rwMu.Unlock()
-	s.atChanMap[model.Mini] = make(chan string, 1)
-
-	c := &model.Config{
-		Appid:       s.Appid,
-		Secret:      s.Secret,
-		AccessToken: s.accessToken,
-		Host:        s.Host,
-	}
-
-	return mini.New(c, int8(s.DebugSwitch), s.atChanMap[model.Mini])
-}
-
-func (s *SDK) DoRequestGet(c context.Context, path string, ptr interface{}) (err error) {
+func (s *OpenSDK) DoRequestGet(c context.Context, path string, ptr interface{}) (err error) {
 	uri := s.Host + path
 	httpClient := xhttp.NewClient()
 	if s.DebugSwitch == model.DebugOn {

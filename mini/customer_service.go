@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/go-pay/wechat-sdk/model"
-	"github.com/go-pay/wechat-sdk/pkg/bm"
+	"github.com/go-pay/wechat-sdk/pkg/bmap"
 	"github.com/go-pay/wechat-sdk/pkg/util"
 )
 
@@ -26,9 +26,9 @@ func (s *SDK) CSMessageGetTempMedia(c context.Context, mediaId string) (media []
 //	msgType：消息类型，枚举值：mini.MsgTypeText、mini.MsgTypeImage、mini.MsgTypeLink、mini.MsgTypeMiniPage
 //	msgValue：对应 msgType 的value值，BodyMap key-value 格式传入
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/customer-message/customerServiceMessage.send.html
-func (s *SDK) CSMessageSend(c context.Context, toUser string, msgType model.MsgType, msgValue bm.BodyMap) (ec *model.ErrorCode, err error) {
+func (s *SDK) CSMessageSend(c context.Context, toUser string, msgType model.MsgType, msgValue bmap.BodyMap) (ec *model.ErrorCode, err error) {
 	path := "/cgi-bin/message/custom/send?access_token=" + s.Conf.AccessToken
-	body := make(bm.BodyMap)
+	body := make(bmap.BodyMap)
 	body.Set("touser", toUser)
 	switch msgType {
 	case model.MsgTypeText:
@@ -58,7 +58,7 @@ func (s *SDK) CSMessageSend(c context.Context, toUser string, msgType model.MsgT
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/customer-message/customerServiceMessage.setTyping.html
 func (s *SDK) CSMessageSetTyping(c context.Context, toUser string, typingStatus model.TypingStatus) (ec *model.ErrorCode, err error) {
 	path := "/cgi-bin/message/custom/typing?access_token=" + s.Conf.AccessToken
-	body := make(bm.BodyMap)
+	body := make(bmap.BodyMap)
 	body.Set("touser", toUser)
 	switch typingStatus {
 	case model.TypingTyping:
@@ -79,7 +79,7 @@ func (s *SDK) CSMessageSetTyping(c context.Context, toUser string, typingStatus 
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/customer-message/customerServiceMessage.uploadTempMedia.html
 func (s *SDK) CSMessageUploadTempMedia(c context.Context, img *util.File) (media *model.UploadTempMedia, err error) {
 	path := "/cgi-bin/media/upload?access_token=" + s.Conf.AccessToken
-	body := make(bm.BodyMap)
+	body := make(bmap.BodyMap)
 	body.Set("type", "image").
 		SetFormFile("media", img)
 	media = &model.UploadTempMedia{}

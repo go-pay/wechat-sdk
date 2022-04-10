@@ -6,16 +6,16 @@ import (
 	"testing"
 
 	"github.com/go-pay/wechat-sdk/mini"
-	"github.com/go-pay/wechat-sdk/open"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
+	"github.com/go-pay/wechat-sdk/public"
 )
 
 var (
-	ctx     = context.Background()
-	wxsdk   *SDK
-	miniSDK *mini.SDK
-	openSDK *open.SDK
-	err     error
+	ctx       = context.Background()
+	wxsdk     *SDK
+	miniSDK   *mini.SDK
+	publicSDK *public.SDK
+	err       error
 	// 测试时，将自己的Appid和Secret填入，此appid和secret为测试号
 	Appid  = "wxcfad67697020fc14"
 	Secret = "c104683b3067ceac97b680aa5bf62b69"
@@ -55,8 +55,8 @@ func TestMain(m *testing.M) {
 	//miniSDK.DebugSwitch = DebugOn
 
 	// New 微信公众号 SDK
-	openSDK = wxsdk.NewOpen()
-	openSDK.DebugSwitch = DebugOff
+	publicSDK = wxsdk.NewPublic()
+	publicSDK.DebugSwitch = DebugOff
 
 	os.Exit(m.Run())
 }

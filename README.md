@@ -91,17 +91,18 @@ wxsdk.SetAccessToken()
 miniSDK := wxsdk.NewMini()
 ```
 
-- ### NewOpenSDK
+- ### NewPublicSDK
 
 ```go
 // New 微信公众号 SDK
-openSDK := wxsdk.NewOpen()
+publicSDK := wxsdk.NewPublic()
 ```
 
 - ### 点击分别查看小程序、公众号使用文档
 
   * #### [微信小程序](https://github.com/go-pay/wechat-sdk/blob/main/doc/mini.md)
-  * #### [微信公众号](https://github.com/go-pay/wechat-sdk/blob/main/doc/open.md)
+  * #### [微信公众号](https://github.com/go-pay/wechat-sdk/blob/main/doc/public.md)
+  * #### [微信开放平台](https://github.com/go-pay/wechat-sdk/blob/main/doc/open.md)
 
 ---
 

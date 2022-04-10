@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/go-pay/wechat-sdk/model"
-	"github.com/go-pay/wechat-sdk/pkg/bm"
+	"github.com/go-pay/wechat-sdk/pkg/bmap"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
 )
 
@@ -18,10 +18,10 @@ func TestCode2Session(t *testing.T) {
 }
 
 func TestUniformMessageSend(t *testing.T) {
-	body := make(bm.BodyMap)
-	bb := make(bm.BodyMap)
+	body := make(bmap.BodyMap)
+	bb := make(bmap.BodyMap)
 	bb.Set("appid", "APPID").
-		Set("template_id", "TEMPLATE_ID").SetBodyMap("miniprogram", func(b bm.BodyMap) {
+		Set("template_id", "TEMPLATE_ID").SetBodyMap("miniprogram", func(b bmap.BodyMap) {
 		b.Set("appid", "xiaochengxuappid12345").Set("pagepath", "index?foo=bar")
 	})
 

@@ -6,7 +6,7 @@ import (
 	"encoding/hex"
 
 	"github.com/go-pay/wechat-sdk/model"
-	"github.com/go-pay/wechat-sdk/pkg/bm"
+	"github.com/go-pay/wechat-sdk/pkg/bmap"
 )
 
 // GetPaidUnionid 用户支付完成后，获取该用户的 UnionId，无需用户授权
@@ -47,7 +47,7 @@ func (s *SDK) CheckEncryptedData(c context.Context, encryptedData string) (resul
 	path := "/wxa/business/checkencryptedmsg?access_token=" + s.Conf.AccessToken
 	h := sha256.New()
 	h.Write([]byte(encryptedData))
-	body := make(bm.BodyMap)
+	body := make(bmap.BodyMap)
 	body.Set("encrypted_msg_hash", hex.EncodeToString(h.Sum(nil)))
 	result = &model.CheckEncryptedResult{}
 	if err = s.doRequestPost(c, path, body, result); err != nil {

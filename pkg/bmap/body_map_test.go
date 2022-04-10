@@ -1,4 +1,4 @@
-package bm
+package bmap
 
 import (
 	"encoding/json"
@@ -132,14 +132,15 @@ func TestBodyMapMarshalSlice(t *testing.T) {
 	xlog.Debug("body:", string(bss))
 }
 
-func TestBodyMapSetSlice(t *testing.T) {
-	var ss []string
-	ss = append(ss, "a")
-	ss = append(ss, "b")
-	ss = append(ss, "c")
-	ss = append(ss, "d")
+func TestSliceTest(t *testing.T) {
+	var rs []string
+	rs = append(rs, "SOFTWARE")
+	rs = append(rs, "SECURITY")
+	rs = append(rs, "LOVE_MARRIAGE")
 
 	bm := make(BodyMap)
-	bm.Set("slice", ss)
-	xlog.Info(bm.JsonBody())
+	bm.Set("sub_mchid", "2021060717").
+		Set("advertising_industry_filters", rs)
+
+	xlog.Debugf("%s", bm.JsonBody())
 }

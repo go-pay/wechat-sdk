@@ -1,4 +1,4 @@
-package open
+package public
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/go-pay/wechat-sdk/model"
-	"github.com/go-pay/wechat-sdk/pkg/bm"
+	"github.com/go-pay/wechat-sdk/pkg/bmap"
 	"github.com/go-pay/wechat-sdk/pkg/util"
 	"github.com/go-pay/wechat-sdk/pkg/xhttp"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
@@ -55,7 +55,7 @@ func (s *SDK) doRequestGetByte(c context.Context, path string) (bs []byte, err e
 	return
 }
 
-func (s *SDK) doRequestPost(c context.Context, path string, body bm.BodyMap, ptr interface{}) (err error) {
+func (s *SDK) doRequestPost(c context.Context, path string, body bmap.BodyMap, ptr interface{}) (err error) {
 	uri := s.Conf.Host + path
 	httpClient := xhttp.NewClient()
 	if s.DebugSwitch == model.DebugOn {
@@ -76,7 +76,7 @@ func (s *SDK) doRequestPost(c context.Context, path string, body bm.BodyMap, ptr
 	return
 }
 
-func (s *SDK) doRequestPostFile(ctx context.Context, path string, body bm.BodyMap, ptr interface{}) (err error) {
+func (s *SDK) doRequestPostFile(ctx context.Context, path string, body bmap.BodyMap, ptr interface{}) (err error) {
 	uri := s.Conf.Host + path
 	httpClient := xhttp.NewClient()
 	if s.DebugSwitch == model.DebugOn {
