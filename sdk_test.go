@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/go-pay/wechat-sdk/mini"
+	"github.com/go-pay/wechat-sdk/open"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
 	"github.com/go-pay/wechat-sdk/public"
 )
@@ -15,6 +16,7 @@ var (
 	wxsdk     *SDK
 	miniSDK   *mini.SDK
 	publicSDK *public.SDK
+	openSDK   *open.SDK
 	err       error
 	// 测试时，将自己的Appid和Secret填入，此appid和secret为测试号
 	Appid  = "wxcfad67697020fc14"
@@ -23,10 +25,11 @@ var (
 
 func TestMain(m *testing.M) {
 	// NewSDK 初始化微信 SDK
+	//  pt: 微信平台类型
 	//	Appid：Appid
 	//	Secret：appSecret
 	//	accessToken：AccessToken，若此参数为空，则自动获取并自动维护刷新
-	wxsdk, err = NewSDK(Appid, Secret)
+	wxsdk, err = NewSDK(PlatformMini, Appid, Secret)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -38,11 +41,11 @@ func TestMain(m *testing.M) {
 	wxsdk.DebugSwitch = DebugOff
 
 	// New完SDK，首次获取AccessToken请通过此方法获取，之后请通过下面的回调方法获取
-	at := wxsdk.GetAccessToken()
+	at := wxsdk.GetMiniOrPublicAT()
 	xlog.Infof("at: %s", at)
 
 	// 每次刷新 accessToken 后，此方法回调返回 accessToken 和 有效时间（秒）
-	wxsdk.SetAccessTokenCallback(func(accessToken string, expireIn int, err error) {
+	wxsdk.SetMiniOrPublicATCallback(func(accessToken string, expireIn int, err error) {
 		if err != nil {
 			xlog.Errorf("refresh access token error(%+v)", err)
 		}
@@ -51,12 +54,28 @@ func TestMain(m *testing.M) {
 	})
 
 	// New 微信小程序 SDK
-	miniSDK = wxsdk.NewMini()
+	miniSDK, err = wxsdk.NewMini()
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
 	//miniSDK.DebugSwitch = DebugOn
 
 	// New 微信公众号 SDK
-	publicSDK = wxsdk.NewPublic()
-	publicSDK.DebugSwitch = DebugOff
+	//publicSDK, err = wxsdk.NewPublic()
+	//if err != nil {
+	//	xlog.Error(err)
+	//	return
+	//}
+	//publicSDK.DebugSwitch = DebugOff
+
+	// New 微信开放平台 SDK
+	//openSDK, err = wxsdk.NewOpen()
+	//if err != nil {
+	//	xlog.Error(err)
+	//	return
+	//}
+	//openSDK.DebugSwitch = DebugOff
 
 	os.Exit(m.Run())
 }
@@ -68,5 +87,5 @@ func TestGetAccessToken(t *testing.T) {
 		Errcode:0
 		Errmsg:
 	*/
-	xlog.Debugf("at:%s", wxsdk.GetAccessToken())
+	xlog.Debugf("at:%s", wxsdk.GetMiniOrPublicAT())
 }

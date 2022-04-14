@@ -2,17 +2,15 @@ package mini
 
 import (
 	"time"
-
-	"github.com/go-pay/wechat-sdk/model"
 )
 
 type SDK struct {
-	Conf        *model.Config
+	Conf        *Config
 	DebugSwitch int8
 	AccessChan  chan string
 }
 
-func New(c *model.Config, ds int8, accessChan chan string) (m *SDK) {
+func New(c *Config, ds int8, accessChan chan string) (m *SDK) {
 	m = &SDK{
 		Conf:        c,
 		DebugSwitch: ds,

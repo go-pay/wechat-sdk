@@ -1,4 +1,4 @@
-package model
+package mini
 
 import "github.com/go-pay/wechat-sdk/pkg/xtime"
 
@@ -15,6 +15,18 @@ const (
 type MsgType int8
 
 type TypingStatus int8
+
+type Config struct {
+	Appid       string
+	Secret      string
+	AccessToken string
+	Host        string
+}
+
+type ErrorCode struct {
+	Errcode int    `json:"errcode,omitempty"` // 错误码
+	Errmsg  string `json:"errmsg,omitempty"`  // 错误信息
+}
 
 type Code2Session struct {
 	Openid     string `json:"openid,omitempty"`      // 用户唯一标识

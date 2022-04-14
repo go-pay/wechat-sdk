@@ -3,7 +3,7 @@ package wechat
 import (
 	"testing"
 
-	"github.com/go-pay/wechat-sdk/model"
+	"github.com/go-pay/wechat-sdk/mini"
 	"github.com/go-pay/wechat-sdk/pkg/bmap"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
 )
@@ -52,7 +52,7 @@ func TestDecryptOpenData(t *testing.T) {
 	session := "lyY4HPQbaOYzZdG+JcYK9w=="
 
 	// 微信小程序 手机号
-	phone := new(model.UserPhone)
+	phone := new(mini.UserPhone)
 
 	err = miniSDK.DecryptOpenData(data, iv, session, phone)
 	if err != nil {
@@ -69,7 +69,7 @@ func TestDecryptOpenData(t *testing.T) {
 	iv2 := "r7BXXKkLb8qrSNn05n0qiA=="
 
 	// 微信小程序 用户信息
-	userInfo := new(model.UserInfo)
+	userInfo := new(mini.UserInfo)
 
 	err = miniSDK.DecryptOpenData(encryptedData, iv2, sessionKey, userInfo)
 	if err != nil {

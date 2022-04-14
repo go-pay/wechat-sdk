@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/go-pay/wechat-sdk/mini"
-	"github.com/go-pay/wechat-sdk/model"
+	"github.com/go-pay/wechat-sdk/open"
 	"github.com/go-pay/wechat-sdk/pkg/util"
 	"github.com/go-pay/wechat-sdk/pkg/xhttp"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
@@ -20,19 +20,21 @@ type SDK struct {
 	rwMu            sync.RWMutex
 	Appid           string
 	Secret          string
-	accessToken     string
-	atChanMap       map[string]chan string
-	callback        func(accessToken string, expireIn int, err error)
 	Host            string
 	RefreshInternal time.Duration
 	DebugSwitch     DebugSwitch
+
+	plat        Platform
+	accessToken string
+	atChanMap   map[string]chan string
+	callback    func(accessToken string, expireIn int, err error)
 }
 
 // NewSDK 初始化微信 SDK
-//	Appid：Appid
-//	Secret：appSecret
-//	accessToken：AccessToken，若此参数为空，则自动获取并自动维护刷新
-func NewSDK(appid, secret string, accessToken ...string) (sdk *SDK, err error) {
+//	plat：wechat.PlatformMiniOrPublic 或 wechat.PlatformOpen
+//	appid：Appid
+//	secret：appSecret
+func NewSDK(plat Platform, appid, secret string) (sdk *SDK, err error) {
 	sdk = &SDK{
 		ctx:             context.Background(),
 		Appid:           appid,
@@ -41,18 +43,30 @@ func NewSDK(appid, secret string, accessToken ...string) (sdk *SDK, err error) {
 		Host:            HostMap[HostDefault],
 		RefreshInternal: time.Second * 20,
 		DebugSwitch:     DebugOff,
+		plat:            plat,
 	}
-	if len(accessToken) >= 1 {
-		sdk.accessToken = accessToken[0]
-		return
+	switch plat {
+	case PlatformMini:
+		// 获取AccessToken
+		err = sdk.getAccessToken()
+		if err != nil {
+			return nil, err
+		}
+		// auto refresh access token
+		go sdk.autoRefreshAccessToken()
+	case PlatformPublic:
+		// 获取AccessToken
+		err = sdk.getAccessToken()
+		if err != nil {
+			return nil, err
+		}
+		// auto refresh access token
+		go sdk.autoRefreshAccessToken()
+	case PlatformOpen:
+
+	default:
+		return nil, fmt.Errorf("unsupported platform: %s", plat)
 	}
-	// 获取AccessToken
-	err = sdk.getAccessToken()
-	if err != nil {
-		return nil, err
-	}
-	// auto refresh access token
-	go sdk.autoRefreshAccessToken()
 	return
 }
 
@@ -75,42 +89,61 @@ func (s *SDK) SetHost(host Host) (sdk *SDK) {
 	return s
 }
 
-// NewPublic new 微信公众号
-func (s *SDK) NewPublic() (o *public.SDK) {
+// NewMini new 微信小程序
+func (s *SDK) NewMini() (m *mini.SDK, err error) {
+	if s.plat != PlatformMini {
+		return nil, fmt.Errorf("invalid platform: %s", s.plat)
+	}
 	s.rwMu.Lock()
-	defer s.rwMu.Unlock()
-	s.atChanMap[model.Open] = make(chan string, 1)
+	s.atChanMap[Mini] = make(chan string, 1)
+	s.rwMu.Unlock()
 
-	c := &model.Config{
+	c := &mini.Config{
 		Appid:       s.Appid,
 		Secret:      s.Secret,
 		AccessToken: s.accessToken,
 		Host:        s.Host,
 	}
-
-	return public.New(c, int8(s.DebugSwitch), s.atChanMap[model.Mini])
+	return mini.New(c, int8(s.DebugSwitch), s.atChanMap[Mini]), nil
 }
 
-// NewMini new 微信小程序
-func (s *SDK) NewMini() (m *mini.SDK) {
+// NewPublic new 微信公众号
+func (s *SDK) NewPublic() (p *public.SDK, err error) {
+	if s.plat != PlatformPublic {
+		return nil, fmt.Errorf("invalid platform: %s", s.plat)
+	}
 	s.rwMu.Lock()
-	defer s.rwMu.Unlock()
-	s.atChanMap[model.Mini] = make(chan string, 1)
+	s.atChanMap[Public] = make(chan string, 1)
+	s.rwMu.Unlock()
 
-	c := &model.Config{
+	c := &public.Config{
 		Appid:       s.Appid,
 		Secret:      s.Secret,
 		AccessToken: s.accessToken,
 		Host:        s.Host,
 	}
+	return public.New(c, int8(s.DebugSwitch), s.atChanMap[Public]), nil
+}
 
-	return mini.New(c, int8(s.DebugSwitch), s.atChanMap[model.Mini])
+// NewOpen new 微信开放平台
+func (s *SDK) NewOpen() (o *open.SDK, err error) {
+	if s.plat != PlatformOpen {
+		return nil, fmt.Errorf("invalid platform: %s", s.plat)
+	}
+	c := &open.Config{
+		Ctx:         s.ctx,
+		Appid:       s.Appid,
+		Secret:      s.Secret,
+		AccessToken: s.accessToken,
+		Host:        s.Host,
+	}
+	return open.New(c, int8(s.DebugSwitch)), nil
 }
 
 func (s *SDK) DoRequestGet(c context.Context, path string, ptr interface{}) (err error) {
 	uri := s.Host + path
 	httpClient := xhttp.NewClient()
-	if s.DebugSwitch == model.DebugOn {
+	if s.DebugSwitch == DebugOn {
 		xlog.Debugf("Wechat_SDK_URI: %s", uri)
 	}
 	httpClient.Header.Add(xhttp.HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
@@ -118,7 +151,7 @@ func (s *SDK) DoRequestGet(c context.Context, path string, ptr interface{}) (err
 	if err != nil {
 		return fmt.Errorf("http.request(GET, %s)：%w", uri, err)
 	}
-	if s.DebugSwitch == model.DebugOn {
+	if s.DebugSwitch == DebugOn {
 		xlog.Debugf("Wechat_SDK_Response: [%d] -> %s", res.StatusCode, string(bs))
 	}
 	if err = json.Unmarshal(bs, ptr); err != nil {

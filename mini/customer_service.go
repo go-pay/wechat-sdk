@@ -3,7 +3,6 @@ package mini
 import (
 	"context"
 
-	"github.com/go-pay/wechat-sdk/model"
 	"github.com/go-pay/wechat-sdk/pkg/bmap"
 	"github.com/go-pay/wechat-sdk/pkg/util"
 )
@@ -26,25 +25,25 @@ func (s *SDK) CSMessageGetTempMedia(c context.Context, mediaId string) (media []
 //	msgType：消息类型，枚举值：mini.MsgTypeText、mini.MsgTypeImage、mini.MsgTypeLink、mini.MsgTypeMiniPage
 //	msgValue：对应 msgType 的value值，BodyMap key-value 格式传入
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/customer-message/customerServiceMessage.send.html
-func (s *SDK) CSMessageSend(c context.Context, toUser string, msgType model.MsgType, msgValue bmap.BodyMap) (ec *model.ErrorCode, err error) {
+func (s *SDK) CSMessageSend(c context.Context, toUser string, msgType MsgType, msgValue bmap.BodyMap) (ec *ErrorCode, err error) {
 	path := "/cgi-bin/message/custom/send?access_token=" + s.Conf.AccessToken
 	body := make(bmap.BodyMap)
 	body.Set("touser", toUser)
 	switch msgType {
-	case model.MsgTypeText:
+	case MsgTypeText:
 		body.Set("msgtype", "text").
 			Set("text", msgValue)
-	case model.MsgTypeImage:
+	case MsgTypeImage:
 		body.Set("msgtype", "image").
 			Set("text", msgValue)
-	case model.MsgTypeLink:
+	case MsgTypeLink:
 		body.Set("msgtype", "link").
 			Set("text", msgValue)
-	case model.MsgTypeMiniPage:
+	case MsgTypeMiniPage:
 		body.Set("msgtype", "miniprogrampage").
 			Set("text", msgValue)
 	}
-	ec = &model.ErrorCode{}
+	ec = &ErrorCode{}
 	if err = s.doRequestPost(c, path, body, ec); err != nil {
 		return nil, err
 	}
@@ -56,17 +55,17 @@ func (s *SDK) CSMessageSend(c context.Context, toUser string, msgType model.MsgT
 //	toUser：小程序用户的 OpenID
 //	typingStatus：枚举值：mini.TypingTyping、mini.TypingCancel
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/customer-message/customerServiceMessage.setTyping.html
-func (s *SDK) CSMessageSetTyping(c context.Context, toUser string, typingStatus model.TypingStatus) (ec *model.ErrorCode, err error) {
+func (s *SDK) CSMessageSetTyping(c context.Context, toUser string, typingStatus TypingStatus) (ec *ErrorCode, err error) {
 	path := "/cgi-bin/message/custom/typing?access_token=" + s.Conf.AccessToken
 	body := make(bmap.BodyMap)
 	body.Set("touser", toUser)
 	switch typingStatus {
-	case model.TypingTyping:
+	case TypingTyping:
 		body.Set("command", "Typing")
-	case model.TypingCancel:
+	case TypingCancel:
 		body.Set("command", "CancelTyping")
 	}
-	ec = &model.ErrorCode{}
+	ec = &ErrorCode{}
 	if err = s.doRequestPost(c, path, body, ec); err != nil {
 		return nil, err
 	}
@@ -77,12 +76,12 @@ func (s *SDK) CSMessageSetTyping(c context.Context, toUser string, typingStatus 
 //	注意：errcode = 0 为成功
 //	注意：目前仅支持图片，用于发送客服消息或被动回复用户消息。
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/customer-message/customerServiceMessage.uploadTempMedia.html
-func (s *SDK) CSMessageUploadTempMedia(c context.Context, img *util.File) (media *model.UploadTempMedia, err error) {
+func (s *SDK) CSMessageUploadTempMedia(c context.Context, img *util.File) (media *UploadTempMedia, err error) {
 	path := "/cgi-bin/media/upload?access_token=" + s.Conf.AccessToken
 	body := make(bmap.BodyMap)
 	body.Set("type", "image").
 		SetFormFile("media", img)
-	media = &model.UploadTempMedia{}
+	media = &UploadTempMedia{}
 	if err = s.doRequestPostFile(c, path, body, media); err != nil {
 		return nil, err
 	}
