@@ -62,12 +62,12 @@ func TestMain(m *testing.M) {
 	//miniSDK.DebugSwitch = DebugOn
 
 	// New 微信公众号 SDK
-	//publicSDK, err = wxsdk.NewPublic()
-	//if err != nil {
-	//	xlog.Error(err)
-	//	return
-	//}
-	//publicSDK.DebugSwitch = DebugOff
+	publicSDK, err = wxsdk.NewPublic()
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	publicSDK.DebugSwitch = DebugOff
 
 	// New 微信开放平台 SDK
 	//openSDK, err = wxsdk.NewOpen()

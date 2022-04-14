@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/go-pay/wechat-sdk"
 	"github.com/go-pay/wechat-sdk/pkg/util"
 	"github.com/go-pay/wechat-sdk/pkg/xhttp"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
@@ -43,7 +42,7 @@ func New(c *Config, ds int8) (o *SDK) {
 func (s *SDK) DoRequestGet(c context.Context, path string, ptr interface{}) (err error) {
 	uri := s.Host + path
 	httpClient := xhttp.NewClient()
-	if s.DebugSwitch == wechat.DebugOn {
+	if s.DebugSwitch == DebugOn {
 		xlog.Debugf("Wechat_SDK_URI: %s", uri)
 	}
 	httpClient.Header.Add(xhttp.HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
@@ -51,7 +50,7 @@ func (s *SDK) DoRequestGet(c context.Context, path string, ptr interface{}) (err
 	if err != nil {
 		return fmt.Errorf("http.request(GET, %s)：%w", uri, err)
 	}
-	if s.DebugSwitch == wechat.DebugOn {
+	if s.DebugSwitch == DebugOn {
 		xlog.Debugf("Wechat_SDK_Response: [%d] -> %s", res.StatusCode, string(bs))
 	}
 	if err = json.Unmarshal(bs, ptr); err != nil {

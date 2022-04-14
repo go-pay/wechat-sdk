@@ -2,6 +2,13 @@ package open
 
 import "context"
 
+const (
+	Success = 0
+
+	DebugOff = 0
+	DebugOn  = 1
+)
+
 type Config struct {
 	Ctx         context.Context
 	Appid       string

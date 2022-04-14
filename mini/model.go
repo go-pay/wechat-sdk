@@ -3,6 +3,9 @@ package mini
 import "github.com/go-pay/wechat-sdk/pkg/xtime"
 
 const (
+	DebugOff = 0
+	DebugOn  = 1
+
 	MsgTypeText     = 0 // 文本消息
 	MsgTypeImage    = 1 // 图片消息
 	MsgTypeLink     = 2 // 图文链接

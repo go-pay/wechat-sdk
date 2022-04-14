@@ -2,6 +2,11 @@ package public
 
 import "github.com/go-pay/wechat-sdk/pkg/xtime"
 
+const (
+	DebugOff = 0
+	DebugOn  = 1
+)
+
 type Config struct {
 	Appid       string
 	Secret      string

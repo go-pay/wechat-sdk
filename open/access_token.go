@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/go-pay/wechat-sdk"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
 )
 
@@ -16,7 +15,7 @@ func (s *SDK) Code2AccessToken(code string) (err error) {
 	if err = s.DoRequestGet(s.ctx, path, at); err != nil {
 		return
 	}
-	if at.Errcode != wechat.Success {
+	if at.Errcode != Success {
 		err = fmt.Errorf("errcode(%d), errmsg(%s)", at.Errcode, at.Errmsg)
 		return
 	}
@@ -51,7 +50,7 @@ func (s *SDK) refreshAccessToken() (err error) {
 	if err = s.DoRequestGet(s.ctx, path, at); err != nil {
 		return
 	}
-	if at.Errcode != wechat.Success {
+	if at.Errcode != Success {
 		err = fmt.Errorf("errcode(%d), errmsg(%s)", at.Errcode, at.Errmsg)
 		return
 	}
