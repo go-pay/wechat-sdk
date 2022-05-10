@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/go-pay/wechat-sdk/model"
+	"github.com/go-pay/wechat-sdk/mini"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
 )
 
@@ -23,7 +23,7 @@ func (s *SDK) getAccessToken() (err error) {
 	}()
 
 	path := "/cgi-bin/token?grant_type=client_credential&appid=" + s.Appid + "&secret=" + s.Secret
-	at := &model.AccessToken{}
+	at := &mini.AccessToken{}
 	if err = s.DoRequestGet(s.ctx, path, at); err != nil {
 		return
 	}
@@ -56,12 +56,12 @@ func (s *SDK) autoRefreshAccessToken() {
 	}
 }
 
-// SetAccessTokenCallback access token callback listener
-func (s *SDK) SetAccessTokenCallback(fn func(accessToken string, expireIn int, err error)) {
+// SetMiniOrPublicATCallback set mini or public access token callback listener
+func (s *SDK) SetMiniOrPublicATCallback(fn func(accessToken string, expireIn int, err error)) {
 	s.callback = fn
 }
 
-// GetAccessToken get access token string
-func (s *SDK) GetAccessToken() (at string) {
+// GetMiniOrPublicAT get mini or public access token string
+func (s *SDK) GetMiniOrPublicAT() (at string) {
 	return s.accessToken
 }

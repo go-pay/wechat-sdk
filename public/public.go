@@ -1,4 +1,4 @@
-package mini
+package public
 
 import (
 	"time"
@@ -10,13 +10,13 @@ type SDK struct {
 	AccessChan  chan string
 }
 
-func New(c *Config, ds int8, accessChan chan string) (m *SDK) {
-	m = &SDK{
+func New(c *Config, ds int8, accessChan chan string) (o *SDK) {
+	o = &SDK{
 		Conf:        c,
 		DebugSwitch: ds,
 		AccessChan:  accessChan,
 	}
-	go m.accessTokenListener()
+	go o.accessTokenListener()
 	return
 }
 

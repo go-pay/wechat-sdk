@@ -1,23 +1,35 @@
 package wechat
 
+type DebugSwitch int8
+type Host int
+type Platform string
+
 const (
-	Success  = 0
+	Mini   = "mini"
+	Public = "public"
+	Open   = "open"
+
+	Success = 0
+
 	DebugOff = 0
 	DebugOn  = 1
-	Version  = "1.0.0"
+
+	Version = "1.0.0"
 )
 
 const (
-	HostDefault Host = iota
+	HostDefault Host = iota + 1
 	HostDefault2
 	HostSH // 上海
 	HostSZ // 深圳
 	HostHK // 香港
 )
 
-type DebugSwitch int8
-
-type Host int
+const (
+	PlatformMini   Platform = "mini"   // 小程序
+	PlatformPublic Platform = "public" // 公众号
+	PlatformOpen   Platform = "open"   // 开放平台
+)
 
 var (
 	HostMap = map[Host]string{

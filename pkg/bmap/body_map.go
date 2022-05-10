@@ -1,4 +1,4 @@
-package bm
+package bmap
 
 import (
 	"encoding/json"
@@ -41,6 +41,11 @@ func (bm BodyMap) SetBodyMap(key string, value func(b BodyMap)) BodyMap {
 func (bm BodyMap) SetFormFile(key string, file *util.File) BodyMap {
 	bm[key] = file
 	return bm
+}
+
+// 获取参数，同 GetString()
+func (bm BodyMap) Get(key string) string {
+	return bm.GetString(key)
 }
 
 // 获取参数转换string
@@ -88,11 +93,20 @@ func (bm BodyMap) JsonBody() (jb string) {
 	return jb
 }
 
+// Unmarshal to struct or slice point
+func (bm BodyMap) Unmarshal(ptr interface{}) (err error) {
+	bs, err := json.Marshal(bm)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(bs, ptr)
+}
+
 func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error) {
 	if len(bm) == 0 {
 		return nil
 	}
-	start.Name = xml.Name{"", "xml"}
+	start.Name = xml.Name{Space: "", Local: "xml"}
 	if err = e.EncodeToken(start); err != nil {
 		return
 	}
@@ -118,7 +132,6 @@ func (bm *BodyMap) UnmarshalXML(d *xml.Decoder, start xml.StartElement) (err err
 	}
 }
 
-// Deprecated
 // ("bar=baz&foo=quux") sorted by key.
 func (bm BodyMap) EncodeWeChatSignParams(apiKey string) string {
 	if bm == nil {
