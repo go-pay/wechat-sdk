@@ -3,6 +3,8 @@ package public
 import "github.com/go-pay/wechat-sdk/pkg/xtime"
 
 const (
+	Success = 0
+
 	DebugOff = 0
 	DebugOn  = 1
 )

@@ -20,11 +20,9 @@ type SDK struct {
 	Host            string
 	Appid           string
 	Secret          string
-
-	accessToken  string
-	refreshToken string
-	atChanMap    map[string]chan string
-	callback     func(accessToken string, expireIn int, err error)
+	accessToken     string
+	refreshToken    string
+	callback        func(at *AccessToken, err error)
 }
 
 func New(c *Config, ds int8) (o *SDK) {

@@ -30,12 +30,11 @@ func TestUniformMessageSend(t *testing.T) {
 
 	//xlog.Debugf("%s", body.JsonBody())
 
-	rsp, err := miniSDK.UniformMessageSend(ctx, "Openid", body)
+	err = miniSDK.UniformMessageSend(ctx, "Openid", body)
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
-	xlog.Debugf("rsp:%+v", rsp)
 }
 
 func TestVerifyDecryptOpenData(t *testing.T) {

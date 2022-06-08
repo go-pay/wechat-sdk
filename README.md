@@ -64,25 +64,29 @@ if err != nil {
 //wxsdk.DebugSwitch = wechat.DebugOn
 ```
 
-- ### AccessToken 说明
+- ### AccessToken 说明：微信小程序和公众号 与 开放平台的 AccessToken 不用通用。
 
+- #### 微信小程序 or 公众号的 AccessToken
 ```go
-// NewSDK 后，首次获取AccessToken请通过此方法获取，之后请通过下面的回调方法获取
-at := wxsdk.GetAccessToken()
+// New完SDK，首次获取AccessToken请通过此方法获取，之后请通过下面的回调方法获取
+at := wxsdk.GetMiniOrPublicAT()
 xlog.Infof("at: %s", at)
 
 // 每次刷新 accessToken 后，此方法回调返回 accessToken 和 有效时间（秒）
-wxsdk.SetAccessTokenCallback(func(accessToken string, expireIn int, err error) {
+wxsdk.SetMiniOrPublicATCallback(func(accessToken string, expireIn int, err error) {
     if err != nil {
         xlog.Errorf("refresh access token error(%+v)", err)
+        return
     }
     xlog.Infof("accessToken: %s", accessToken)
     xlog.Infof("expireIn: %d", expireIn)
 })
 
 // 若 NewSDK() 时自传 AccessToken，则后续更新替换请调用此方法
-wxsdk.SetAccessToken()
+wxsdk.SetMiniOrPublicAT()
 ```
+
+- #### 开放平台 的AccessToken详见下方 NewOpenSDK
 
 - ### NewMiniSDK
 
@@ -96,6 +100,32 @@ miniSDK := wxsdk.NewMini()
 ```go
 // New 微信公众号 SDK
 publicSDK := wxsdk.NewPublic()
+```
+
+- ### NewOpenSDK
+
+```go
+// New 微信开放平台 SDK
+openSDK, err = wxsdk.NewOpen()
+if err != nil {
+    xlog.Error(err)
+    return
+}
+// 注意：必须换取 开放平台 自己的AccessToken，与小程序和公众号不通用
+openAT, err := openSDK.Code2AccessToken(ctx, "xxx")
+if err != nil {
+    xlog.Error(err)
+    return
+}
+xlog.Infof("open at: %+v", openAT)
+// 每次刷新 accessToken 后，此方法回调返回 accessToken 和 有效时间（秒）
+openSDK.SetOpenATCallback(func(at *open.AccessToken, err error) {
+    if err != nil {
+        xlog.Errorf("refresh access token error(%+v)", err)
+        return
+    }
+    xlog.Infof("AccessToken: %+v", at)
+})
 ```
 
 - ### 点击分别查看小程序、公众号使用文档

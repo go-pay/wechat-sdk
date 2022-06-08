@@ -87,10 +87,9 @@ func TestUserTagList(t *testing.T) {
 }
 
 func TestUserTagUpdate(t *testing.T) {
-	rsp, err := publicSDK.UserTagUpdate(ctx, 100, "test_tag_update")
+	err = publicSDK.UserTagUpdate(ctx, 100, "test_tag_update")
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
-	xlog.Infof("rsp:%+v", rsp)
 }

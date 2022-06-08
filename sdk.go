@@ -53,7 +53,7 @@ func NewSDK(plat Platform, appid, secret string) (sdk *SDK, err error) {
 			return nil, err
 		}
 		// auto refresh access token
-		go sdk.autoRefreshAccessToken()
+		go sdk.goAutoRefreshAccessToken()
 	case PlatformPublic:
 		// 获取AccessToken
 		err = sdk.getAccessToken()
@@ -61,17 +61,17 @@ func NewSDK(plat Platform, appid, secret string) (sdk *SDK, err error) {
 			return nil, err
 		}
 		// auto refresh access token
-		go sdk.autoRefreshAccessToken()
+		go sdk.goAutoRefreshAccessToken()
 	case PlatformOpen:
-
+		// 需要开放平台Client单独调用 s.Code2AccessToken()
 	default:
 		return nil, fmt.Errorf("unsupported platform: %s", plat)
 	}
 	return
 }
 
-// SetAccessToken 若 NewSDK() 时自传 AccessToken，则后续更新替换请调用此方法
-func (s *SDK) SetAccessToken(accessToken string) {
+// SetMiniOrPublicAT 若 NewSDK() 时自传 AccessToken，则后续更新替换请调用此方法
+func (s *SDK) SetMiniOrPublicAT(accessToken string) {
 	s.accessToken = accessToken
 	if len(s.atChanMap) > 0 {
 		for _, v := range s.atChanMap {
@@ -131,11 +131,10 @@ func (s *SDK) NewOpen() (o *open.SDK, err error) {
 		return nil, fmt.Errorf("invalid platform: %s", s.plat)
 	}
 	c := &open.Config{
-		Ctx:         s.ctx,
-		Appid:       s.Appid,
-		Secret:      s.Secret,
-		AccessToken: s.accessToken,
-		Host:        s.Host,
+		Ctx:    s.ctx,
+		Appid:  s.Appid,
+		Secret: s.Secret,
+		Host:   s.Host,
 	}
 	return open.New(c, int8(s.DebugSwitch)), nil
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"fmt"
 
 	"github.com/go-pay/wechat-sdk/pkg/bmap"
 )
@@ -19,7 +20,10 @@ func (s *SDK) GetPaidUnionid(c context.Context, openid, transactionId string) (u
 	if err = s.doRequestGet(c, path, unionid); err != nil {
 		return nil, err
 	}
-	return
+	if unionid.Errcode != Success {
+		return nil, fmt.Errorf("errcode(%d), errmsg(%s)", unionid.Errcode, unionid.Errmsg)
+	}
+	return unionid, nil
 }
 
 // GetPaidUnionidByTradeNo 用户支付完成后，获取该用户的 UnionId，无需用户授权
@@ -34,7 +38,10 @@ func (s *SDK) GetPaidUnionidByTradeNo(c context.Context, openid, mchid, tradeNo 
 	if err = s.doRequestGet(c, path, unionid); err != nil {
 		return nil, err
 	}
-	return
+	if unionid.Errcode != Success {
+		return nil, fmt.Errorf("errcode(%d), errmsg(%s)", unionid.Errcode, unionid.Errmsg)
+	}
+	return unionid, nil
 }
 
 // CheckEncryptedData 检查加密信息是否由微信生成
@@ -52,5 +59,8 @@ func (s *SDK) CheckEncryptedData(c context.Context, encryptedData string) (resul
 	if err = s.doRequestPost(c, path, body, result); err != nil {
 		return nil, err
 	}
-	return
+	if result.Errcode != Success {
+		return nil, fmt.Errorf("errcode(%d), errmsg(%s)", result.Errcode, result.Errmsg)
+	}
+	return result, nil
 }
