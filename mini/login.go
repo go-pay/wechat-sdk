@@ -2,6 +2,7 @@ package mini
 
 import (
 	"context"
+	"fmt"
 )
 
 // Code2Session 登录凭证校验
@@ -14,5 +15,8 @@ func (s *SDK) Code2Session(c context.Context, wxCode string) (session *Code2Sess
 	if err = s.doRequestGet(c, path, session); err != nil {
 		return nil, err
 	}
-	return
+	if session.Errcode != Success {
+		return nil, fmt.Errorf("errcode(%d), errmsg(%s)", session.Errcode, session.Errmsg)
+	}
+	return session, nil
 }

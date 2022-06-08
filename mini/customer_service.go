@@ -2,6 +2,7 @@ package mini
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-pay/wechat-sdk/pkg/bmap"
 	"github.com/go-pay/wechat-sdk/pkg/util"
@@ -25,7 +26,7 @@ func (s *SDK) CSMessageGetTempMedia(c context.Context, mediaId string) (media []
 //	msgType：消息类型，枚举值：mini.MsgTypeText、mini.MsgTypeImage、mini.MsgTypeLink、mini.MsgTypeMiniPage
 //	msgValue：对应 msgType 的value值，BodyMap key-value 格式传入
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/customer-message/customerServiceMessage.send.html
-func (s *SDK) CSMessageSend(c context.Context, toUser string, msgType MsgType, msgValue bmap.BodyMap) (ec *ErrorCode, err error) {
+func (s *SDK) CSMessageSend(c context.Context, toUser string, msgType MsgType, msgValue bmap.BodyMap) (err error) {
 	path := "/cgi-bin/message/custom/send?access_token=" + s.Conf.AccessToken
 	body := make(bmap.BodyMap)
 	body.Set("touser", toUser)
@@ -43,11 +44,14 @@ func (s *SDK) CSMessageSend(c context.Context, toUser string, msgType MsgType, m
 		body.Set("msgtype", "miniprogrampage").
 			Set("text", msgValue)
 	}
-	ec = &ErrorCode{}
+	ec := &ErrorCode{}
 	if err = s.doRequestPost(c, path, body, ec); err != nil {
-		return nil, err
+		return err
 	}
-	return
+	if ec.Errcode != Success {
+		return fmt.Errorf("errcode(%d), errmsg(%s)", ec.Errcode, ec.Errmsg)
+	}
+	return nil
 }
 
 // CSMessageSetTyping 下发客服当前输入状态给用户
@@ -55,7 +59,7 @@ func (s *SDK) CSMessageSend(c context.Context, toUser string, msgType MsgType, m
 //	toUser：小程序用户的 OpenID
 //	typingStatus：枚举值：mini.TypingTyping、mini.TypingCancel
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/customer-message/customerServiceMessage.setTyping.html
-func (s *SDK) CSMessageSetTyping(c context.Context, toUser string, typingStatus TypingStatus) (ec *ErrorCode, err error) {
+func (s *SDK) CSMessageSetTyping(c context.Context, toUser string, typingStatus TypingStatus) (err error) {
 	path := "/cgi-bin/message/custom/typing?access_token=" + s.Conf.AccessToken
 	body := make(bmap.BodyMap)
 	body.Set("touser", toUser)
@@ -65,11 +69,14 @@ func (s *SDK) CSMessageSetTyping(c context.Context, toUser string, typingStatus 
 	case TypingCancel:
 		body.Set("command", "CancelTyping")
 	}
-	ec = &ErrorCode{}
+	ec := &ErrorCode{}
 	if err = s.doRequestPost(c, path, body, ec); err != nil {
-		return nil, err
+		return err
 	}
-	return
+	if ec.Errcode != Success {
+		return fmt.Errorf("errcode(%d), errmsg(%s)", ec.Errcode, ec.Errmsg)
+	}
+	return nil
 }
 
 // CSMessageUploadTempMedia 把媒体文件上传到微信服务器
@@ -85,5 +92,8 @@ func (s *SDK) CSMessageUploadTempMedia(c context.Context, img *util.File) (media
 	if err = s.doRequestPostFile(c, path, body, media); err != nil {
 		return nil, err
 	}
-	return
+	if media.Errcode != Success {
+		return nil, fmt.Errorf("errcode(%d), errmsg(%s)", media.Errcode, media.Errmsg)
+	}
+	return media, nil
 }

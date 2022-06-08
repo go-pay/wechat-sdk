@@ -2,6 +2,7 @@ package wechat
 
 import (
 	"fmt"
+	"runtime"
 	"time"
 
 	"github.com/go-pay/wechat-sdk/mini"
@@ -44,7 +45,14 @@ func (s *SDK) getAccessToken() (err error) {
 	return nil
 }
 
-func (s *SDK) autoRefreshAccessToken() {
+func (s *SDK) goAutoRefreshAccessToken() {
+	defer func() {
+		if r := recover(); r != nil {
+			buf := make([]byte, 64<<10)
+			buf = buf[:runtime.Stack(buf, false)]
+			xlog.Errorf("mini_public_goAutoRefreshAccessToken: panic recovered: %s\n%s", r, buf)
+		}
+	}()
 	for {
 		// every one hour, request new access token, default 10s
 		time.Sleep(s.RefreshInternal / 2)

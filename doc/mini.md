@@ -8,7 +8,7 @@
 
 ---
 
-### 具体使用请参考 `doc/mini.md`
+### 具体使用请参考 `sdk_mini_test.go`
 
 #### Code2Session
 

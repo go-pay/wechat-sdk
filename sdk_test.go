@@ -48,6 +48,7 @@ func TestMain(m *testing.M) {
 	wxsdk.SetMiniOrPublicATCallback(func(accessToken string, expireIn int, err error) {
 		if err != nil {
 			xlog.Errorf("refresh access token error(%+v)", err)
+			return
 		}
 		xlog.Infof("accessToken: %s", accessToken)
 		xlog.Infof("expireIn: %d", expireIn)
@@ -70,13 +71,27 @@ func TestMain(m *testing.M) {
 	publicSDK.DebugSwitch = DebugOff
 
 	// New 微信开放平台 SDK
-	//openSDK, err = wxsdk.NewOpen()
-	//if err != nil {
-	//	xlog.Error(err)
-	//	return
-	//}
-	//openSDK.DebugSwitch = DebugOff
-
+	openSDK, err = wxsdk.NewOpen()
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	openSDK.DebugSwitch = DebugOff
+	// 注意：必须换取 开放平台 自己的AccessToken，与小程序和公众号不通用
+	openAT, err := openSDK.Code2AccessToken(ctx, "xxx")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Infof("open at: %+v", openAT)
+	// 每次刷新 accessToken 后，此方法回调返回 accessToken 和 有效时间（秒）
+	openSDK.SetOpenATCallback(func(at *open.AccessToken, err error) {
+		if err != nil {
+			xlog.Errorf("refresh access token error(%+v)", err)
+			return
+		}
+		xlog.Infof("AccessToken: %+v", at)
+	})
 	os.Exit(m.Run())
 }
 

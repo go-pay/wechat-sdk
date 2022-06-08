@@ -2,6 +2,7 @@ package public
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-pay/wechat-sdk/pkg/bmap"
 )
@@ -16,7 +17,10 @@ func (s *SDK) QRCodeCreate(c context.Context, body bmap.BodyMap) (qr *QRCodeRsp,
 	if err = s.doRequestPost(c, path, body, qr); err != nil {
 		return nil, err
 	}
-	return
+	if qr.Errcode != Success {
+		return nil, fmt.Errorf("errcode(%d), errmsg(%s)", qr.Errcode, qr.Errmsg)
+	}
+	return qr, nil
 }
 
 // ShortKeyGen 生成短key托管
@@ -28,7 +32,10 @@ func (s *SDK) ShortKeyGen(c context.Context, body bmap.BodyMap) (skg *ShortKeyGe
 	if err = s.doRequestPost(c, path, body, skg); err != nil {
 		return nil, err
 	}
-	return
+	if skg.Errcode != Success {
+		return nil, fmt.Errorf("errcode(%d), errmsg(%s)", skg.Errcode, skg.Errmsg)
+	}
+	return skg, nil
 }
 
 // ShortKeyFetch 获取托管的短key
@@ -43,5 +50,8 @@ func (s *SDK) ShortKeyFetch(c context.Context, shortKey string) (skf *ShortKeyFe
 	if err = s.doRequestPost(c, path, body, skf); err != nil {
 		return nil, err
 	}
-	return
+	if skf.Errcode != Success {
+		return nil, fmt.Errorf("errcode(%d), errmsg(%s)", skf.Errcode, skf.Errmsg)
+	}
+	return skf, nil
 }
