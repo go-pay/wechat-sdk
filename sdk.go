@@ -31,7 +31,7 @@ type SDK struct {
 }
 
 // NewSDK 初始化微信 SDK
-//	plat：wechat.PlatformMiniOrPublic 或 wechat.PlatformOpen
+//	plat：wechat.PlatformMini 或 wechat.PlatformPublic 或 wechat.PlatformOpen
 //	appid：Appid
 //	secret：appSecret
 func NewSDK(plat Platform, appid, secret string) (sdk *SDK, err error) {
@@ -46,15 +46,7 @@ func NewSDK(plat Platform, appid, secret string) (sdk *SDK, err error) {
 		plat:            plat,
 	}
 	switch plat {
-	case PlatformMini:
-		// 获取AccessToken
-		err = sdk.getAccessToken()
-		if err != nil {
-			return nil, err
-		}
-		// auto refresh access token
-		go sdk.goAutoRefreshAccessToken()
-	case PlatformPublic:
+	case PlatformMini, PlatformPublic:
 		// 获取AccessToken
 		err = sdk.getAccessToken()
 		if err != nil {
