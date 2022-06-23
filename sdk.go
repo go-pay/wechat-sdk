@@ -18,13 +18,12 @@ import (
 type SDK struct {
 	ctx             context.Context
 	rwMu            sync.RWMutex
-	Appid           string
-	Secret          string
 	Host            string
 	RefreshInternal time.Duration
 	DebugSwitch     DebugSwitch
 
 	plat        Platform
+	_MiniPublic bool
 	accessToken string
 	atChanMap   map[string]chan string
 	callback    func(accessToken string, expireIn int, err error)
@@ -34,19 +33,18 @@ type SDK struct {
 //	plat：wechat.PlatformMini 或 wechat.PlatformPublic 或 wechat.PlatformOpen
 //	appid：Appid
 //	secret：appSecret
-func NewSDK(plat Platform, appid, secret string) (sdk *SDK, err error) {
+func NewSDK(plat Platform) (sdk *SDK, err error) {
 	sdk = &SDK{
 		ctx:             context.Background(),
-		Appid:           appid,
-		Secret:          secret,
 		atChanMap:       make(map[string]chan string),
 		Host:            HostMap[HostDefault],
 		RefreshInternal: time.Second * 20,
 		DebugSwitch:     DebugOff,
 		plat:            plat,
 	}
-	switch plat {
+	switch sdk.plat {
 	case PlatformMini, PlatformPublic:
+		sdk._MiniPublic = true
 		// 获取AccessToken
 		err = sdk.getAccessToken()
 		if err != nil {
@@ -82,8 +80,8 @@ func (s *SDK) SetHost(host Host) (sdk *SDK) {
 }
 
 // NewMini new 微信小程序
-func (s *SDK) NewMini() (m *mini.SDK, err error) {
-	if s.plat != PlatformMini {
+func (s *SDK) NewMini(appid, secret string) (m *mini.SDK, err error) {
+	if !s._MiniPublic {
 		return nil, fmt.Errorf("invalid platform: %s", s.plat)
 	}
 	s.rwMu.Lock()
@@ -91,8 +89,8 @@ func (s *SDK) NewMini() (m *mini.SDK, err error) {
 	s.rwMu.Unlock()
 
 	c := &mini.Config{
-		Appid:       s.Appid,
-		Secret:      s.Secret,
+		Appid:       appid,
+		Secret:      secret,
 		AccessToken: s.accessToken,
 		Host:        s.Host,
 	}
@@ -100,8 +98,8 @@ func (s *SDK) NewMini() (m *mini.SDK, err error) {
 }
 
 // NewPublic new 微信公众号
-func (s *SDK) NewPublic() (p *public.SDK, err error) {
-	if s.plat != PlatformPublic {
+func (s *SDK) NewPublic(appid, secret string) (p *public.SDK, err error) {
+	if !s._MiniPublic {
 		return nil, fmt.Errorf("invalid platform: %s", s.plat)
 	}
 	s.rwMu.Lock()
@@ -109,8 +107,8 @@ func (s *SDK) NewPublic() (p *public.SDK, err error) {
 	s.rwMu.Unlock()
 
 	c := &public.Config{
-		Appid:       s.Appid,
-		Secret:      s.Secret,
+		Appid:       appid,
+		Secret:      secret,
 		AccessToken: s.accessToken,
 		Host:        s.Host,
 	}
@@ -118,14 +116,14 @@ func (s *SDK) NewPublic() (p *public.SDK, err error) {
 }
 
 // NewOpen new 微信开放平台
-func (s *SDK) NewOpen() (o *open.SDK, err error) {
+func (s *SDK) NewOpen(appid, secret string) (o *open.SDK, err error) {
 	if s.plat != PlatformOpen {
 		return nil, fmt.Errorf("invalid platform: %s", s.plat)
 	}
 	c := &open.Config{
 		Ctx:    s.ctx,
-		Appid:  s.Appid,
-		Secret: s.Secret,
+		Appid:  appid,
+		Secret: secret,
 		Host:   s.Host,
 	}
 	return open.New(c, int8(s.DebugSwitch)), nil

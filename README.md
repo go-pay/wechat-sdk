@@ -52,7 +52,7 @@ import (
 //  Appid：Appid
 //  Secret：appSecret
 //  accessToken：AccessToken，若此参数为空，则自动获取并自动维护刷新
-wxsdk, err := wechat.NewSDK(Appid, Secret)
+wxsdk, err := wechat.NewSDK(plat)
 if err != nil {
     xlog.Error(err)
     return
@@ -92,21 +92,21 @@ wxsdk.SetMiniOrPublicAT()
 
 ```go
 // New 微信小程序 SDK
-miniSDK := wxsdk.NewMini()
+miniSDK := wxsdk.NewMini(Appid, Secret)
 ```
 
 - ### NewPublicSDK
 
 ```go
 // New 微信公众号 SDK
-publicSDK := wxsdk.NewPublic()
+publicSDK := wxsdk.NewPublic(Appid, Secret)
 ```
 
 - ### NewOpenSDK
 
 ```go
 // New 微信开放平台 SDK
-openSDK, err = wxsdk.NewOpen()
+openSDK, err = wxsdk.NewOpen(Appid, Secret)
 if err != nil {
     xlog.Error(err)
     return

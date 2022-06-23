@@ -29,7 +29,7 @@ func TestMain(m *testing.M) {
 	//	Appid：Appid
 	//	Secret：appSecret
 	//	accessToken：AccessToken，若此参数为空，则自动获取并自动维护刷新
-	wxsdk, err = NewSDK(PlatformMini, Appid, Secret)
+	wxsdk, err = NewSDK(PlatformMini)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -55,7 +55,7 @@ func TestMain(m *testing.M) {
 	})
 
 	// New 微信小程序 SDK
-	miniSDK, err = wxsdk.NewMini()
+	miniSDK, err = wxsdk.NewMini(Appid, Secret)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -63,7 +63,7 @@ func TestMain(m *testing.M) {
 	//miniSDK.DebugSwitch = DebugOn
 
 	// New 微信公众号 SDK
-	publicSDK, err = wxsdk.NewPublic()
+	publicSDK, err = wxsdk.NewPublic(Appid, Secret)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -71,7 +71,7 @@ func TestMain(m *testing.M) {
 	publicSDK.DebugSwitch = DebugOff
 
 	// New 微信开放平台 SDK
-	openSDK, err = wxsdk.NewOpen()
+	openSDK, err = wxsdk.NewOpen(Appid, Secret)
 	if err != nil {
 		xlog.Error(err)
 		return
