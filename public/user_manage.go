@@ -12,7 +12,7 @@ import (
 //	注意：errcode = 0 为成功
 //	文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagCreate(c context.Context, tagName string) (ut *UserTagRsp, err error) {
-	path := "/cgi-bin/tags/create?access_token=" + s.Conf.AccessToken
+	path := "/cgi-bin/tags/create?access_token=" + s.accessToken
 	body := make(bmap.BodyMap)
 	body.SetBodyMap("tag", func(b bmap.BodyMap) {
 		b.Set("name", tagName)
@@ -31,7 +31,7 @@ func (s *SDK) UserTagCreate(c context.Context, tagName string) (ut *UserTagRsp, 
 //	注意：errcode = 0 为成功
 //	文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagList(c context.Context) (utl *UserTagListRsp, err error) {
-	path := "/cgi-bin/tags/get?access_token=" + s.Conf.AccessToken
+	path := "/cgi-bin/tags/get?access_token=" + s.accessToken
 	utl = &UserTagListRsp{}
 	if err = s.doRequestGet(c, path, utl); err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func (s *SDK) UserTagList(c context.Context) (utl *UserTagListRsp, err error) {
 //	注意：errcode = 0 为成功
 //	文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagUpdate(c context.Context, tagId int, tagName string) (err error) {
-	path := "/cgi-bin/tags/update?access_token=" + s.Conf.AccessToken
+	path := "/cgi-bin/tags/update?access_token=" + s.accessToken
 	body := make(bmap.BodyMap)
 	body.SetBodyMap("tag", func(b bmap.BodyMap) {
 		b.Set("id", tagId)
@@ -66,7 +66,7 @@ func (s *SDK) UserTagUpdate(c context.Context, tagId int, tagName string) (err e
 //	注意：errcode = 0 为成功
 //	文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagDelete(c context.Context, tagId int) (err error) {
-	path := "/cgi-bin/tags/delete?access_token=" + s.Conf.AccessToken
+	path := "/cgi-bin/tags/delete?access_token=" + s.accessToken
 	body := make(bmap.BodyMap)
 	body.SetBodyMap("tag", func(b bmap.BodyMap) {
 		b.Set("id", tagId)
@@ -86,7 +86,7 @@ func (s *SDK) UserTagDelete(c context.Context, tagId int) (err error) {
 //	openid：第一个拉取的 openid，不填默认从头开始拉取
 //	文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagFansList(c context.Context, tagId int, openid string) (utf *UserTagFansListRsp, err error) {
-	path := "/cgi-bin/user/tag/get?access_token=" + s.Conf.AccessToken
+	path := "/cgi-bin/user/tag/get?access_token=" + s.accessToken
 	body := make(bmap.BodyMap)
 	body.Set("tagid", tagId)
 	if openid != "" {
@@ -109,7 +109,7 @@ func (s *SDK) UserTagBatchTagging(c context.Context, tagId int, openidList []str
 	if len(openidList) <= 0 {
 		return errors.New("openid_list is empty")
 	}
-	path := "/cgi-bin/tags/members/batchtagging?access_token=" + s.Conf.AccessToken
+	path := "/cgi-bin/tags/members/batchtagging?access_token=" + s.accessToken
 	body := make(bmap.BodyMap)
 	body.Set("tagid", tagId)
 	body.Set("openid_list", openidList)
@@ -130,7 +130,7 @@ func (s *SDK) UserTagBatchUnTagging(c context.Context, tagId int, openidList []s
 	if len(openidList) <= 0 {
 		return errors.New("openid_list is empty")
 	}
-	path := "/cgi-bin/tags/members/batchuntagging?access_token=" + s.Conf.AccessToken
+	path := "/cgi-bin/tags/members/batchuntagging?access_token=" + s.accessToken
 	body := make(bmap.BodyMap)
 	body.Set("tagid", tagId)
 	body.Set("openid_list", openidList)
@@ -151,7 +151,7 @@ func (s *SDK) UserTagIdList(c context.Context, openid string) (uti *UserTagIdLis
 	if openid == "" {
 		return nil, errors.New("openid is empty")
 	}
-	path := "/cgi-bin/tags/getidlist?access_token=" + s.Conf.AccessToken
+	path := "/cgi-bin/tags/getidlist?access_token=" + s.accessToken
 	body := make(bmap.BodyMap)
 	body.Set("openid", openid)
 	uti = &UserTagIdListRsp{}

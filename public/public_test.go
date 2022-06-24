@@ -1,11 +1,55 @@
-package wechat
+package public
 
 import (
+	"context"
+	"os"
 	"testing"
 
 	"github.com/go-pay/wechat-sdk/pkg/bmap"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
 )
+
+var (
+	ctx       = context.Background()
+	publicSDK *SDK
+	err       error
+	// 测试时，将自己的Appid和Secret填入，此appid和secret为测试号
+	Appid  = "wxcfad67697020fc14"
+	Secret = "c104683b3067ceac97b680aa5bf62b69"
+)
+
+func TestMain(m *testing.M) {
+	// 初始化微信公众号 SDK
+	//	Appid：Appid
+	//	Secret：appSecret
+	//	autoManageToken：是否自动获取并自动维护刷新 AccessToken
+	publicSDK, err = New(Appid, Secret, true)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+
+	// 打开Debug开关，输出日志
+	publicSDK.DebugSwitch = DebugOn
+
+	// 若 autoManageToken 为 false，需要手动设置 Token
+	// publicSDK.SetPublicAccessToken("access_token")
+
+	// 首次获取AccessToken请通过此方法获取，之后请通过下面的回调方法获取
+	at := publicSDK.GetPublicAccessToken()
+	xlog.Infof("at: %s", at)
+
+	// 每次刷新 accessToken 后，此方法回调返回 accessToken 和 有效时间（秒）
+	publicSDK.SetPublicAccessTokenCallback(func(accessToken string, expireIn int, err error) {
+		if err != nil {
+			xlog.Errorf("refresh access token error(%+v)", err)
+			return
+		}
+		xlog.Infof("accessToken: %s", accessToken)
+		xlog.Infof("expireIn: %d", expireIn)
+	})
+	os.Exit(m.Run())
+}
 
 func TestQRCodeCreate(t *testing.T) {
 	body := make(bmap.BodyMap)

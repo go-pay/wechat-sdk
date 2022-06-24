@@ -64,7 +64,7 @@ if err != nil {
 //wxsdk.DebugSwitch = wechat.DebugOn
 ```
 
-- ### AccessToken 说明：微信小程序和公众号 与 开放平台的 AccessToken 不用通用。
+- ### AccessToken
 
 - #### 微信小程序 or 公众号的 AccessToken
 ```go

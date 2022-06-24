@@ -1,16 +1,14 @@
-package wechat
+package public
 
 import (
 	"fmt"
 	"runtime"
 	"time"
 
-	"github.com/go-pay/wechat-sdk/mini"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
 )
 
-// 获取小程序、公众号全局唯一后台接口调用凭据（access_token）
-//	微信小程序文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
+// 获取公众号全局唯一后台接口调用凭据（access_token）
 //	公众号文档：https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Get_access_token.html
 func (s *SDK) getAccessToken() (err error) {
 	defer func() {
@@ -24,7 +22,7 @@ func (s *SDK) getAccessToken() (err error) {
 	}()
 
 	path := "/cgi-bin/token?grant_type=client_credential&appid=" + s.Appid + "&secret=" + s.Secret
-	at := &mini.AccessToken{}
+	at := &AccessToken{}
 	if err = s.DoRequestGet(s.ctx, path, at); err != nil {
 		return
 	}
@@ -37,11 +35,6 @@ func (s *SDK) getAccessToken() (err error) {
 	if s.callback != nil {
 		go s.callback(at.AccessToken, at.ExpiresIn, nil)
 	}
-	if len(s.atChanMap) > 0 {
-		for _, v := range s.atChanMap {
-			v <- at.AccessToken
-		}
-	}
 	return nil
 }
 
@@ -50,7 +43,7 @@ func (s *SDK) goAutoRefreshAccessToken() {
 		if r := recover(); r != nil {
 			buf := make([]byte, 64<<10)
 			buf = buf[:runtime.Stack(buf, false)]
-			xlog.Errorf("mini_public_goAutoRefreshAccessToken: panic recovered: %s\n%s", r, buf)
+			xlog.Errorf("public_goAutoRefreshAccessToken: panic recovered: %s\n%s", r, buf)
 		}
 	}()
 	for {
@@ -64,12 +57,17 @@ func (s *SDK) goAutoRefreshAccessToken() {
 	}
 }
 
-// SetMiniOrPublicATCallback set mini or public access token callback listener
-func (s *SDK) SetMiniOrPublicATCallback(fn func(accessToken string, expireIn int, err error)) {
+// SetPublicAccessTokenCallback set public access token callback listener
+func (s *SDK) SetPublicAccessTokenCallback(fn func(accessToken string, expireIn int, err error)) {
 	s.callback = fn
 }
 
-// GetMiniOrPublicAT get mini or public access token string
-func (s *SDK) GetMiniOrPublicAT() (at string) {
+// GetPublicAccessToken get public access token string
+func (s *SDK) GetPublicAccessToken() (at string) {
 	return s.accessToken
+}
+
+// SetPublicAccessToken set public access token string
+func (s *SDK) SetPublicAccessToken(accessToken string) {
+	s.accessToken = accessToken
 }

@@ -22,7 +22,7 @@ func (s *SDK) refreshAccessToken() (err error) {
 		}
 	}()
 	// /sns/oauth2/refresh_token?appid=APPID&grant_type=refresh_token&refresh_token=REFRESH_TOKEN
-	path := "/sns/oauth2/refresh_token?grant_type=refresh_token&appid=" + s.Appid + "&refresh_token=" + s.Secret
+	path := "/sns/oauth2/refresh_token?grant_type=refresh_token&appid=" + s.Appid + "&refresh_token=" + s.refreshToken
 	at := &AccessToken{}
 	if err = s.DoRequestGet(s.ctx, path, at); err != nil {
 		return
@@ -32,6 +32,7 @@ func (s *SDK) refreshAccessToken() (err error) {
 		return
 	}
 	s.accessToken = at.AccessToken
+	s.refreshToken = at.RefreshToken
 	s.RefreshInternal = time.Second * time.Duration(at.ExpiresIn)
 	if s.callback != nil {
 		go s.callback(at, nil)
@@ -58,9 +59,19 @@ func (s *SDK) goAutoRefreshAccessToken() {
 	}
 }
 
-// SetOpenATCallback open access token callback listener
-func (s *SDK) SetOpenATCallback(fn func(at *AccessToken, err error)) {
+// SetOpenAccessTokenCallback open access token callback listener
+func (s *SDK) SetOpenAccessTokenCallback(fn func(at *AccessToken, err error)) {
 	s.callback = fn
+}
+
+// GetOpenAccessToken get open access_token string
+func (s *SDK) GetOpenAccessToken() (at string) {
+	return s.accessToken
+}
+
+// SetOpenAccessToken set open access token string
+func (s *SDK) SetOpenAccessToken(accessToken string) {
+	s.accessToken = accessToken
 }
 
 // Code2AccessToken 获取开放平台全局唯一后台接口调用凭据（access_token）
@@ -77,12 +88,15 @@ func (s *SDK) Code2AccessToken(c context.Context, code string) (at *AccessToken,
 		return
 	}
 	s.accessToken = at.AccessToken
+	s.refreshToken = at.RefreshToken
 	s.RefreshInternal = time.Second * time.Duration(at.ExpiresIn)
 	if s.callback != nil {
 		go s.callback(at, nil)
 	}
-	// 自动刷新 AccessToken
-	go s.goAutoRefreshAccessToken()
+	if s.autoManageToken {
+		// 自动刷新 AccessToken
+		go s.goAutoRefreshAccessToken()
+	}
 	return at, nil
 }
 
@@ -99,9 +113,4 @@ func (s *SDK) CheckAccessToken(c context.Context, openid string) (err error) {
 		return
 	}
 	return nil
-}
-
-// GetAccessToken get open access_token string
-func (s *SDK) GetAccessToken() (at string) {
-	return s.accessToken
 }

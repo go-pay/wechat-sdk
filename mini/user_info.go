@@ -15,7 +15,7 @@ import (
 //	transactionId：微信支付订单号
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/user-info/auth.getPaidUnionId.html
 func (s *SDK) GetPaidUnionid(c context.Context, openid, transactionId string) (unionid *PaidUnionId, err error) {
-	path := "/wxa/getpaidunionid?access_token=" + s.Conf.AccessToken + "&openid=" + openid + "&transaction_id=" + transactionId
+	path := "/wxa/getpaidunionid?access_token=" + s.accessToken + "&openid=" + openid + "&transaction_id=" + transactionId
 	unionid = &PaidUnionId{}
 	if err = s.doRequestGet(c, path, unionid); err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func (s *SDK) GetPaidUnionid(c context.Context, openid, transactionId string) (u
 //	tradeNo：微信支付商户订单号
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/user-info/auth.getPaidUnionId.html
 func (s *SDK) GetPaidUnionidByTradeNo(c context.Context, openid, mchid, tradeNo string) (unionid *PaidUnionId, err error) {
-	path := "/wxa/getpaidunionid?access_token=" + s.Conf.AccessToken + "&openid=" + openid + "&mch_id=" + mchid + "&out_trade_no=" + tradeNo
+	path := "/wxa/getpaidunionid?access_token=" + s.accessToken + "&openid=" + openid + "&mch_id=" + mchid + "&out_trade_no=" + tradeNo
 	unionid = &PaidUnionId{}
 	if err = s.doRequestGet(c, path, unionid); err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func (s *SDK) GetPaidUnionidByTradeNo(c context.Context, openid, mchid, tradeNo 
 //	注意：（当前只支持手机号加密数据），只能检测最近3天生成的加密数据
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/user-info/auth.checkEncryptedData.html
 func (s *SDK) CheckEncryptedData(c context.Context, encryptedData string) (result *CheckEncryptedResult, err error) {
-	path := "/wxa/business/checkencryptedmsg?access_token=" + s.Conf.AccessToken
+	path := "/wxa/business/checkencryptedmsg?access_token=" + s.accessToken
 	h := sha256.New()
 	h.Write([]byte(encryptedData))
 	body := make(bmap.BodyMap)

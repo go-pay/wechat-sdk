@@ -1,12 +1,55 @@
-package wechat
+package mini
 
 import (
+	"context"
+	"os"
 	"testing"
 
-	"github.com/go-pay/wechat-sdk/mini"
 	"github.com/go-pay/wechat-sdk/pkg/bmap"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
 )
+
+var (
+	ctx     = context.Background()
+	miniSDK *SDK
+	err     error
+	// 测试时，将自己的Appid和Secret填入，此appid和secret为测试号
+	Appid  = "wxcfad67697020fc14"
+	Secret = "c104683b3067ceac97b680aa5bf62b69"
+)
+
+func TestMain(m *testing.M) {
+	// 初始化微信小程序 SDK
+	//	Appid：Appid
+	//	Secret：appSecret
+	//	autoManageToken：是否自动获取并自动维护刷新 AccessToken
+	miniSDK, err = New(Appid, Secret, true)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+
+	// 打开Debug开关，输出日志
+	miniSDK.DebugSwitch = DebugOn
+
+	// 若 autoManageToken 为 false，需要手动设置 Token
+	// miniSDK.SetMiniAccessToken("access_token")
+
+	// 首次获取AccessToken请通过此方法获取，之后请通过下面的回调方法获取
+	at := miniSDK.GetMiniAccessToken()
+	xlog.Infof("at: %s", at)
+
+	// 每次刷新 accessToken 后，此方法回调返回 accessToken 和 有效时间（秒）
+	miniSDK.SetMiniAccessTokenCallback(func(accessToken string, expireIn int, err error) {
+		if err != nil {
+			xlog.Errorf("refresh access token error(%+v)", err)
+			return
+		}
+		xlog.Infof("accessToken: %s", accessToken)
+		xlog.Infof("expireIn: %d", expireIn)
+	})
+	os.Exit(m.Run())
+}
 
 func TestCode2Session(t *testing.T) {
 	session, err := miniSDK.Code2Session(ctx, "wxCode")
@@ -51,7 +94,7 @@ func TestDecryptOpenData(t *testing.T) {
 	session := "lyY4HPQbaOYzZdG+JcYK9w=="
 
 	// 微信小程序 手机号
-	phone := new(mini.UserPhone)
+	phone := new(UserPhone)
 
 	err = miniSDK.DecryptOpenData(data, iv, session, phone)
 	if err != nil {
@@ -68,7 +111,7 @@ func TestDecryptOpenData(t *testing.T) {
 	iv2 := "r7BXXKkLb8qrSNn05n0qiA=="
 
 	// 微信小程序 用户信息
-	userInfo := new(mini.UserInfo)
+	userInfo := new(UserInfo)
 
 	err = miniSDK.DecryptOpenData(encryptedData, iv2, sessionKey, userInfo)
 	if err != nil {

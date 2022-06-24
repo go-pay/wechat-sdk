@@ -5,16 +5,9 @@ type Host int
 type Platform string
 
 const (
-	Mini   = "mini"
-	Public = "public"
-	Open   = "open"
-
 	Success = 0
 
-	DebugOff = 0
-	DebugOn  = 1
-
-	Version = "1.1.1"
+	Version = "1.1.2"
 )
 
 const (
@@ -23,12 +16,6 @@ const (
 	HostSH // 上海
 	HostSZ // 深圳
 	HostHK // 香港
-)
-
-const (
-	PlatformMini   Platform = "mini"   // 小程序
-	PlatformPublic Platform = "public" // 公众号
-	PlatformOpen   Platform = "open"   // 开放平台
 )
 
 var (

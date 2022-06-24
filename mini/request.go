@@ -13,7 +13,7 @@ import (
 )
 
 func (s *SDK) doRequestGet(c context.Context, path string, ptr interface{}) (err error) {
-	uri := s.Conf.Host + path
+	uri := s.Host + path
 	httpClient := xhttp.NewClient()
 	if s.DebugSwitch == DebugOn {
 		xlog.Debugf("Wechat_Mini_SDK_URI: %s", uri)
@@ -33,7 +33,7 @@ func (s *SDK) doRequestGet(c context.Context, path string, ptr interface{}) (err
 }
 
 func (s *SDK) doRequestGetByte(c context.Context, path string) (bs []byte, err error) {
-	uri := s.Conf.Host + path
+	uri := s.Host + path
 	httpClient := xhttp.NewClient()
 	if s.DebugSwitch == DebugOn {
 		xlog.Debugf("Wechat_Mini_SDK_URI: %s", uri)
@@ -55,7 +55,7 @@ func (s *SDK) doRequestGetByte(c context.Context, path string) (bs []byte, err e
 }
 
 func (s *SDK) doRequestPost(c context.Context, path string, body bmap.BodyMap, ptr interface{}) (err error) {
-	uri := s.Conf.Host + path
+	uri := s.Host + path
 	httpClient := xhttp.NewClient()
 	if s.DebugSwitch == DebugOn {
 		xlog.Debugf("Wechat_Mini_SDK_URI: %s", uri)
@@ -76,7 +76,7 @@ func (s *SDK) doRequestPost(c context.Context, path string, body bmap.BodyMap, p
 }
 
 func (s *SDK) doRequestPostFile(ctx context.Context, path string, body bmap.BodyMap, ptr interface{}) (err error) {
-	uri := s.Conf.Host + path
+	uri := s.Host + path
 	httpClient := xhttp.NewClient()
 	if s.DebugSwitch == DebugOn {
 		xlog.Debugf("Wechat_Mini_SDK_URI: %s", uri)

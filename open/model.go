@@ -7,6 +7,8 @@ const (
 
 	DebugOff = 0
 	DebugOn  = 1
+
+	HostDefault = "https://api.weixin.qq.com"
 )
 
 type Config struct {

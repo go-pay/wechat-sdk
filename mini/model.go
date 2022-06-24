@@ -15,18 +15,20 @@ const (
 
 	TypingTyping = 0 // 对用户下发"正在输入"状态，
 	TypingCancel = 1 // 取消对用户的"正在输入"状态
+
+	HostDefault = "https://api.weixin.qq.com"
 )
 
 type MsgType int8
 
 type TypingStatus int8
 
-type Config struct {
-	Appid       string
-	Secret      string
-	AccessToken string
-	Host        string
-}
+//type Config struct {
+//	Appid       string
+//	Secret      string
+//	AccessToken string
+//	Host        string
+//}
 
 type ErrorCode struct {
 	Errcode int    `json:"errcode,omitempty"` // 错误码

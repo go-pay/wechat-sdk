@@ -13,7 +13,7 @@ import (
 //	mpMsg：对应 mp_template_msg 的value值，BodyMap key-value 格式传入
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/uniform-message/uniformMessage.send.html
 func (s *SDK) UniformMessageSend(c context.Context, toUser string, mpMsg bmap.BodyMap) (err error) {
-	path := "/cgi-bin/message/wxopen/template/uniform_send?access_token=" + s.Conf.AccessToken
+	path := "/cgi-bin/message/wxopen/template/uniform_send?access_token=" + s.accessToken
 	body := make(bmap.BodyMap)
 	body.Set("touser", toUser)
 	body.Set("mp_template_msg", mpMsg)
