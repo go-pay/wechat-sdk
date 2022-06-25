@@ -7,6 +7,9 @@ type Platform string
 const (
 	Success = 0
 
+	DebugOff = 0
+	DebugOn  = 1
+
 	Version = "1.1.2"
 )
 

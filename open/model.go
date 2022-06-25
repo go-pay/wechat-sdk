@@ -5,9 +5,6 @@ import "context"
 const (
 	Success = 0
 
-	DebugOff = 0
-	DebugOn  = 1
-
 	HostDefault = "https://api.weixin.qq.com"
 )
 

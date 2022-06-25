@@ -6,29 +6,56 @@
 
 ---
 
-### 具体使用请参考 `sdk_open_test.go`
+### 具体使用请参考 `open/open_test.go`
 
-#### 通过 code 获取 access_token
+- ### NewSDK
 
 ```go
-// 注意：必须换取 开放平台 自己的AccessToken，与小程序和公众号不通用
-openAT, err := openSDK.Code2AccessToken(ctx, "xxx")
+import (
+    "github.com/go-pay/wechat-sdk/open"
+    "github.com/go-pay/wechat-sdk/pkg/xlog"
+)
+
+// 初始化微信开放平台 SDK
+//	Appid：Appid
+//	Secret：appSecret
+//	autoManageToken：是否自动获取并自动维护刷新 AccessToken
+openSDK, err := open.New(Appid, Secret, true)
 if err != nil {
     xlog.Error(err)
     return
 }
-xlog.Infof("open at: %+v", openAT)
+
+// 打开Debug开关，输出日志
+openSDK.DebugSwitch = wechat.DebugOn
+```
+
+
+#### 通过 code 获取 access_token
+
+```go
+// 如果 自行维护 AccessToken，请需要手动设置 Token
+// openSDK.SetOpenAccessToken("access_token")
+
+// 注意：必须优先换取 开放平台 AccessToken，否则会导致部分接口调用失败
+at, err := openSDK.Code2AccessToken(ctx, "code")
+if err != nil {
+	xlog.Error(err)
+	return
+}
+xlog.Infof("at: %s", at)
+
 // 每次刷新 accessToken 后，此方法回调返回 accessToken 和 有效时间（秒）
-openSDK.SetOpenATCallback(func(at *open.AccessToken, err error) {
-    if err != nil {
-        xlog.Errorf("refresh access token error(%+v)", err)
-        return
-    }
-    xlog.Infof("AccessToken: %+v", at)
+openSDK.SetOpenAccessTokenCallback(func(at *AccessToken, err error) {
+	if err != nil {
+		xlog.Errorf("refresh access token error(%+v)", err)
+		return
+	}
+	xlog.Infof("AccessToken: %+v", at)
 })
 ```
 
-#### 通过 code 获取 access_token
+#### 获取用户信息
 
 ```go
 rsp, err := openSDK.UserInfo(ctx, "openid", "zh_CN")

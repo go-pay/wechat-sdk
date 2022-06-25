@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/go-pay/wechat-sdk"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
 )
 
@@ -25,7 +26,7 @@ func TestMain(m *testing.M) {
 	openSDK = New(Appid, Secret, true)
 
 	// 打开Debug开关，输出日志
-	openSDK.DebugSwitch = DebugOn
+	openSDK.DebugSwitch = wechat.DebugOn
 
 	// 如果 自行维护 AccessToken，请需要手动设置 Token
 	// openSDK.SetOpenAccessToken("access_token")

@@ -8,7 +8,54 @@
 
 ---
 
-### 具体使用请参考 `sdk_mini_test.go`
+### 具体使用请参考 `mini/mini_test.go`
+
+- ### NewSDK
+
+```go
+import (
+    "github.com/go-pay/wechat-sdk/mini"
+    "github.com/go-pay/wechat-sdk/pkg/xlog"
+)
+
+// 初始化微信小程序 SDK
+//	Appid：Appid
+//	Secret：appSecret
+//	autoManageToken：是否自动获取并自动维护刷新 AccessToken
+miniSDK, err := mini.New(Appid, Secret, true)
+if err != nil {
+    xlog.Error(err)
+    return
+}
+
+// 打开Debug开关，输出日志
+miniSDK.DebugSwitch = wechat.DebugOn
+```
+
+#### AccessToken
+
+```go
+import (
+    "github.com/go-pay/wechat-sdk/mini"
+    "github.com/go-pay/wechat-sdk/pkg/xlog"
+)
+
+// 若 autoManageToken 为 false，需要手动设置 Token
+// miniSDK.SetMiniAccessToken("access_token")
+
+// 获取AccessToken请通过此方法获取，之后请通过下面的回调方法获取
+at := miniSDK.GetMiniAccessToken()
+
+// 每次刷新 accessToken 后，此方法回调返回 accessToken 和 有效时间（秒）
+miniSDK.SetMiniAccessTokenCallback(func(accessToken string, expireIn int, err error) {
+	if err != nil {
+		xlog.Errorf("refresh access token error(%+v)", err)
+		return
+	}
+	xlog.Infof("accessToken: %s", accessToken)
+	xlog.Infof("expireIn: %d", expireIn)
+})
+```
 
 #### Code2Session
 

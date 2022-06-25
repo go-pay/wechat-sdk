@@ -29,7 +29,7 @@ type SDK struct {
 func New(appid, secret string, autoManageToken bool) (o *SDK) {
 	o = &SDK{
 		ctx:             context.Background(),
-		DebugSwitch:     DebugOff,
+		DebugSwitch:     wechat.DebugOff,
 		Host:            HostDefault,
 		Appid:           appid,
 		Secret:          secret,
@@ -41,7 +41,7 @@ func New(appid, secret string, autoManageToken bool) (o *SDK) {
 func (s *SDK) DoRequestGet(c context.Context, path string, ptr interface{}) (err error) {
 	uri := s.Host + path
 	httpClient := xhttp.NewClient()
-	if s.DebugSwitch == DebugOn {
+	if s.DebugSwitch == wechat.DebugOn {
 		xlog.Debugf("Wechat_Open_SDK_URI: %s", uri)
 	}
 	httpClient.Header.Add(xhttp.HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
@@ -49,7 +49,7 @@ func (s *SDK) DoRequestGet(c context.Context, path string, ptr interface{}) (err
 	if err != nil {
 		return fmt.Errorf("http.request(GET, %s)：%w", uri, err)
 	}
-	if s.DebugSwitch == DebugOn {
+	if s.DebugSwitch == wechat.DebugOn {
 		xlog.Debugf("Wechat_Open_SDK_Response: [%d] -> %s", res.StatusCode, string(bs))
 	}
 	if err = json.Unmarshal(bs, ptr); err != nil {

@@ -5,9 +5,6 @@ import "github.com/go-pay/wechat-sdk/pkg/xtime"
 const (
 	Success = 0
 
-	DebugOff = 0
-	DebugOn  = 1
-
 	HostDefault = "https://api.weixin.qq.com"
 )
 

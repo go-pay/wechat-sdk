@@ -5,7 +5,7 @@
 [![Github](https://img.shields.io/github/followers/iGoogle-ink?label=Follow&style=social)](https://github.com/iGoogle-ink)
 [![Github](https://img.shields.io/github/forks/go-pay/wechat-sdk?label=Fork&style=social)](https://github.com/go-pay/wechat-sdk/fork)
 
-[![Golang](https://img.shields.io/badge/golang-1.16-brightgreen.svg)](https://golang.google.cn)
+[![Golang](https://img.shields.io/badge/golang-1.17-brightgreen.svg)](https://golang.google.cn)
 [![GoDoc](https://img.shields.io/badge/doc-pkg.go.dev-informational.svg)](https://pkg.go.dev/github.com/go-pay/wechat-sdk)
 [![Drone CI](https://cloud.drone.io/api/badges/go-pay/wechat-sdk/status.svg)](https://cloud.drone.io/go-pay/wechat-sdk)
 [![GitHub Release](https://img.shields.io/github/v/release/go-pay/wechat-sdk)](https://github.com/go-pay/wechat-sdk/releases)
@@ -39,94 +39,6 @@ func main() {
 <br>
 
 # 二、文档说明
-
-- ### NewSDK
-
-```go
-import (
-    "github.com/go-pay/wechat-sdk"
-    "github.com/go-pay/wechat-sdk/pkg/xlog"
-)
-
-// NewSDK 初始化微信 SDK
-//  Appid：Appid
-//  Secret：appSecret
-//  accessToken：AccessToken，若此参数为空，则自动获取并自动维护刷新
-wxsdk, err := wechat.NewSDK(plat)
-if err != nil {
-    xlog.Error(err)
-    return
-}
-
-// 可替换host节点
-//wxsdk.SetHost(wechat.HostSH)
-// 打开Debug开关，输出日志
-//wxsdk.DebugSwitch = wechat.DebugOn
-```
-
-- ### AccessToken
-
-- #### 微信小程序 or 公众号的 AccessToken
-```go
-// New完SDK，首次获取AccessToken请通过此方法获取，之后请通过下面的回调方法获取
-at := wxsdk.GetMiniOrPublicAT()
-xlog.Infof("at: %s", at)
-
-// 每次刷新 accessToken 后，此方法回调返回 accessToken 和 有效时间（秒）
-wxsdk.SetMiniOrPublicATCallback(func(accessToken string, expireIn int, err error) {
-    if err != nil {
-        xlog.Errorf("refresh access token error(%+v)", err)
-        return
-    }
-    xlog.Infof("accessToken: %s", accessToken)
-    xlog.Infof("expireIn: %d", expireIn)
-})
-
-// 若 NewSDK() 时自传 AccessToken，则后续更新替换请调用此方法
-wxsdk.SetMiniOrPublicAT()
-```
-
-- #### 开放平台 的AccessToken详见下方 NewOpenSDK
-
-- ### NewMiniSDK
-
-```go
-// New 微信小程序 SDK
-miniSDK := wxsdk.NewMini(Appid, Secret)
-```
-
-- ### NewPublicSDK
-
-```go
-// New 微信公众号 SDK
-publicSDK := wxsdk.NewPublic(Appid, Secret)
-```
-
-- ### NewOpenSDK
-
-```go
-// New 微信开放平台 SDK
-openSDK, err = wxsdk.NewOpen(Appid, Secret)
-if err != nil {
-    xlog.Error(err)
-    return
-}
-// 注意：必须换取 开放平台 自己的AccessToken，与小程序和公众号不通用
-openAT, err := openSDK.Code2AccessToken(ctx, "xxx")
-if err != nil {
-    xlog.Error(err)
-    return
-}
-xlog.Infof("open at: %+v", openAT)
-// 每次刷新 accessToken 后，此方法回调返回 accessToken 和 有效时间（秒）
-openSDK.SetOpenATCallback(func(at *open.AccessToken, err error) {
-    if err != nil {
-        xlog.Errorf("refresh access token error(%+v)", err)
-        return
-    }
-    xlog.Infof("AccessToken: %+v", at)
-})
-```
 
 - ### 点击分别查看小程序、公众号使用文档
 

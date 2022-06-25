@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/go-pay/wechat-sdk"
 	"github.com/go-pay/wechat-sdk/pkg/bmap"
 	"github.com/go-pay/wechat-sdk/pkg/xlog"
 )
@@ -30,7 +31,7 @@ func TestMain(m *testing.M) {
 	}
 
 	// 打开Debug开关，输出日志
-	miniSDK.DebugSwitch = DebugOn
+	miniSDK.DebugSwitch = wechat.DebugOn
 
 	// 若 autoManageToken 为 false，需要手动设置 Token
 	// miniSDK.SetMiniAccessToken("access_token")

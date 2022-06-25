@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/go-pay/wechat-sdk"
 	"github.com/go-pay/wechat-sdk/pkg/bmap"
 	"github.com/go-pay/wechat-sdk/pkg/util"
 	"github.com/go-pay/wechat-sdk/pkg/xhttp"
@@ -15,7 +16,7 @@ import (
 func (s *SDK) doRequestGet(c context.Context, path string, ptr interface{}) (err error) {
 	uri := s.Host + path
 	httpClient := xhttp.NewClient()
-	if s.DebugSwitch == DebugOn {
+	if s.DebugSwitch == wechat.DebugOn {
 		xlog.Debugf("Wechat_Mini_SDK_URI: %s", uri)
 	}
 	httpClient.Header.Add(xhttp.HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
@@ -23,7 +24,7 @@ func (s *SDK) doRequestGet(c context.Context, path string, ptr interface{}) (err
 	if err != nil {
 		return fmt.Errorf("http.request(GET, %s)：%w", uri, err)
 	}
-	if s.DebugSwitch == DebugOn {
+	if s.DebugSwitch == wechat.DebugOn {
 		xlog.Debugf("Wechat_Mini_SDK_Response: [%d] -> %s", res.StatusCode, string(bs))
 	}
 	if err = json.Unmarshal(bs, ptr); err != nil {
@@ -35,7 +36,7 @@ func (s *SDK) doRequestGet(c context.Context, path string, ptr interface{}) (err
 func (s *SDK) doRequestGetByte(c context.Context, path string) (bs []byte, err error) {
 	uri := s.Host + path
 	httpClient := xhttp.NewClient()
-	if s.DebugSwitch == DebugOn {
+	if s.DebugSwitch == wechat.DebugOn {
 		xlog.Debugf("Wechat_Mini_SDK_URI: %s", uri)
 	}
 	httpClient.Header.Add(xhttp.HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
@@ -43,7 +44,7 @@ func (s *SDK) doRequestGetByte(c context.Context, path string) (bs []byte, err e
 	if err != nil {
 		return nil, fmt.Errorf("http.request(GET, %s)：%w", uri, err)
 	}
-	if s.DebugSwitch == DebugOn {
+	if s.DebugSwitch == wechat.DebugOn {
 		xlog.Debugf("Wechat_Mini_SDK_Response: [%d] -> %s", res.StatusCode, string(bs))
 	}
 	ec := &ErrorCode{}
@@ -57,7 +58,7 @@ func (s *SDK) doRequestGetByte(c context.Context, path string) (bs []byte, err e
 func (s *SDK) doRequestPost(c context.Context, path string, body bmap.BodyMap, ptr interface{}) (err error) {
 	uri := s.Host + path
 	httpClient := xhttp.NewClient()
-	if s.DebugSwitch == DebugOn {
+	if s.DebugSwitch == wechat.DebugOn {
 		xlog.Debugf("Wechat_Mini_SDK_URI: %s", uri)
 		xlog.Debugf("Wechat_Mini_SDK_RequestBody: %s", body.JsonBody())
 	}
@@ -66,7 +67,7 @@ func (s *SDK) doRequestPost(c context.Context, path string, body bmap.BodyMap, p
 	if err != nil {
 		return fmt.Errorf("http.request(POST, %s)：%w", uri, err)
 	}
-	if s.DebugSwitch == DebugOn {
+	if s.DebugSwitch == wechat.DebugOn {
 		xlog.Debugf("Wechat_Mini_SDK_Response: [%d] -> %s", res.StatusCode, string(bs))
 	}
 	if err = json.Unmarshal(bs, ptr); err != nil {
@@ -78,7 +79,7 @@ func (s *SDK) doRequestPost(c context.Context, path string, body bmap.BodyMap, p
 func (s *SDK) doRequestPostFile(ctx context.Context, path string, body bmap.BodyMap, ptr interface{}) (err error) {
 	uri := s.Host + path
 	httpClient := xhttp.NewClient()
-	if s.DebugSwitch == DebugOn {
+	if s.DebugSwitch == wechat.DebugOn {
 		xlog.Debugf("Wechat_Mini_SDK_URI: %s", uri)
 	}
 	httpClient.Header.Add(xhttp.HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
@@ -86,7 +87,7 @@ func (s *SDK) doRequestPostFile(ctx context.Context, path string, body bmap.Body
 	if err != nil {
 		return fmt.Errorf("http.request(POST, %s)：%w", uri, err)
 	}
-	if s.DebugSwitch == DebugOn {
+	if s.DebugSwitch == wechat.DebugOn {
 		xlog.Debugf("Wechat_Mini_SDK_Response: [%d] -> %s", res.StatusCode, string(bs))
 	}
 	if err = json.Unmarshal(bs, ptr); err != nil {
