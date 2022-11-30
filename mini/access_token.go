@@ -9,7 +9,7 @@ import (
 )
 
 // 获取小程序全局唯一后台接口调用凭据（access_token）
-//	微信小程序文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
+// 微信小程序文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
 func (s *SDK) getAccessToken() (err error) {
 	defer func() {
 		if err != nil {

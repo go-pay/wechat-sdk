@@ -16,9 +16,9 @@ import (
 )
 
 // VerifyDecryptOpenData 数据签名校验
-//	rowData、signature：通过调用接口（如 wx.getUserInfo）获取数据时，接口会同时返回 rawData、signature
-//	sessionKey：会话密钥，通过 sdk.Code2Session() 方法获取到
-//	文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
+// rowData、signature：通过调用接口（如 wx.getUserInfo）获取数据时，接口会同时返回 rawData、signature
+// sessionKey：会话密钥，通过 sdk.Code2Session() 方法获取到
+// 文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
 func (s *SDK) VerifyDecryptOpenData(rowData, signature, sessionKey string) (ok bool) {
 	signData := rowData + sessionKey
 	hash := sha1.New()
@@ -28,11 +28,11 @@ func (s *SDK) VerifyDecryptOpenData(rowData, signature, sessionKey string) (ok b
 }
 
 // DecryptOpenData 解密开放数据到结构体
-//	encryptedData：包括敏感数据在内的完整用户信息的加密数据，小程序获取到
-//	iv：加密算法的初始向量，小程序获取
-//	sessionKey：会话密钥，通过 sdk.Code2Session() 方法获取到
-//	ptr：需要解析到的结构体指针，例：mini.UserPhone、mini.UserInfo
-//	文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
+// encryptedData：包括敏感数据在内的完整用户信息的加密数据，小程序获取到
+// iv：加密算法的初始向量，小程序获取
+// sessionKey：会话密钥，通过 sdk.Code2Session() 方法获取到
+// ptr：需要解析到的结构体指针，例：mini.UserPhone、mini.UserInfo
+// 文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
 func (s *SDK) DecryptOpenData(encryptedData, iv, sessionKey string, ptr interface{}) (err error) {
 	if encryptedData == util.NULL || iv == util.NULL || sessionKey == util.NULL {
 		return errors.New("input params can not null")

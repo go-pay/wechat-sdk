@@ -9,7 +9,7 @@ import (
 )
 
 // 获取公众号全局唯一后台接口调用凭据（access_token）
-//	公众号文档：https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Get_access_token.html
+// 公众号文档：https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Get_access_token.html
 func (s *SDK) getAccessToken() (err error) {
 	defer func() {
 		if err != nil {

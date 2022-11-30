@@ -93,3 +93,29 @@ type UploadTempMedia struct {
 	Errcode   int        `json:"errcode,omitempty"` // 错误码
 	Errmsg    string     `json:"errmsg,omitempty"`  // 错误信息
 }
+
+type PhoneNumberRsp struct {
+	PhoneInfo *UserPhone `json:"phone_info,omitempty"` // 用户手机号信息
+	Errcode   int        `json:"errcode,omitempty"`    // 错误码
+	Errmsg    string     `json:"errmsg,omitempty"`     // 错误信息
+}
+
+type PluginOpenPid struct {
+	Openpid string `json:"openpid,omitempty"` // 插件用户的唯一标识
+	Errcode int    `json:"errcode,omitempty"` // 错误码
+	Errmsg  string `json:"errmsg,omitempty"`  // 错误信息
+}
+
+type UserEncryptKey struct {
+	Errcode     int        `json:"errcode"`
+	Errmsg      string     `json:"errmsg"`
+	KeyInfoList []*KeyInfo `json:"key_info_list"`
+}
+
+type KeyInfo struct {
+	EncryptKey string `json:"encrypt_key"`
+	Version    int    `json:"version"`
+	ExpireIn   int    `json:"expire_in"`
+	Iv         string `json:"iv"`
+	CreateTime int    `json:"create_time"`
+}

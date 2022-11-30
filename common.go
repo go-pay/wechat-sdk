@@ -10,7 +10,7 @@ const (
 	DebugOff = 0
 	DebugOn  = 1
 
-	Version = "1.1.2"
+	Version = "1.1.3"
 )
 
 const (

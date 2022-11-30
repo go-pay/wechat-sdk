@@ -3,7 +3,7 @@ package util
 import "testing"
 
 func TestBytesToString(t *testing.T) {
-	var b []byte = []byte("abc")
+	var b = []byte("abc")
 	s := BytesToString(b)
 	if s != string(b) {
 		t.Fatal("BytesToString error")

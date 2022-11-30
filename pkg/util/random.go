@@ -9,7 +9,7 @@ import (
 func RandomString(l int) string {
 	str := "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
 	bytes := []byte(str)
-	var result []byte = make([]byte, 0, l)
+	var result = make([]byte, 0, l)
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	for i := 0; i < l; i++ {
 		result = append(result, bytes[r.Intn(len(bytes))])
@@ -21,7 +21,7 @@ func RandomString(l int) string {
 func RandomPureString(l int) string {
 	str := "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
 	bytes := []byte(str)
-	var result []byte = make([]byte, 0, l)
+	var result = make([]byte, 0, l)
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	for i := 0; i < l; i++ {
 		result = append(result, bytes[r.Intn(len(bytes))])

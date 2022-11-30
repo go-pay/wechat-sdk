@@ -10,7 +10,7 @@ import (
 )
 
 // 刷新或续期 access_token 使用
-//	微信开放平台文档：https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html
+// 微信开放平台文档：https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html
 func (s *SDK) refreshAccessToken() (err error) {
 	defer func() {
 		if err != nil {
@@ -21,7 +21,6 @@ func (s *SDK) refreshAccessToken() (err error) {
 			}
 		}
 	}()
-	// /sns/oauth2/refresh_token?appid=APPID&grant_type=refresh_token&refresh_token=REFRESH_TOKEN
 	path := "/sns/oauth2/refresh_token?grant_type=refresh_token&appid=" + s.Appid + "&refresh_token=" + s.refreshToken
 	at := &AccessToken{}
 	if err = s.DoRequestGet(s.ctx, path, at); err != nil {
@@ -75,8 +74,8 @@ func (s *SDK) SetOpenAccessToken(accessToken string) {
 }
 
 // Code2AccessToken 获取开放平台全局唯一后台接口调用凭据（access_token）
-//	注意：必须换取 开放平台 自己的AccessToken，与小程序和公众号不通用
-//	微信开放平台文档：https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html
+// 注意：必须换取 开放平台 自己的AccessToken，与小程序和公众号不通用
+// 微信开放平台文档：https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html
 func (s *SDK) Code2AccessToken(c context.Context, code string) (at *AccessToken, err error) {
 	path := "/sns/oauth2/access_token?grant_type=authorization_code&appid=" + s.Appid + "&secret=" + s.Secret + "&code=" + code
 	at = &AccessToken{}
@@ -101,7 +100,7 @@ func (s *SDK) Code2AccessToken(c context.Context, code string) (at *AccessToken,
 }
 
 // CheckAccessToken check access_token is ok
-//	文档：https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Authorized_API_call_UnionID.html
+// 文档：https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Authorized_API_call_UnionID.html
 func (s *SDK) CheckAccessToken(c context.Context, openid string) (err error) {
 	path := "/sns/auth?access_token=" + s.accessToken + "&openid=" + openid
 	ec := &ErrorCode{}

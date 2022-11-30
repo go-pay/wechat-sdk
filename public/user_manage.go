@@ -9,8 +9,8 @@ import (
 )
 
 // UserTagCreate 用户标签创建
-//	注意：errcode = 0 为成功
-//	文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
+// 注意：errcode = 0 为成功
+// 文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagCreate(c context.Context, tagName string) (ut *UserTagRsp, err error) {
 	path := "/cgi-bin/tags/create?access_token=" + s.accessToken
 	body := make(bmap.BodyMap)
@@ -28,8 +28,8 @@ func (s *SDK) UserTagCreate(c context.Context, tagName string) (ut *UserTagRsp, 
 }
 
 // UserTagList 获取已创建的用户标签列表
-//	注意：errcode = 0 为成功
-//	文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
+// 注意：errcode = 0 为成功
+// 文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagList(c context.Context) (utl *UserTagListRsp, err error) {
 	path := "/cgi-bin/tags/get?access_token=" + s.accessToken
 	utl = &UserTagListRsp{}
@@ -43,8 +43,8 @@ func (s *SDK) UserTagList(c context.Context) (utl *UserTagListRsp, err error) {
 }
 
 // UserTagUpdate 用户标签编辑更新
-//	注意：errcode = 0 为成功
-//	文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
+// 注意：errcode = 0 为成功
+// 文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagUpdate(c context.Context, tagId int, tagName string) (err error) {
 	path := "/cgi-bin/tags/update?access_token=" + s.accessToken
 	body := make(bmap.BodyMap)
@@ -63,8 +63,8 @@ func (s *SDK) UserTagUpdate(c context.Context, tagId int, tagName string) (err e
 }
 
 // UserTagDelete 用户标签删除
-//	注意：errcode = 0 为成功
-//	文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
+// 注意：errcode = 0 为成功
+// 文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagDelete(c context.Context, tagId int) (err error) {
 	path := "/cgi-bin/tags/delete?access_token=" + s.accessToken
 	body := make(bmap.BodyMap)
@@ -82,9 +82,9 @@ func (s *SDK) UserTagDelete(c context.Context, tagId int) (err error) {
 }
 
 // UserTagFansList 获取标签下粉丝列表
-//	注意：errcode = 0 为成功
-//	openid：第一个拉取的 openid，不填默认从头开始拉取
-//	文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
+// 注意：errcode = 0 为成功
+// openid：第一个拉取的 openid，不填默认从头开始拉取
+// 文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagFansList(c context.Context, tagId int, openid string) (utf *UserTagFansListRsp, err error) {
 	path := "/cgi-bin/user/tag/get?access_token=" + s.accessToken
 	body := make(bmap.BodyMap)
@@ -103,8 +103,8 @@ func (s *SDK) UserTagFansList(c context.Context, tagId int, openid string) (utf 
 }
 
 // UserTagBatchTagging 批量为用户打标签
-//	注意：errcode = 0 为成功
-//	文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
+// 注意：errcode = 0 为成功
+// 文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagBatchTagging(c context.Context, tagId int, openidList []string) (err error) {
 	if len(openidList) <= 0 {
 		return errors.New("openid_list is empty")
@@ -124,8 +124,8 @@ func (s *SDK) UserTagBatchTagging(c context.Context, tagId int, openidList []str
 }
 
 // UserTagBatchUnTagging 批量为用户取消标签
-//	注意：errcode = 0 为成功
-//	文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
+// 注意：errcode = 0 为成功
+// 文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagBatchUnTagging(c context.Context, tagId int, openidList []string) (err error) {
 	if len(openidList) <= 0 {
 		return errors.New("openid_list is empty")
@@ -145,8 +145,8 @@ func (s *SDK) UserTagBatchUnTagging(c context.Context, tagId int, openidList []s
 }
 
 // UserTagIdList 获取用户身上的标签列表
-//	注意：errcode = 0 为成功
-//	文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
+// 注意：errcode = 0 为成功
+// 文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagIdList(c context.Context, openid string) (uti *UserTagIdListRsp, err error) {
 	if openid == "" {
 		return nil, errors.New("openid is empty")

@@ -118,6 +118,9 @@ if err != nil {
 	* 检查加密信息：`sdk.CheckEncryptedData()`
 	* 获取支付后的UnionId：`sdk.GetPaidUnionid()`
 	* 获取支付后的UnionId：`sdk.GetPaidUnionidByTradeNo()`
+	* 获取插件用户OpenPid：`sdk.GetPluginOpenPid()`
+	* 获取用户EncryptKey：`sdk.GetUserEncryptKey()`
+	* 获取手机号：`sdk.GetPhoneNumber()`
 * <font color='#07C160' size='4'>开放数据</font>
 	* 开放数据校验：`sdk.VerifyDecryptOpenData()`
 	* 开放数据解密：`sdk.DecryptOpenData()`
