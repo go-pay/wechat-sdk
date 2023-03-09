@@ -24,6 +24,10 @@ type SDK struct {
 	callback func(accessToken string, expireIn int, err error)
 }
 
+// New 初始化微信公众号 SDK
+// Appid：Appid
+// Secret：appSecret
+// autoManageToken：是否自动获取并自动维护刷新 AccessToken
 func New(appid, secret string, autoManageToken bool) (p *SDK, err error) {
 	p = &SDK{
 		ctx:         context.Background(),
