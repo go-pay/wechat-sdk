@@ -17,9 +17,9 @@ import (
 )
 
 // 初始化微信公众号 SDK
-//	Appid：Appid
-//	Secret：appSecret
-//	autoManageToken：是否自动获取并自动维护刷新 AccessToken
+// Appid：Appid
+// Secret：appSecret
+// autoManageToken：是否自动获取并自动维护刷新 AccessToken
 publicSDK, err := public.New(Appid, Secret, true)
 if err != nil {
     xlog.Error(err)
@@ -45,13 +45,13 @@ import (
 at := publicSDK.GetPublicAccessToken()
 
 // 每次刷新 accessToken 后，此方法回调返回 accessToken 和 有效时间（秒）
-publicSDK.SetPublicAccessTokenCallback(func(accessToken string, expireIn int, err error) {
-	if err != nil {
-		xlog.Errorf("refresh access token error(%+v)", err)
-		return
-	}
-	xlog.Infof("accessToken: %s", accessToken)
-	xlog.Infof("expireIn: %d", expireIn)
+publicSDK.SetPublicAccessTokenCallback(func(appid, accessToken string, expireIn int, err error) {
+    if err != nil {
+        xlog.Errorf("refresh access token error(%+v)", err)
+        return
+    }
+    xlog.Infof("appid:%s, accessToken: %s",appid, accessToken)
+    xlog.Infof("expireIn: %d", expireIn)
 })
 ```
 
@@ -62,17 +62,17 @@ publicSDK.SetPublicAccessTokenCallback(func(accessToken string, expireIn int, er
 body := make(bm.BodyMap)
 // 临时二维码
 body.Set("expire_seconds", 604800).
-	Set("action_name", "QR_SCENE").
-	SetBodyMap("action_info", func(b bm.BodyMap) {
-		b.SetBodyMap("scene", func(b bm.BodyMap) {
-			b.Set("scene_id", 123)
-		})
-	})
+    Set("action_name", "QR_SCENE").
+    SetBodyMap("action_info", func(b bm.BodyMap) {
+        b.SetBodyMap("scene", func(b bm.BodyMap) {
+            b.Set("scene_id", 123)
+        })
+    })
 
 rsp, err := publicSDK.QRCodeCreate(ctx, body)
 if err != nil {
-	xlog.Error(err)
-	return
+    xlog.Error(err)
+    return
 }
 xlog.Infof("rsp:%+v", rsp)
 ```
