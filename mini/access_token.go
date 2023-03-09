@@ -16,7 +16,7 @@ func (s *SDK) getAccessToken() (err error) {
 			// reset default refresh internal
 			s.RefreshInternal = time.Second * 20
 			if s.callback != nil {
-				go s.callback("", 0, err)
+				go s.callback("", "", 0, err)
 			}
 		}
 	}()
@@ -33,7 +33,7 @@ func (s *SDK) getAccessToken() (err error) {
 	s.accessToken = at.AccessToken
 	s.RefreshInternal = time.Second * time.Duration(at.ExpiresIn)
 	if s.callback != nil {
-		go s.callback(at.AccessToken, at.ExpiresIn, nil)
+		go s.callback(s.Appid, at.AccessToken, at.ExpiresIn, nil)
 	}
 	return nil
 }
@@ -58,7 +58,7 @@ func (s *SDK) goAutoRefreshAccessToken() {
 }
 
 // SetMiniAccessTokenCallback set mini access token callback listener
-func (s *SDK) SetMiniAccessTokenCallback(fn func(accessToken string, expireIn int, err error)) {
+func (s *SDK) SetMiniAccessTokenCallback(fn func(appid, accessToken string, expireIn int, err error)) {
 	s.callback = fn
 }
 

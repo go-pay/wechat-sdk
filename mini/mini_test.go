@@ -41,12 +41,12 @@ func TestMain(m *testing.M) {
 	xlog.Infof("at: %s", at)
 
 	// 每次刷新 accessToken 后，此方法回调返回 accessToken 和 有效时间（秒）
-	miniSDK.SetMiniAccessTokenCallback(func(accessToken string, expireIn int, err error) {
+	miniSDK.SetMiniAccessTokenCallback(func(appid, accessToken string, expireIn int, err error) {
 		if err != nil {
 			xlog.Errorf("refresh access token error(%+v)", err)
 			return
 		}
-		xlog.Infof("accessToken: %s", accessToken)
+		xlog.Infof("appid:%s, accessToken: %s", appid, accessToken)
 		xlog.Infof("expireIn: %d", expireIn)
 	})
 	os.Exit(m.Run())

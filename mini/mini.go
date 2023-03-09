@@ -21,7 +21,7 @@ type SDK struct {
 	accessToken     string
 	RefreshInternal time.Duration
 
-	callback func(accessToken string, expireIn int, err error)
+	callback func(appid, accessToken string, expireIn int, err error)
 }
 
 // New 初始化微信小程序 SDK
