@@ -75,19 +75,29 @@ func (s *SDK) SetAccessTokenRefreshInternal(internal time.Duration) {
 // GetAccessTokenMap 获取 access_token map，key 为 openid
 func (s *SDK) GetAccessTokenMap() (openidATMap map[string]*AT) {
 	openidATMap = make(map[string]*AT, len(s.openidAccessTokenMap))
-	s.mu.RLock()
-	defer s.mu.RUnlock()
-	for k, v := range s.openidAccessTokenMap {
-		openidATMap[k] = &AT{
-			AccessToken:  v.AccessToken,
-			ExpiresIn:    v.ExpiresIn,
-			RefreshToken: v.RefreshToken,
-			Openid:       v.Openid,
-			Scope:        v.Scope,
-			Unionid:      v.Unionid,
+	if s.openidAccessTokenMap != nil && len(s.openidAccessTokenMap) > 0 {
+		s.mu.RLock()
+		defer s.mu.RUnlock()
+		for k, v := range s.openidAccessTokenMap {
+			openidATMap[k] = &AT{
+				AccessToken:  v.AccessToken,
+				ExpiresIn:    v.ExpiresIn,
+				RefreshToken: v.RefreshToken,
+				Openid:       v.Openid,
+				Scope:        v.Scope,
+				Unionid:      v.Unionid,
+			}
 		}
+		return
 	}
-	return openidATMap
+	return
+}
+
+// DelAccessToken 根据 openid 删除 map 中维护的 access_token
+func (s *SDK) DelAccessToken(openid string) {
+	if s.openidAccessTokenMap != nil {
+		delete(s.openidAccessTokenMap, openid)
+	}
 }
 
 // Code2AccessToken 通过 code 获取用户 access_token
