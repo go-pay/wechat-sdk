@@ -19,39 +19,57 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	// 初始化微信开放平台 SDK
-	//	Appid：Appid
-	//	Secret：appSecret
-	//	autoManageToken：是否自动获取并自动维护刷新 AccessToken
+	// New 初始化微信开放平台 SDK
+	// Appid：Appid
+	// Secret：appSecret
+	// autoManageToken：是否自动维护刷新 AccessToken（用户量较少时推荐使用，默认10分钟轮询检测一次，发现有效期小于1.5倍轮询时间时，自动刷新）
 	openSDK = New(Appid, Secret, true)
 
 	// 打开Debug开关，输出日志
 	openSDK.DebugSwitch = wechat.DebugOn
 
-	// 如果 自行维护 AccessToken，请需要手动设置 Token
-	// openSDK.SetOpenAccessToken("access_token")
+	// 可自行设置 AccessToken 刷新间隔
+	//openSDK.SetAccessTokenRefreshInternal(5 * time.Minute)
 
-	// 注意：必须优先换取 开放平台 AccessToken，否则会导致部分接口调用失败
-	at, err := openSDK.Code2AccessToken(ctx, "xxx")
-	if err != nil {
-		xlog.Error(err)
-		return
-	}
-	xlog.Infof("at: %s", at)
-
-	// 每次刷新 accessToken 后，此方法回调返回 accessToken 和 有效时间（秒）
-	openSDK.SetOpenAccessTokenCallback(func(at *AccessToken, err error) {
+	// 此方法回调返回 AccessToken
+	openSDK.SetAccessTokenCallback(func(at *AT, err error) {
 		if err != nil {
-			xlog.Errorf("refresh access token error(%+v)", err)
+			xlog.Errorf("call back access token err:%+v", err)
 			return
 		}
-		xlog.Infof("AccessToken: %+v", at)
+		xlog.Infof("call back access token: %v", at)
 	})
 	os.Exit(m.Run())
 }
 
+func TestCode2AccessToken(t *testing.T) {
+	at, err := openSDK.Code2AccessToken(ctx, "xxx")
+	if err != nil {
+		xlog.Errorf("Code2AccessToken,err:%v", err)
+		return
+	}
+	xlog.Infof("at: %v", at)
+}
+
+func TestRefreshAccessToken(t *testing.T) {
+	at, err := openSDK.RefreshAccessToken(ctx, "refreshToken")
+	if err != nil {
+		xlog.Errorf("RefreshAccessToken,err:%v", err)
+		return
+	}
+	xlog.Infof("at: %v", at)
+}
+
+func TestCheckAccessToken(t *testing.T) {
+	err := openSDK.CheckAccessToken(ctx, "accessToken", "openid")
+	if err != nil {
+		xlog.Errorf("CheckAccessToken,err:%v", err)
+		return
+	}
+}
+
 func TestUserInfo(t *testing.T) {
-	rsp, err := openSDK.UserInfo(ctx, "openid", "zh_CN")
+	rsp, err := openSDK.UserInfo(ctx, "access_token", "openid", "zh_CN")
 	if err != nil {
 		xlog.Error(err)
 		return

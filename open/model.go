@@ -16,6 +16,15 @@ type Config struct {
 	Host        string
 }
 
+type AT struct {
+	AccessToken  string // 获取到的凭证
+	ExpiresIn    int    // 凭证有效时间，单位：秒。目前是7200秒之内的值。
+	RefreshToken string // 用户刷新 access_token
+	Openid       string // 授权用户唯一标识
+	Scope        string // 用户授权的作用域，使用逗号（,）分隔
+	Unionid      string // 当且仅当该移动应用已获得该用户的 userinfo 授权时，才会出现该字段
+}
+
 type AccessToken struct {
 	AccessToken  string `json:"access_token,omitempty"`  // 获取到的凭证
 	ExpiresIn    int    `json:"expires_in,omitempty"`    // 凭证有效时间，单位：秒。目前是7200秒之内的值。

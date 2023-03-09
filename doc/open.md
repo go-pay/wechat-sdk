@@ -16,10 +16,10 @@ import (
     "github.com/go-pay/wechat-sdk/pkg/xlog"
 )
 
-// 初始化微信开放平台 SDK
-//	Appid：Appid
-//	Secret：appSecret
-//	autoManageToken：是否自动获取并自动维护刷新 AccessToken
+// New 初始化微信开放平台 SDK
+// Appid：Appid
+// Secret：appSecret
+// autoManageToken：是否自动维护刷新 AccessToken（用户量较少时推荐使用，默认10分钟轮询检测一次，发现有效期小于1.5倍轮询时间时，自动刷新）
 openSDK, err := open.New(Appid, Secret, true)
 if err != nil {
     xlog.Error(err)
@@ -28,31 +28,50 @@ if err != nil {
 
 // 打开Debug开关，输出日志
 openSDK.DebugSwitch = wechat.DebugOn
+
+// 可自行设置 AccessToken 刷新间隔
+//openSDK.SetAccessTokenRefreshInternal(5 * time.Minute)
+
+// 此方法回调返回 AccessToken
+openSDK.SetAccessTokenCallback(func(at *AT, err error) {
+    if err != nil {
+        xlog.Errorf("call back access token err:%+v", err)
+        return
+    }
+    xlog.Infof("call back access token: %v", at)
+})
 ```
 
-
-#### 通过 code 获取 access_token
+#### 通过 code 获取用户 access_token
 
 ```go
-// 如果 自行维护 AccessToken，请需要手动设置 Token
-// openSDK.SetOpenAccessToken("access_token")
-
-// 注意：必须优先换取 开放平台 AccessToken，否则会导致部分接口调用失败
 at, err := openSDK.Code2AccessToken(ctx, "code")
 if err != nil {
-	xlog.Error(err)
-	return
+    xlog.Error(err)
+    return
 }
 xlog.Infof("at: %s", at)
+```
 
-// 每次刷新 accessToken 后，此方法回调返回 accessToken 和 有效时间（秒）
-openSDK.SetOpenAccessTokenCallback(func(at *AccessToken, err error) {
-	if err != nil {
-		xlog.Errorf("refresh access token error(%+v)", err)
-		return
-	}
-	xlog.Infof("AccessToken: %+v", at)
-})
+#### 刷新或续期 access_token 使用
+
+```go
+at, err := openSDK.RefreshAccessToken(ctx, "refreshToken")
+if err != nil {
+    xlog.Error(err)
+    return
+}
+xlog.Infof("at: %s", at)
+```
+
+#### 检验授权凭证（access_token）是否有效
+
+```go
+err := openSDK.CheckAccessToken(ctx, "accessToken", "openid")
+if err != nil {
+    xlog.Errorf("CheckAccessToken,err:%v", err)
+    return
+}
 ```
 
 #### 获取用户信息
@@ -68,9 +87,10 @@ xlog.Infof("rsp:%+v", rsp)
 
 ## 附录：
 
-### 微信开发平台 服务端API
+### 微信开放平台 服务端API
 
 * <font color='#07C160' size='4'>微信登录功能</font>
-	* 通过 code 获取 access_token：``sdk.Code2AccessToken()`
+	* 通过 code 获取 access_token：`sdk.Code2AccessToken()`
+	* 刷新或续期 access_token：`sdk.RefreshAccessToken()`
 	* 检验授权凭证 access_token 是否有效：`sdk.CheckAccessToken()`
 	* 获取用户个人信息（UnionID 机制）：`sdk.UserInfo()`
