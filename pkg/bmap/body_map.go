@@ -160,7 +160,7 @@ func (bm BodyMap) EncodeWeChatSignParams(apiKey string) string {
 }
 
 // ("bar=baz&foo=quux") sorted by key.
-func (bm BodyMap) EncodeAliPaySignParams() string {
+func (bm BodyMap) EncodeSortedSignParams() string {
 	if bm == nil {
 		return ""
 	}
