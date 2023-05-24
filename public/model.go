@@ -76,3 +76,10 @@ type UserTagIdListRsp struct {
 	Errmsg    string `json:"errmsg,omitempty"`
 	TagidList []int  `json:"tagid_list,omitempty"`
 }
+
+type TicketRsp struct {
+	Errcode   int    `json:"errcode,omitempty"`
+	Errmsg    string `json:"errmsg,omitempty"`
+	Ticket    string `json:"ticket,omitempty"`
+	ExpiresIn int    `json:"expires_in,omitempty"` // 有效期7200秒，开发者必须在自己的服务全局缓存jsapi_ticket
+}

@@ -94,3 +94,10 @@ xlog.Infof("rsp:%+v", rsp)
 	* 生成带参数的二维码：`sdk.QRCodeCreate()`
 	* 生成短key托管：`sdk.ShortKeyGen()`
 	* 获取托管的短key：`sdk.ShortKeyFetch()`
+* <font color='#07C160' size='4'>微信网页开发</font>
+	* 获取 jsapi_ticket：`sdk.GetJsApiTicket()`
+	* 获取卡券 api_ticket：`sdk.GetApiTicket()`
+
+### 微信公众号 公共API
+
+* `public.JsSDKUsePermissionSign()` => 获取JS-SDK使用权限签名
