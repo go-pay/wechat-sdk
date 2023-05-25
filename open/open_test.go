@@ -12,7 +12,6 @@ import (
 var (
 	ctx     = context.Background()
 	openSDK *SDK
-	err     error
 	// 测试时，将自己的Appid和Secret填入，此appid和secret为测试号
 	Appid  = "wxcfad67697020fc14"
 	Secret = "c104683b3067ceac97b680aa5bf62b69"

@@ -22,7 +22,6 @@ type SDK struct {
 	Host                     string
 	autoManageToken          bool                    // 是否自动维护刷新 AccessToken
 	autoRefreshTokenInternal time.Duration           // 自动刷新 token 的间隔时间
-	minRefreshTokenDuration  time.Duration           // 最小刷新 token 的阈值时长
 	openidAccessTokenMap     map[string]*AccessToken // key: openid
 
 	callback func(at *AT, err error)
