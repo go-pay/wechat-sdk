@@ -23,7 +23,7 @@ func TestMain(m *testing.M) {
 	// 初始化微信小程序 SDK
 	//	Appid：Appid
 	//	Secret：appSecret
-	//	autoManageToken：是否自动获取并自动维护刷新 AccessToken
+	//	autoManageToken：是否自动获取并自动维护刷新 AccessToken，默认使用稳定版接口且force_refresh=false
 	miniSDK, err = New(Appid, Secret, true)
 	if err != nil {
 		xlog.Error(err)

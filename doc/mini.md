@@ -21,7 +21,7 @@ import (
 // 初始化微信小程序 SDK
 // Appid：Appid
 // Secret：appSecret
-// autoManageToken：是否自动获取并自动维护刷新 AccessToken
+// autoManageToken：是否自动获取并自动维护刷新 AccessToken，默认使用稳定版接口且force_refresh=false
 miniSDK, err := mini.New(Appid, Secret, true)
 if err != nil {
     xlog.Error(err)
@@ -126,8 +126,13 @@ if err != nil {
 	* 开放数据解密：`sdk.DecryptOpenData()`
 * <font color='#07C160' size='4'>客服消息</font>
 	* 获取客服消息内的临时素材：`sdk.CSMessageGetTempMedia()`
-	* 发送客服消息给用户：`sdk.CSMessageSend()`
+	* 发送客服消息：`sdk.CSMessageSend()`
 	* 下发客服当前输入状态给用户：`sdk.CSMessageSetTyping()`
-	* 把媒体文件上传到微信服务器（目前仅支持图片）：`sdk.CSMessageUploadTempMedia()`
+	* 新增图片素材：`sdk.CSMessageUploadTempMedia()`
 * <font color='#07C160' size='4'>统一服务消息</font>
 	* 发送统一服务消息：`sdk.UniformMessageSend()` 未完成
+
+### 微信小程序 公共API
+
+* `mini.GetAccessToken()` => 获取接口调用凭据
+* `mini.GetStableAccessToken()` => 获取稳定版接口调用凭据

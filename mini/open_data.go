@@ -33,7 +33,7 @@ func (s *SDK) VerifyDecryptOpenData(rowData, signature, sessionKey string) (ok b
 // sessionKey：会话密钥，通过 sdk.Code2Session() 方法获取到
 // ptr：需要解析到的结构体指针，例：mini.UserPhone、mini.UserInfo
 // 文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
-func (s *SDK) DecryptOpenData(encryptedData, iv, sessionKey string, ptr interface{}) (err error) {
+func (s *SDK) DecryptOpenData(encryptedData, iv, sessionKey string, ptr any) (err error) {
 	if encryptedData == util.NULL || iv == util.NULL || sessionKey == util.NULL {
 		return errors.New("input params can not null")
 	}

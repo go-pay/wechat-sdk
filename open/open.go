@@ -48,7 +48,7 @@ func New(appid, secret string, autoManageToken bool) (o *SDK) {
 	return
 }
 
-func (s *SDK) DoRequestGet(c context.Context, path string, ptr interface{}) (err error) {
+func (s *SDK) DoRequestGet(c context.Context, path string, ptr any) (err error) {
 	uri := s.Host + path
 	httpClient := xhttp.NewClient()
 	if s.DebugSwitch == wechat.DebugOn {
@@ -57,7 +57,7 @@ func (s *SDK) DoRequestGet(c context.Context, path string, ptr interface{}) (err
 	httpClient.Header.Add(xhttp.HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
 	res, bs, err := httpClient.Get(uri).EndBytes(c)
 	if err != nil {
-		return fmt.Errorf("http.request(GET, %s)：%w", uri, err)
+		return fmt.Errorf("http.request(GET, %s), status_code:%d, err:%w", uri, res.StatusCode, err)
 	}
 	if s.DebugSwitch == wechat.DebugOn {
 		xlog.Debugf("Wechat_Open_SDK_Response: [%d] -> %s", res.StatusCode, string(bs))
