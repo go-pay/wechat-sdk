@@ -5,9 +5,9 @@ import (
 	"os"
 	"testing"
 
+	"github.com/go-pay/bm"
 	"github.com/go-pay/wechat-sdk"
-	"github.com/go-pay/wechat-sdk/pkg/bmap"
-	"github.com/go-pay/wechat-sdk/pkg/xlog"
+	"github.com/go-pay/xlog"
 )
 
 var (
@@ -20,6 +20,7 @@ var (
 )
 
 func TestMain(m *testing.M) {
+	xlog.SetLevel(xlog.DebugLevel)
 	// 初始化微信小程序 SDK
 	//	Appid：Appid
 	//	Secret：appSecret
@@ -62,10 +63,10 @@ func TestCode2Session(t *testing.T) {
 }
 
 func TestUniformMessageSend(t *testing.T) {
-	body := make(bmap.BodyMap)
-	bb := make(bmap.BodyMap)
+	body := make(bm.BodyMap)
+	bb := make(bm.BodyMap)
 	bb.Set("appid", "APPID").
-		Set("template_id", "TEMPLATE_ID").SetBodyMap("miniprogram", func(b bmap.BodyMap) {
+		Set("template_id", "TEMPLATE_ID").SetBodyMap("miniprogram", func(b bm.BodyMap) {
 		b.Set("appid", "xiaochengxuappid12345").Set("pagepath", "index?foo=bar")
 	})
 

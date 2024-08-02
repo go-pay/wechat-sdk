@@ -1,6 +1,6 @@
 package mini
 
-import "github.com/go-pay/wechat-sdk/pkg/xtime"
+import "github.com/go-pay/xtime"
 
 const (
 	Success = 0

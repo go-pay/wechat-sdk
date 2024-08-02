@@ -1,18 +1,16 @@
 package mini
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
 	"crypto/sha1"
 	"encoding/base64"
 	"encoding/hex"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"reflect"
 
-	xaes "github.com/go-pay/wechat-sdk/pkg/aes"
-	"github.com/go-pay/wechat-sdk/pkg/util"
+	"github.com/go-pay/crypto/aes"
+	"github.com/go-pay/util"
+	"github.com/go-pay/util/js"
 )
 
 // VerifyDecryptOpenData 数据签名校验
@@ -39,8 +37,6 @@ func (s *SDK) DecryptOpenData(encryptedData, iv, sessionKey string, ptr any) (er
 	}
 	var (
 		cipherText, aesKey, ivKey, plainText []byte
-		block                                cipher.Block
-		blockMode                            cipher.BlockMode
 	)
 	beanValue := reflect.ValueOf(ptr)
 	if beanValue.Kind() != reflect.Ptr {
@@ -55,17 +51,12 @@ func (s *SDK) DecryptOpenData(encryptedData, iv, sessionKey string, ptr any) (er
 	if len(cipherText)%len(aesKey) != 0 {
 		return errors.New("encryptedData error")
 	}
-	if block, err = aes.NewCipher(aesKey); err != nil {
-		return fmt.Errorf("aes.NewCipher(),error(%w)", err)
+	plainText, err = aes.CBCDecrypt(cipherText, aesKey, ivKey)
+	if err != nil {
+		return fmt.Errorf("aes.CBCDecrypt(),err(%w)", err)
 	}
-	blockMode = cipher.NewCBCDecrypter(block, ivKey)
-	plainText = make([]byte, len(cipherText))
-	blockMode.CryptBlocks(plainText, cipherText)
-	if len(plainText) > 0 {
-		plainText = xaes.PKCS7UnPadding(plainText)
-	}
-	if err = json.Unmarshal(plainText, ptr); err != nil {
-		return fmt.Errorf("json.Unmarshal(%s, %+v),error(%w)", string(plainText), ptr, err)
+	if err = js.UnmarshalBytes(plainText, ptr); err != nil {
+		return fmt.Errorf("js.UnmarshalBytes(%s, %+v),error(%w)", string(plainText), ptr, err)
 	}
 	return
 }

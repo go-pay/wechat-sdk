@@ -1,3 +1,7 @@
+版本号：Release 1.1.6
+修改记录：
+   (1) big change
+
 版本号：Release 1.1.5
 修改记录：
    (1) 微信公众号：新增 ticket获取，js-sdk使用校验签名接口

@@ -6,7 +6,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	"github.com/go-pay/wechat-sdk/pkg/bmap"
+	"github.com/go-pay/bm"
 )
 
 // GetPluginOpenPid 获取插件用户openpid
@@ -16,9 +16,9 @@ import (
 func (s *SDK) GetPluginOpenPid(c context.Context, code string) (openpid *PluginOpenPid, err error) {
 	path := "/wxa/getpluginopenpid?access_token=" + s.accessToken
 	openpid = &PluginOpenPid{}
-	body := make(bmap.BodyMap)
+	body := make(bm.BodyMap)
 	body.Set("code", code)
-	if err = s.doRequestPost(c, path, body, openpid); err != nil {
+	if _, err = s.doRequestPost(c, path, body, openpid); err != nil {
 		return nil, err
 	}
 	if openpid.Errcode != Success {
@@ -35,7 +35,7 @@ func (s *SDK) GetPluginOpenPid(c context.Context, code string) (openpid *PluginO
 func (s *SDK) GetPaidUnionid(c context.Context, openid, transactionId string) (unionid *PaidUnionId, err error) {
 	path := "/wxa/getpaidunionid?access_token=" + s.accessToken + "&openid=" + openid + "&transaction_id=" + transactionId
 	unionid = &PaidUnionId{}
-	if err = s.doRequestGet(c, path, unionid); err != nil {
+	if _, err = s.doRequestGet(c, path, unionid); err != nil {
 		return nil, err
 	}
 	if unionid.Errcode != Success {
@@ -53,7 +53,7 @@ func (s *SDK) GetPaidUnionid(c context.Context, openid, transactionId string) (u
 func (s *SDK) GetPaidUnionidByTradeNo(c context.Context, openid, mchid, tradeNo string) (unionid *PaidUnionId, err error) {
 	path := "/wxa/getpaidunionid?access_token=" + s.accessToken + "&openid=" + openid + "&mch_id=" + mchid + "&out_trade_no=" + tradeNo
 	unionid = &PaidUnionId{}
-	if err = s.doRequestGet(c, path, unionid); err != nil {
+	if _, err = s.doRequestGet(c, path, unionid); err != nil {
 		return nil, err
 	}
 	if unionid.Errcode != Success {
@@ -71,10 +71,10 @@ func (s *SDK) CheckEncryptedData(c context.Context, encryptedData string) (resul
 	path := "/wxa/business/checkencryptedmsg?access_token=" + s.accessToken
 	h := sha256.New()
 	h.Write([]byte(encryptedData))
-	body := make(bmap.BodyMap)
+	body := make(bm.BodyMap)
 	body.Set("encrypted_msg_hash", hex.EncodeToString(h.Sum(nil)))
 	result = &CheckEncryptedResult{}
-	if err = s.doRequestPost(c, path, body, result); err != nil {
+	if _, err = s.doRequestPost(c, path, body, result); err != nil {
 		return nil, err
 	}
 	if result.Errcode != Success {
@@ -90,12 +90,12 @@ func (s *SDK) CheckEncryptedData(c context.Context, encryptedData string) (resul
 // 文档：https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-info/internet/getUserEncryptKey.html
 func (s *SDK) GetUserEncryptKey(c context.Context, openid, signature, sigMethod string) (uek *UserEncryptKey, err error) {
 	path := "/wxa/business/getuserencryptkey?access_token=" + s.accessToken
-	body := make(bmap.BodyMap)
+	body := make(bm.BodyMap)
 	body.Set("openid", openid).
 		Set("signature", signature).
 		Set("sig_method", sigMethod)
 	uek = &UserEncryptKey{}
-	if err = s.doRequestPost(c, path, body, uek); err != nil {
+	if _, err = s.doRequestPost(c, path, body, uek); err != nil {
 		return nil, err
 	}
 	if uek.Errcode != Success {
@@ -111,9 +111,9 @@ func (s *SDK) GetUserEncryptKey(c context.Context, openid, signature, sigMethod 
 func (s *SDK) GetPhoneNumber(c context.Context, code string) (pn *PhoneNumberRsp, err error) {
 	path := "/wxa/business/getuserphonenumber?access_token=" + s.accessToken
 	pn = &PhoneNumberRsp{}
-	body := make(bmap.BodyMap)
+	body := make(bm.BodyMap)
 	body.Set("code", code)
-	if err = s.doRequestPost(c, path, body, pn); err != nil {
+	if _, err = s.doRequestPost(c, path, body, pn); err != nil {
 		return nil, err
 	}
 	if pn.Errcode != Success {

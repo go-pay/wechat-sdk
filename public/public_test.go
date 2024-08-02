@@ -5,9 +5,9 @@ import (
 	"os"
 	"testing"
 
+	"github.com/go-pay/bm"
 	"github.com/go-pay/wechat-sdk"
-	"github.com/go-pay/wechat-sdk/pkg/bmap"
-	"github.com/go-pay/wechat-sdk/pkg/xlog"
+	"github.com/go-pay/xlog"
 )
 
 var (
@@ -20,6 +20,7 @@ var (
 )
 
 func TestMain(m *testing.M) {
+	xlog.SetLevel(xlog.DebugLevel)
 	// 初始化微信公众号 SDK
 	//	Appid：Appid
 	//	Secret：appSecret
@@ -53,12 +54,12 @@ func TestMain(m *testing.M) {
 }
 
 func TestQRCodeCreate(t *testing.T) {
-	body := make(bmap.BodyMap)
+	body := make(bm.BodyMap)
 	// 临时二维码
 	body.Set("expire_seconds", 604800).
 		Set("action_name", "QR_SCENE").
-		SetBodyMap("action_info", func(b bmap.BodyMap) {
-			b.SetBodyMap("scene", func(b bmap.BodyMap) {
+		SetBodyMap("action_info", func(b bm.BodyMap) {
+			b.SetBodyMap("scene", func(b bm.BodyMap) {
 				b.Set("scene_id", 123)
 			})
 		})
@@ -74,8 +75,8 @@ func TestQRCodeCreate(t *testing.T) {
 
 	// 永久二维码
 	body.Set("action_name", "QR_LIMIT_SCENE").
-		SetBodyMap("action_info", func(b bmap.BodyMap) {
-			b.SetBodyMap("scene", func(b bmap.BodyMap) {
+		SetBodyMap("action_info", func(b bm.BodyMap) {
+			b.SetBodyMap("scene", func(b bm.BodyMap) {
 				b.Set("scene_id", 456)
 			})
 		})
@@ -88,7 +89,7 @@ func TestQRCodeCreate(t *testing.T) {
 }
 
 func TestShortKeyGen(t *testing.T) {
-	body := make(bmap.BodyMap)
+	body := make(bm.BodyMap)
 	body.Set("long_data", "loooooong data").
 		Set("expire_seconds", 86400)
 
