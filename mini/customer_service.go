@@ -4,8 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/go-pay/wechat-sdk/pkg/bmap"
-	"github.com/go-pay/wechat-sdk/pkg/util"
+	"github.com/go-pay/bm"
 )
 
 // CSMessageGetTempMedia 获取客服消息内的临时素材
@@ -26,9 +25,9 @@ func (s *SDK) CSMessageGetTempMedia(c context.Context, mediaId string) (media []
 // msgType：消息类型，枚举值：mini.MsgTypeText、mini.MsgTypeImage、mini.MsgTypeLink、mini.MsgTypeMiniPage
 // msgValue：对应 msgType 的value值，BodyMap key-value 格式传入
 // 文档：https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/kf-mgnt/kf-message/sendCustomMessage.html
-func (s *SDK) CSMessageSend(c context.Context, toUser string, msgType MsgType, msgValue bmap.BodyMap) (err error) {
+func (s *SDK) CSMessageSend(c context.Context, toUser string, msgType MsgType, msgValue bm.BodyMap) (err error) {
 	path := "/cgi-bin/message/custom/send?access_token=" + s.accessToken
-	body := make(bmap.BodyMap)
+	body := make(bm.BodyMap)
 	body.Set("touser", toUser)
 	switch msgType {
 	case MsgTypeText:
@@ -45,7 +44,7 @@ func (s *SDK) CSMessageSend(c context.Context, toUser string, msgType MsgType, m
 			Set("text", msgValue)
 	}
 	ec := &ErrorCode{}
-	if err = s.doRequestPost(c, path, body, ec); err != nil {
+	if _, err = s.doRequestPost(c, path, body, ec); err != nil {
 		return err
 	}
 	if ec.Errcode != Success {
@@ -61,7 +60,7 @@ func (s *SDK) CSMessageSend(c context.Context, toUser string, msgType MsgType, m
 // 文档：https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/kf-mgnt/kf-message/setTyping.html
 func (s *SDK) CSMessageSetTyping(c context.Context, toUser string, typingStatus TypingStatus) (err error) {
 	path := "/cgi-bin/message/custom/typing?access_token=" + s.accessToken
-	body := make(bmap.BodyMap)
+	body := make(bm.BodyMap)
 	body.Set("touser", toUser)
 	switch typingStatus {
 	case TypingTyping:
@@ -70,7 +69,7 @@ func (s *SDK) CSMessageSetTyping(c context.Context, toUser string, typingStatus 
 		body.Set("command", "CancelTyping")
 	}
 	ec := &ErrorCode{}
-	if err = s.doRequestPost(c, path, body, ec); err != nil {
+	if _, err = s.doRequestPost(c, path, body, ec); err != nil {
 		return err
 	}
 	if ec.Errcode != Success {
@@ -83,13 +82,13 @@ func (s *SDK) CSMessageSetTyping(c context.Context, toUser string, typingStatus 
 // 注意：errcode = 0 为成功
 // 注意：目前仅支持图片，用于发送客服消息或被动回复用户消息。
 // 文档：https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/kf-mgnt/kf-message/uploadTempMedia.html
-func (s *SDK) CSMessageUploadTempMedia(c context.Context, img *util.File) (media *UploadTempMedia, err error) {
+func (s *SDK) CSMessageUploadTempMedia(c context.Context, img *bm.File) (media *UploadTempMedia, err error) {
 	path := "/cgi-bin/media/upload?access_token=" + s.accessToken
-	body := make(bmap.BodyMap)
+	body := make(bm.BodyMap)
 	body.Set("type", "image").
 		SetFormFile("media", img)
 	media = &UploadTempMedia{}
-	if err = s.doRequestPostFile(c, path, body, media); err != nil {
+	if _, err = s.doRequestPostFile(c, path, body, media); err != nil {
 		return nil, err
 	}
 	if media.Errcode != Success {

@@ -16,7 +16,7 @@ func (s *SDK) UserInfo(c context.Context, accessToken, openid, lan string) (ui *
 	}
 	path := "/sns/userinfo?access_token=" + accessToken + "&openid=" + openid + "&lang=" + lan
 	ui = &UserInfo{}
-	if err = s.DoRequestGet(c, path, ui); err != nil {
+	if _, err = s.DoRequestGet(c, path, ui); err != nil {
 		return
 	}
 	if ui.Errcode != Success {

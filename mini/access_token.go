@@ -6,8 +6,6 @@ import (
 	"runtime"
 	"strconv"
 	"time"
-
-	"github.com/go-pay/wechat-sdk/pkg/xlog"
 )
 
 // 获取小程序全局唯一后台接口调用凭据（access_token）
@@ -25,7 +23,7 @@ func (s *SDK) getAccessToken() (err error) {
 
 	path := "/cgi-bin/token?grant_type=client_credential&appid=" + s.Appid + "&secret=" + s.Secret
 	at := &AccessToken{}
-	if err = s.DoRequestGet(s.ctx, path, at); err != nil {
+	if _, err = s.DoRequestGet(s.ctx, path, at); err != nil {
 		return
 	}
 	if at.Errcode != Success {
@@ -45,7 +43,7 @@ func (s *SDK) goAutoRefreshAccessToken() {
 		if r := recover(); r != nil {
 			buf := make([]byte, 64<<10)
 			buf = buf[:runtime.Stack(buf, false)]
-			xlog.Errorf("mini_goAutoRefreshAccessToken: panic recovered: %s\n%s", r, buf)
+			s.logger.Errorf("mini_goAutoRefreshAccessToken: panic recovered: %s\n%s", r, buf)
 		}
 	}()
 	for {
@@ -53,7 +51,7 @@ func (s *SDK) goAutoRefreshAccessToken() {
 		time.Sleep(s.RefreshInternal / 2)
 		err := s.getAccessToken()
 		if err != nil {
-			xlog.Errorf("get access token error, after 10s retry: %+v", err)
+			s.logger.Errorf("get access token error, after 10s retry: %+v", err)
 			continue
 		}
 	}
@@ -74,7 +72,7 @@ func (s *SDK) getStableAccessToken() (err error) {
 
 	path := "/cgi-bin/stable_token?grant_type=client_credential&appid=" + s.Appid + "&secret=" + s.Secret + "&force_refresh=false"
 	at := &AccessToken{}
-	if err = s.DoRequestGet(s.ctx, path, at); err != nil {
+	if _, err = s.DoRequestGet(s.ctx, path, at); err != nil {
 		return
 	}
 	if at.Errcode != Success {
@@ -94,7 +92,7 @@ func (s *SDK) goAutoRefreshStableAccessToken() {
 		if r := recover(); r != nil {
 			buf := make([]byte, 64<<10)
 			buf = buf[:runtime.Stack(buf, false)]
-			xlog.Errorf("mini_goAutoRefreshAccessToken: panic recovered: %s\n%s", r, buf)
+			s.logger.Errorf("mini_goAutoRefreshAccessToken: panic recovered: %s\n%s", r, buf)
 		}
 	}()
 	for {
@@ -102,7 +100,7 @@ func (s *SDK) goAutoRefreshStableAccessToken() {
 		time.Sleep(s.RefreshInternal / 2)
 		err := s.getStableAccessToken()
 		if err != nil {
-			xlog.Errorf("get access token error, after 10s retry: %+v", err)
+			s.logger.Errorf("get access token error, after 10s retry: %+v", err)
 			continue
 		}
 	}

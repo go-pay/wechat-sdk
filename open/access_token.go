@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"runtime"
 	"time"
-
-	"github.com/go-pay/wechat-sdk/pkg/xlog"
 )
 
 func (s *SDK) refreshAccessToken(openid, refreshToken string) {
@@ -15,7 +13,7 @@ func (s *SDK) refreshAccessToken(openid, refreshToken string) {
 		at   = &AccessToken{}
 		err  error
 	)
-	if err = s.DoRequestGet(s.ctx, path, at); err != nil {
+	if _, err = s.DoRequestGet(s.ctx, path, at); err != nil {
 		if s.callback != nil {
 			go s.callback(nil, fmt.Errorf("openid[%s],refresh_token[%s] refresh access token failed: %w", openid, refreshToken, err))
 		}
@@ -47,7 +45,7 @@ func (s *SDK) goAutoRefreshAccessTokenJob() {
 		if r := recover(); r != nil {
 			buf := make([]byte, 64<<10)
 			buf = buf[:runtime.Stack(buf, false)]
-			xlog.Errorf("open_goAutoRefreshAccessToken: panic recovered: %s\n%s", r, buf)
+			s.logger.Errorf("open_goAutoRefreshAccessToken: panic recovered: %s\n%s", r, buf)
 		}
 	}()
 	for {
@@ -105,7 +103,7 @@ func (s *SDK) DelAccessToken(openid string) {
 func (s *SDK) Code2AccessToken(c context.Context, code string) (at *AccessToken, err error) {
 	path := "/sns/oauth2/access_token?grant_type=authorization_code&appid=" + s.Appid + "&secret=" + s.Secret + "&code=" + code
 	at = &AccessToken{}
-	if err = s.DoRequestGet(c, path, at); err != nil {
+	if _, err = s.DoRequestGet(c, path, at); err != nil {
 		return nil, err
 	}
 	if at.Errcode != Success {
@@ -135,7 +133,7 @@ func (s *SDK) Code2AccessToken(c context.Context, code string) (at *AccessToken,
 func (s *SDK) RefreshAccessToken(c context.Context, refreshToken string) (at *AccessToken, err error) {
 	path := "/sns/oauth2/refresh_token?grant_type=refresh_token&appid=" + s.Appid + "&refresh_token=" + refreshToken
 	at = &AccessToken{}
-	if err = s.DoRequestGet(s.ctx, path, at); err != nil {
+	if _, err = s.DoRequestGet(s.ctx, path, at); err != nil {
 		return nil, err
 	}
 	if at.Errcode != Success {
@@ -166,7 +164,7 @@ func (s *SDK) RefreshAccessToken(c context.Context, refreshToken string) (at *Ac
 func (s *SDK) CheckAccessToken(c context.Context, accessToken, openid string) (err error) {
 	path := "/sns/auth?access_token=" + accessToken + "&openid=" + openid
 	ec := &ErrorCode{}
-	if err = s.DoRequestGet(c, path, ec); err != nil {
+	if _, err = s.DoRequestGet(c, path, ec); err != nil {
 		return err
 	}
 	if ec.Errcode != Success {

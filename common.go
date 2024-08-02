@@ -10,6 +10,8 @@ const (
 	DebugOff = 0
 	DebugOn  = 1
 
+	HeaderRequestID = "Request-ID"
+
 	Version = "1.1.5"
 )
 

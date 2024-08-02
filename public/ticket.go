@@ -11,7 +11,7 @@ import (
 func (s *SDK) GetJsApiTicket(c context.Context) (jt *TicketRsp, err error) {
 	path := "/cgi-bin/ticket/getticket?access_token=" + s.accessToken + "&type=jsapi"
 	jt = &TicketRsp{}
-	if err = s.doRequestGet(c, path, jt); err != nil {
+	if _, err = s.doRequestGet(c, path, jt); err != nil {
 		return nil, err
 	}
 	if jt.Errcode != Success {
@@ -27,7 +27,7 @@ func (s *SDK) GetApiTicket(c context.Context) (at *TicketRsp, err error) {
 	// /cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=wx_card
 	path := "/cgi-bin/ticket/getticket?access_token=" + s.accessToken + "&type=wx_card"
 	at = &TicketRsp{}
-	if err = s.doRequestGet(c, path, at); err != nil {
+	if _, err = s.doRequestGet(c, path, at); err != nil {
 		return nil, err
 	}
 	if at.Errcode != Success {

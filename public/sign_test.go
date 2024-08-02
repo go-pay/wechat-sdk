@@ -3,7 +3,7 @@ package public
 import (
 	"testing"
 
-	"github.com/go-pay/wechat-sdk/pkg/xlog"
+	"github.com/go-pay/xlog"
 )
 
 func TestJsSDKUsePermissionSign(t *testing.T) {

@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/go-pay/wechat-sdk"
-	"github.com/go-pay/wechat-sdk/pkg/xlog"
+	"github.com/go-pay/xlog"
 )
 
 var (
@@ -18,6 +18,7 @@ var (
 )
 
 func TestMain(m *testing.M) {
+	xlog.SetLevel(xlog.DebugLevel)
 	// New 初始化微信开放平台 SDK
 	// Appid：Appid
 	// Secret：appSecret

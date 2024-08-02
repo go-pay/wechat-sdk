@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/go-pay/wechat-sdk/pkg/bmap"
+	"github.com/go-pay/bm"
 )
 
 // UserTagCreate 用户标签创建
@@ -13,12 +13,12 @@ import (
 // 文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagCreate(c context.Context, tagName string) (ut *UserTagRsp, err error) {
 	path := "/cgi-bin/tags/create?access_token=" + s.accessToken
-	body := make(bmap.BodyMap)
-	body.SetBodyMap("tag", func(b bmap.BodyMap) {
+	body := make(bm.BodyMap)
+	body.SetBodyMap("tag", func(b bm.BodyMap) {
 		b.Set("name", tagName)
 	})
 	ut = &UserTagRsp{}
-	if err = s.doRequestPost(c, path, body, ut); err != nil {
+	if _, err = s.doRequestPost(c, path, body, ut); err != nil {
 		return nil, err
 	}
 	if ut.Errcode != Success {
@@ -33,7 +33,7 @@ func (s *SDK) UserTagCreate(c context.Context, tagName string) (ut *UserTagRsp, 
 func (s *SDK) UserTagList(c context.Context) (utl *UserTagListRsp, err error) {
 	path := "/cgi-bin/tags/get?access_token=" + s.accessToken
 	utl = &UserTagListRsp{}
-	if err = s.doRequestGet(c, path, utl); err != nil {
+	if _, err = s.doRequestGet(c, path, utl); err != nil {
 		return nil, err
 	}
 	if utl.Errcode != Success {
@@ -47,13 +47,13 @@ func (s *SDK) UserTagList(c context.Context) (utl *UserTagListRsp, err error) {
 // 文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagUpdate(c context.Context, tagId int, tagName string) (err error) {
 	path := "/cgi-bin/tags/update?access_token=" + s.accessToken
-	body := make(bmap.BodyMap)
-	body.SetBodyMap("tag", func(b bmap.BodyMap) {
+	body := make(bm.BodyMap)
+	body.SetBodyMap("tag", func(b bm.BodyMap) {
 		b.Set("id", tagId)
 		b.Set("name", tagName)
 	})
 	ec := &ErrorCode{}
-	if err = s.doRequestPost(c, path, body, ec); err != nil {
+	if _, err = s.doRequestPost(c, path, body, ec); err != nil {
 		return err
 	}
 	if ec.Errcode != Success {
@@ -67,12 +67,12 @@ func (s *SDK) UserTagUpdate(c context.Context, tagId int, tagName string) (err e
 // 文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagDelete(c context.Context, tagId int) (err error) {
 	path := "/cgi-bin/tags/delete?access_token=" + s.accessToken
-	body := make(bmap.BodyMap)
-	body.SetBodyMap("tag", func(b bmap.BodyMap) {
+	body := make(bm.BodyMap)
+	body.SetBodyMap("tag", func(b bm.BodyMap) {
 		b.Set("id", tagId)
 	})
 	ec := &ErrorCode{}
-	if err = s.doRequestPost(c, path, body, ec); err != nil {
+	if _, err = s.doRequestPost(c, path, body, ec); err != nil {
 		return err
 	}
 	if ec.Errcode != Success {
@@ -87,13 +87,13 @@ func (s *SDK) UserTagDelete(c context.Context, tagId int) (err error) {
 // 文档：https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
 func (s *SDK) UserTagFansList(c context.Context, tagId int, openid string) (utf *UserTagFansListRsp, err error) {
 	path := "/cgi-bin/user/tag/get?access_token=" + s.accessToken
-	body := make(bmap.BodyMap)
+	body := make(bm.BodyMap)
 	body.Set("tagid", tagId)
 	if openid != "" {
 		body.Set("next_openid", openid)
 	}
 	utf = &UserTagFansListRsp{}
-	if err = s.doRequestPost(c, path, body, utf); err != nil {
+	if _, err = s.doRequestPost(c, path, body, utf); err != nil {
 		return nil, err
 	}
 	if utf.Errcode != Success {
@@ -110,11 +110,11 @@ func (s *SDK) UserTagBatchTagging(c context.Context, tagId int, openidList []str
 		return errors.New("openid_list is empty")
 	}
 	path := "/cgi-bin/tags/members/batchtagging?access_token=" + s.accessToken
-	body := make(bmap.BodyMap)
+	body := make(bm.BodyMap)
 	body.Set("tagid", tagId)
 	body.Set("openid_list", openidList)
 	ec := &ErrorCode{}
-	if err = s.doRequestPost(c, path, body, ec); err != nil {
+	if _, err = s.doRequestPost(c, path, body, ec); err != nil {
 		return err
 	}
 	if ec.Errcode != Success {
@@ -131,11 +131,11 @@ func (s *SDK) UserTagBatchUnTagging(c context.Context, tagId int, openidList []s
 		return errors.New("openid_list is empty")
 	}
 	path := "/cgi-bin/tags/members/batchuntagging?access_token=" + s.accessToken
-	body := make(bmap.BodyMap)
+	body := make(bm.BodyMap)
 	body.Set("tagid", tagId)
 	body.Set("openid_list", openidList)
 	ec := &ErrorCode{}
-	if err = s.doRequestPost(c, path, body, ec); err != nil {
+	if _, err = s.doRequestPost(c, path, body, ec); err != nil {
 		return err
 	}
 	if ec.Errcode != Success {
@@ -152,10 +152,10 @@ func (s *SDK) UserTagIdList(c context.Context, openid string) (uti *UserTagIdLis
 		return nil, errors.New("openid is empty")
 	}
 	path := "/cgi-bin/tags/getidlist?access_token=" + s.accessToken
-	body := make(bmap.BodyMap)
+	body := make(bm.BodyMap)
 	body.Set("openid", openid)
 	uti = &UserTagIdListRsp{}
-	if err = s.doRequestPost(c, path, body, uti); err != nil {
+	if _, err = s.doRequestPost(c, path, body, uti); err != nil {
 		return nil, err
 	}
 	if uti.Errcode != Success {
