@@ -2,7 +2,7 @@ package xhttp
 
 import (
 	"context"
-	"io/ioutil"
+	"os"
 	"testing"
 	"time"
 
@@ -40,7 +40,7 @@ func TestHttpGet(t *testing.T) {
 }
 
 func TestHttpUploadFile(t *testing.T) {
-	fileContent, err := ioutil.ReadFile("../../logo.png")
+	fileContent, err := os.ReadFile("../../logo.png")
 	if err != nil {
 		xlog.Error(err)
 		return

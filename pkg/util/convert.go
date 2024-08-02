@@ -2,7 +2,6 @@ package util
 
 import (
 	"math"
-	"reflect"
 	"strconv"
 	"strings"
 	"unsafe"
@@ -92,9 +91,5 @@ func BinaryToDecimal(bit string) (num int) {
 
 // BytesToString 0 拷贝转换 slice byte 为 string
 func BytesToString(b []byte) (s string) {
-	_bptr := (*reflect.SliceHeader)(unsafe.Pointer(&b))
-	_sptr := (*reflect.StringHeader)(unsafe.Pointer(&s))
-	_sptr.Data = _bptr.Data
-	_sptr.Len = _bptr.Len
-	return s
+	return *(*string)(unsafe.Pointer(&b))
 }
