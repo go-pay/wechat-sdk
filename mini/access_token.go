@@ -93,6 +93,7 @@ func (s *SDK) goAutoRefreshStableAccessToken() {
 			buf := make([]byte, 64<<10)
 			buf = buf[:runtime.Stack(buf, false)]
 			s.logger.Errorf("mini_goAutoRefreshAccessToken: panic recovered: %s\n%s", r, buf)
+			s.goAutoRefreshStableAccessToken()
 		}
 	}()
 	for {
