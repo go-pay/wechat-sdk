@@ -46,6 +46,7 @@ func (s *SDK) goAutoRefreshAccessTokenJob() {
 			buf := make([]byte, 64<<10)
 			buf = buf[:runtime.Stack(buf, false)]
 			s.logger.Errorf("open_goAutoRefreshAccessToken: panic recovered: %s\n%s", r, buf)
+			time.Sleep(time.Second * 3)
 			s.goAutoRefreshAccessTokenJob()
 		}
 	}()

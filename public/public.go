@@ -47,7 +47,7 @@ func New(appid, secret string, autoManageToken bool) (p *SDK, err error) {
 		if err = p.getAccessToken(); err != nil {
 			return nil, err
 		}
-		go p.goAutoRefreshAccessToken()
+		go p.goAutoRefreshAccessTokenJob()
 	}
 	return
 }

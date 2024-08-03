@@ -36,13 +36,18 @@ func (s *SDK) getAccessToken() (err error) {
 	return nil
 }
 
-func (s *SDK) goAutoRefreshAccessToken() {
+func (s *SDK) goAutoRefreshAccessTokenJob() {
 	defer func() {
 		if r := recover(); r != nil {
 			buf := make([]byte, 64<<10)
 			buf = buf[:runtime.Stack(buf, false)]
-			s.logger.Errorf("public_goAutoRefreshAccessToken: panic recovered: %s\n%s", r, buf)
-			s.goAutoRefreshAccessToken()
+			s.logger.Errorf("public_goAutoRefreshAccessTokenJob: panic recovered: %s\n%s", r, buf)
+			time.Sleep(time.Second * 3)
+			if err := s.getAccessToken(); err != nil {
+				// 失败就不再自动刷新了
+				return
+			}
+			s.goAutoRefreshAccessTokenJob()
 		}
 	}()
 	for {
