@@ -3,11 +3,10 @@ package open
 import (
 	"context"
 	"fmt"
-	"github.com/go-pay/smap"
 	"net/http"
-	"sync"
 	"time"
 
+	"github.com/go-pay/smap"
 	"github.com/go-pay/util"
 	"github.com/go-pay/util/js"
 	"github.com/go-pay/wechat-sdk"
@@ -18,7 +17,6 @@ import (
 type SDK struct {
 	ctx                      context.Context
 	DebugSwitch              wechat.DebugSwitch
-	mu                       sync.RWMutex
 	Appid                    string
 	Secret                   string
 	Host                     string
