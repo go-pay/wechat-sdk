@@ -3,6 +3,7 @@ package open
 import (
 	"context"
 	"fmt"
+	"github.com/go-pay/smap"
 	"net/http"
 	"sync"
 	"time"
@@ -21,9 +22,9 @@ type SDK struct {
 	Appid                    string
 	Secret                   string
 	Host                     string
-	autoManageToken          bool                    // 是否自动维护刷新 AccessToken
-	autoRefreshTokenInternal time.Duration           // 自动刷新 token 的间隔时间
-	openidAccessTokenMap     map[string]*AccessToken // key: openid
+	autoManageToken          bool                           // 是否自动维护刷新 AccessToken
+	autoRefreshTokenInternal time.Duration                  // 自动刷新 token 的间隔时间
+	openidAccessTokenMap     smap.Map[string, *AccessToken] // key: openid
 	hc                       *xhttp.Client
 	logger                   xlog.XLogger
 
@@ -49,7 +50,6 @@ func New(appid, secret string, autoManageToken bool) (o *SDK) {
 	}
 	if autoManageToken {
 		o.autoRefreshTokenInternal = time.Minute * 10
-		o.openidAccessTokenMap = make(map[string]*AccessToken)
 		go o.goAutoRefreshAccessTokenJob()
 	}
 	return

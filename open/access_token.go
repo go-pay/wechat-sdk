@@ -25,9 +25,8 @@ func (s *SDK) refreshAccessToken(openid, refreshToken string) {
 		}
 		return
 	}
-	s.mu.Lock()
-	s.openidAccessTokenMap[at.Openid] = at
-	s.mu.Unlock()
+
+	s.openidAccessTokenMap.Store(at.Openid, at)
 	if s.callback != nil {
 		go s.callback(&AT{
 			AccessToken:  at.AccessToken,
@@ -53,12 +52,13 @@ func (s *SDK) goAutoRefreshAccessTokenJob() {
 	for {
 		// request new access token, default internal 10min
 		time.Sleep(s.autoRefreshTokenInternal)
-		for k, v := range s.openidAccessTokenMap {
+		s.openidAccessTokenMap.Range(func(k string, v *AccessToken) bool {
 			// 有效期小于1.5倍轮询时间时，自动刷新）
 			if time.Duration(v.ExpiresIn)*time.Second < (s.autoRefreshTokenInternal*3)/2 {
 				s.refreshAccessToken(k, v.RefreshToken)
 			}
-		}
+			return true
+		})
 	}
 }
 
@@ -74,30 +74,24 @@ func (s *SDK) SetAccessTokenRefreshInternal(internal time.Duration) {
 
 // GetAccessTokenMap 获取 access_token map，key 为 openid
 func (s *SDK) GetAccessTokenMap() (openidATMap map[string]*AT) {
-	openidATMap = make(map[string]*AT, len(s.openidAccessTokenMap))
-	if s.openidAccessTokenMap != nil && len(s.openidAccessTokenMap) > 0 {
-		s.mu.RLock()
-		defer s.mu.RUnlock()
-		for k, v := range s.openidAccessTokenMap {
-			openidATMap[k] = &AT{
-				AccessToken:  v.AccessToken,
-				ExpiresIn:    v.ExpiresIn,
-				RefreshToken: v.RefreshToken,
-				Openid:       v.Openid,
-				Scope:        v.Scope,
-				Unionid:      v.Unionid,
-			}
+	openidATMap = make(map[string]*AT)
+	s.openidAccessTokenMap.Range(func(k string, v *AccessToken) bool {
+		openidATMap[k] = &AT{
+			AccessToken:  v.AccessToken,
+			ExpiresIn:    v.ExpiresIn,
+			RefreshToken: v.RefreshToken,
+			Openid:       v.Openid,
+			Scope:        v.Scope,
+			Unionid:      v.Unionid,
 		}
-		return
-	}
+		return true
+	})
 	return
 }
 
 // DelAccessToken 根据 openid 删除 map 中维护的 access_token
 func (s *SDK) DelAccessToken(openid string) {
-	if s.openidAccessTokenMap != nil {
-		delete(s.openidAccessTokenMap, openid)
-	}
+	s.openidAccessTokenMap.Delete(openid)
 }
 
 // Code2AccessToken 通过 code 获取用户 access_token
@@ -123,9 +117,7 @@ func (s *SDK) Code2AccessToken(c context.Context, code string) (at *AccessToken,
 		}, nil)
 	}
 	if s.autoManageToken {
-		s.mu.Lock()
-		s.openidAccessTokenMap[at.Openid] = at
-		s.mu.Unlock()
+		s.openidAccessTokenMap.Store(at.Openid, at)
 	}
 	return at, nil
 }
@@ -153,9 +145,7 @@ func (s *SDK) RefreshAccessToken(c context.Context, refreshToken string) (at *Ac
 		}, nil)
 	}
 	if s.autoManageToken {
-		s.mu.Lock()
-		s.openidAccessTokenMap[at.Openid] = at
-		s.mu.Unlock()
+		s.openidAccessTokenMap.Store(at.Openid, at)
 	}
 	return at, nil
 }
@@ -171,9 +161,7 @@ func (s *SDK) CheckAccessToken(c context.Context, accessToken, openid string) (e
 	}
 	if ec.Errcode != Success {
 		if s.autoManageToken {
-			s.mu.Lock()
-			delete(s.openidAccessTokenMap, openid)
-			s.mu.Unlock()
+			s.DelAccessToken(openid)
 		}
 		err = fmt.Errorf("errcode(%d), errmsg(%s)", ec.Errcode, ec.Errmsg)
 		return err

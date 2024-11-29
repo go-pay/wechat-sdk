@@ -10,3 +10,5 @@ require (
 	github.com/go-pay/xlog v0.0.3
 	github.com/go-pay/xtime v0.0.2
 )
+
+require github.com/go-pay/smap v0.0.2 // indirect
