@@ -3,6 +3,7 @@ package public
 import (
 	"context"
 	"fmt"
+	"github.com/go-pay/bm"
 	"net/http"
 	"time"
 
@@ -44,10 +45,10 @@ func New(appid, secret string, autoManageToken bool) (p *SDK, err error) {
 		logger:      logger,
 	}
 	if autoManageToken {
-		if err = p.getAccessToken(); err != nil {
+		if err = p.getStableAccessToken(); err != nil {
 			return nil, err
 		}
-		go p.goAutoRefreshAccessTokenJob()
+		go p.goAutoRefreshStableAccessToken()
 	}
 	return
 }
@@ -83,4 +84,30 @@ func (s *SDK) DoRequestGet(c context.Context, path string, ptr any) (res *http.R
 		return res, fmt.Errorf("js.UnmarshalBytes(%s, %+v)：%w", string(bs), ptr, err)
 	}
 	return res, nil
+}
+
+func doRequestGet(c context.Context, uri string, ptr any) (err error) {
+	req := xhttp.NewClient().Req()
+	req.Header.Add(wechat.HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
+	_, bs, err := req.Get(uri).EndBytes(c)
+	if err != nil {
+		return fmt.Errorf("http.request(GET, %s), err:%w", uri, err)
+	}
+	if err = js.UnmarshalBytes(bs, ptr); err != nil {
+		return fmt.Errorf("js.UnmarshalBytes(%s, %+v)：%w", string(bs), ptr, err)
+	}
+	return
+}
+
+func doRequestPost(c context.Context, url string, body bm.BodyMap, ptr any) (err error) {
+	req := xhttp.NewClient().Req()
+	req.Header.Add(wechat.HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
+	_, bs, err := req.Post(url).SendBodyMap(body).EndBytes(c)
+	if err != nil {
+		return fmt.Errorf("http.request(POST, %s), err:%w", url, err)
+	}
+	if err = js.UnmarshalBytes(bs, ptr); err != nil {
+		return fmt.Errorf("js.UnmarshalBytes(%s, %+v)：%w", string(bs), ptr, err)
+	}
+	return
 }

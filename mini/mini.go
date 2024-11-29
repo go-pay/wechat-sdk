@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/go-pay/bm"
 	"github.com/go-pay/util"
 	"github.com/go-pay/util/js"
 	"github.com/go-pay/wechat-sdk"
@@ -91,6 +92,19 @@ func doRequestGet(c context.Context, uri string, ptr any) (err error) {
 	_, bs, err := req.Get(uri).EndBytes(c)
 	if err != nil {
 		return fmt.Errorf("http.request(GET, %s), err:%w", uri, err)
+	}
+	if err = js.UnmarshalBytes(bs, ptr); err != nil {
+		return fmt.Errorf("js.UnmarshalBytes(%s, %+v)：%w", string(bs), ptr, err)
+	}
+	return
+}
+
+func doRequestPost(c context.Context, url string, body bm.BodyMap, ptr any) (err error) {
+	req := xhttp.NewClient().Req()
+	req.Header.Add(wechat.HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
+	_, bs, err := req.Post(url).SendBodyMap(body).EndBytes(c)
+	if err != nil {
+		return fmt.Errorf("http.request(POST, %s), err:%w", url, err)
 	}
 	if err = js.UnmarshalBytes(bs, ptr); err != nil {
 		return fmt.Errorf("js.UnmarshalBytes(%s, %+v)：%w", string(bs), ptr, err)

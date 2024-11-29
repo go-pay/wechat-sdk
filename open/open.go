@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"sync"
 	"time"
 
+	"github.com/go-pay/smap"
 	"github.com/go-pay/util"
 	"github.com/go-pay/util/js"
 	"github.com/go-pay/wechat-sdk"
@@ -17,13 +17,12 @@ import (
 type SDK struct {
 	ctx                      context.Context
 	DebugSwitch              wechat.DebugSwitch
-	mu                       sync.RWMutex
 	Appid                    string
 	Secret                   string
 	Host                     string
-	autoManageToken          bool                    // 是否自动维护刷新 AccessToken
-	autoRefreshTokenInternal time.Duration           // 自动刷新 token 的间隔时间
-	openidAccessTokenMap     map[string]*AccessToken // key: openid
+	autoManageToken          bool                           // 是否自动维护刷新 AccessToken
+	autoRefreshTokenInternal time.Duration                  // 自动刷新 token 的间隔时间
+	openidAccessTokenMap     smap.Map[string, *AccessToken] // key: openid
 	hc                       *xhttp.Client
 	logger                   xlog.XLogger
 
@@ -49,7 +48,6 @@ func New(appid, secret string, autoManageToken bool) (o *SDK) {
 	}
 	if autoManageToken {
 		o.autoRefreshTokenInternal = time.Minute * 10
-		o.openidAccessTokenMap = make(map[string]*AccessToken)
 		go o.goAutoRefreshAccessTokenJob()
 	}
 	return
