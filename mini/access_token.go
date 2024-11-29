@@ -63,7 +63,7 @@ func (s *SDK) goAutoRefreshStableAccessToken() {
 		time.Sleep(s.RefreshInternal / 2)
 		err := s.getStableAccessToken()
 		if err != nil {
-			s.logger.Errorf("get access token error, after 10s retry: %+v", err)
+			s.logger.Errorf("get stable access token error, after 10s retry: %+v", err)
 			continue
 		}
 	}
@@ -86,7 +86,7 @@ func (s *SDK) SetMiniAccessToken(accessToken string) {
 
 // =====================================================================================================================
 
-// 获取接口调用凭据
+// 获取 Access Token
 // 微信小程序文档：https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-access-token/getAccessToken.html
 func GetAccessToken(c context.Context, appid, secret string) (at *AccessToken, err error) {
 	uri := HostDefault + "/cgi-bin/token?grant_type=client_credential&appid=" + appid + "&secret=" + secret
@@ -100,7 +100,7 @@ func GetAccessToken(c context.Context, appid, secret string) (at *AccessToken, e
 	return at, nil
 }
 
-// 获取稳定版接口调用凭据
+// 获取 Stable Access Token
 // 微信小程序文档：https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-access-token/getStableAccessToken.html
 func GetStableAccessToken(c context.Context, appid, secret string, forceRefresh bool) (at *AccessToken, err error) {
 	url := HostDefault + "/cgi-bin/stable_token"

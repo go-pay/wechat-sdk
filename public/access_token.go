@@ -1,14 +1,17 @@
 package public
 
 import (
+	"context"
 	"fmt"
 	"runtime"
 	"time"
+
+	"github.com/go-pay/bm"
 )
 
-// 获取公众号全局唯一后台接口调用凭据（access_token）
-// 公众号文档：https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Get_access_token.html
-func (s *SDK) getAccessToken() (err error) {
+// 获取公众号全局唯一后台稳定版接口调用凭据（access_token）
+// 公众号文档：https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/getStableAccessToken.html
+func (s *SDK) getStableAccessToken() (err error) {
 	defer func() {
 		if err != nil {
 			// reset default refresh internal
@@ -19,9 +22,14 @@ func (s *SDK) getAccessToken() (err error) {
 		}
 	}()
 
-	path := "/cgi-bin/token?grant_type=client_credential&appid=" + s.Appid + "&secret=" + s.Secret
+	path := "/cgi-bin/stable_token"
+	body := make(bm.BodyMap)
+	body.Set("grant_type", "client_credential").
+		Set("appid", s.Appid).
+		Set("secret", s.Secret).
+		Set("force_refresh", false)
 	at := &AccessToken{}
-	if _, err = s.DoRequestGet(s.ctx, path, at); err != nil {
+	if _, err = s.doRequestPost(s.ctx, path, body, at); err != nil {
 		return
 	}
 	if at.Errcode != Success {
@@ -36,26 +44,26 @@ func (s *SDK) getAccessToken() (err error) {
 	return nil
 }
 
-func (s *SDK) goAutoRefreshAccessTokenJob() {
+func (s *SDK) goAutoRefreshStableAccessToken() {
 	defer func() {
 		if r := recover(); r != nil {
 			buf := make([]byte, 64<<10)
 			buf = buf[:runtime.Stack(buf, false)]
-			s.logger.Errorf("public_goAutoRefreshAccessTokenJob: panic recovered: %s\n%s", r, buf)
+			s.logger.Errorf("public_goAutoRefreshStableAccessTokenJob: panic recovered: %s\n%s", r, buf)
 			time.Sleep(time.Second * 3)
-			if err := s.getAccessToken(); err != nil {
+			if err := s.getStableAccessToken(); err != nil {
 				// 失败就不再自动刷新了
 				return
 			}
-			s.goAutoRefreshAccessTokenJob()
+			s.goAutoRefreshStableAccessToken()
 		}
 	}()
 	for {
 		// every one hour, request new access token, default 10s
 		time.Sleep(s.RefreshInternal / 2)
-		err := s.getAccessToken()
+		err := s.getStableAccessToken()
 		if err != nil {
-			s.logger.Errorf("get access token error, after 10s retry: %+v", err)
+			s.logger.Errorf("get stable access token error, after 10s retry: %+v", err)
 			continue
 		}
 	}
@@ -74,4 +82,37 @@ func (s *SDK) GetPublicAccessToken() (at string) {
 // SetPublicAccessToken set public access token string
 func (s *SDK) SetPublicAccessToken(accessToken string) {
 	s.accessToken = accessToken
+}
+
+// 获取 Access Token
+// 微信公众号文档：https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Get_access_token.html
+func GetAccessToken(c context.Context, appid, secret string) (at *AccessToken, err error) {
+	uri := HostDefault + "/cgi-bin/token?grant_type=client_credential&appid=" + appid + "&secret=" + secret
+	at = &AccessToken{}
+	if err = doRequestGet(c, uri, at); err != nil {
+		return nil, err
+	}
+	if at.Errcode != Success {
+		return nil, fmt.Errorf("errcode(%d), errmsg(%s)", at.Errcode, at.Errmsg)
+	}
+	return at, nil
+}
+
+// 获取 Stable Access Token
+// 微信公众号文档：https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/getStableAccessToken.html
+func GetStableAccessToken(c context.Context, appid, secret string, forceRefresh bool) (at *AccessToken, err error) {
+	url := HostDefault + "/cgi-bin/stable_token"
+	body := make(bm.BodyMap)
+	body.Set("grant_type", "client_credential").
+		Set("appid", appid).
+		Set("secret", secret).
+		Set("force_refresh", forceRefresh)
+	at = &AccessToken{}
+	if err = doRequestPost(c, url, body, at); err != nil {
+		return nil, err
+	}
+	if at.Errcode != Success {
+		return nil, fmt.Errorf("errcode(%d), errmsg(%s)", at.Errcode, at.Errmsg)
+	}
+	return at, nil
 }
