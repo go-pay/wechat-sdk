@@ -119,3 +119,107 @@ type KeyInfo struct {
 	Iv         string `json:"iv"`
 	CreateTime int    `json:"create_time"`
 }
+
+type MediaAssetSingleFileUploadRsp struct {
+	MediaId int    `json:"media_id"` // 媒体文件id。
+	Errcode int    `json:"errcode"`
+	Errmsg  string `json:"errmsg"`
+}
+
+type MediaAssetPullUploadRsp struct {
+	TaskId  int    `json:"task_id"`
+	Errcode int    `json:"errcode"`
+	Errmsg  string `json:"errmsg"`
+}
+
+type MediaAssetGetTaskRsp struct {
+	TaskInfo *PullUploadTaskInfo `json:"task_info"`
+	Errcode  int                 `json:"errcode"`
+	Errmsg   string              `json:"errmsg"`
+}
+
+type PullUploadTaskInfo struct {
+	Id         int    `json:"id"`
+	TaskType   int    `json:"task_type"`
+	Status     int    `json:"status"`
+	Errcode    int    `json:"errcode"`
+	Errmsg     string `json:"errmsg"`
+	CreateTime int    `json:"create_time"`
+	FinishTime int    `json:"finish_time"`
+	MediaId    int    `json:"media_id"`
+}
+
+type MediaAssetApplyUploadRsp struct {
+	UploadId string `json:"upload_id"`
+	Errcode  int    `json:"errcode"`
+	Errmsg   string `json:"errmsg"`
+}
+
+type MediaAssetUploadPartRsp struct {
+	Etag    string `json:"etag"`
+	Errcode int    `json:"errcode"`
+	Errmsg  string `json:"errmsg"`
+}
+
+type MediaAssetCommitUploadRsp struct {
+	MediaId int    `json:"media_id"` // 媒体文件id。
+	Errcode int    `json:"errcode"`
+	Errmsg  string `json:"errmsg"`
+}
+
+type MediaAssetListMediaRsp struct {
+	Errcode       int          `json:"errcode"`
+	Errmsg        string       `json:"errmsg"`
+	MediaInfoList []*MediaInfo `json:"media_info_list"`
+}
+
+type MediaInfo struct {
+	MediaId     int          `json:"media_id"`
+	CreateTime  int          `json:"create_time"`
+	ExpireTime  int          `json:"expire_time"`
+	DramaId     int          `json:"drama_id"`
+	FileSize    string       `json:"file_size"`
+	Duration    int          `json:"duration"`
+	Name        string       `json:"name"`
+	Description string       `json:"description"`
+	CoverUrl    string       `json:"cover_url"`
+	OriginalUrl string       `json:"original_url"`
+	Mp4Url      string       `json:"mp4_url"`
+	HlsUrl      string       `json:"hls_url"`
+	AuditDetail *AuditDetail `json:"audit_detail"`
+}
+
+type AuditDetail struct {
+	Status                 int      `json:"status"`
+	CreateTime             int      `json:"create_time"`
+	AuditTime              int      `json:"audit_time"`
+	Reason                 string   `json:"reason"`
+	EvidenceMaterialIdList []string `json:"evidence_material_id_list"`
+}
+
+type MediaAssetGetMediaRsp struct {
+	Errcode   int        `json:"errcode"`
+	Errmsg    string     `json:"errmsg"`
+	MediaInfo *MediaInfo `json:"media_info"`
+}
+
+type MediaAssetGetMediaLinkRsp struct {
+	Errcode   int                `json:"errcode"`
+	Errmsg    string             `json:"errmsg"`
+	MediaInfo *MediaPlaybackInfo `json:"media_info"`
+}
+
+type MediaPlaybackInfo struct {
+	MediaId     int    `json:"media_id"`
+	Duration    int    `json:"duration"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	CoverUrl    string `json:"cover_url"`
+	Mp4Url      string `json:"mp4_url"`
+	HlsUrl      string `json:"hls_url"`
+}
+
+type MediaAssetDeleteMediaRsp struct {
+	Errcode int    `json:"errcode"`
+	Errmsg  string `json:"errmsg"`
+}

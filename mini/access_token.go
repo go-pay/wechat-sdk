@@ -29,7 +29,7 @@ func (s *SDK) getStableAccessToken() (err error) {
 		Set("secret", s.Secret).
 		Set("force_refresh", false)
 	at := &AccessToken{}
-	if _, err = s.doRequestPost(s.ctx, path, body, at); err != nil {
+	if _, err = s.DoRequestPost(s.ctx, path, body, at); err != nil {
 		return
 	}
 	if at.Errcode != Success {
