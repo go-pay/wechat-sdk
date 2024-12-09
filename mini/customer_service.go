@@ -12,7 +12,7 @@ import (
 // 文档：https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/kf-mgnt/kf-message/getTempMedia.html
 func (s *SDK) CSMessageGetTempMedia(c context.Context, mediaId string) (media []byte, err error) {
 	path := "/cgi-bin/media/get?access_token=" + s.accessToken + "&media_id=" + mediaId
-	media, err = s.doRequestGetByte(c, path)
+	media, err = s.DoRequestGetByte(c, path)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +44,7 @@ func (s *SDK) CSMessageSend(c context.Context, toUser string, msgType MsgType, m
 			Set("text", msgValue)
 	}
 	ec := &ErrorCode{}
-	if _, err = s.doRequestPost(c, path, body, ec); err != nil {
+	if _, err = s.DoRequestPost(c, path, body, ec); err != nil {
 		return err
 	}
 	if ec.Errcode != Success {
@@ -69,7 +69,7 @@ func (s *SDK) CSMessageSetTyping(c context.Context, toUser string, typingStatus 
 		body.Set("command", "CancelTyping")
 	}
 	ec := &ErrorCode{}
-	if _, err = s.doRequestPost(c, path, body, ec); err != nil {
+	if _, err = s.DoRequestPost(c, path, body, ec); err != nil {
 		return err
 	}
 	if ec.Errcode != Success {
@@ -88,7 +88,7 @@ func (s *SDK) CSMessageUploadTempMedia(c context.Context, img *bm.File) (media *
 	body.Set("type", "image").
 		SetFormFile("media", img)
 	media = &UploadTempMedia{}
-	if _, err = s.doRequestPostFile(c, path, body, media); err != nil {
+	if _, err = s.DoRequestPostFile(c, path, body, media); err != nil {
 		return nil, err
 	}
 	if media.Errcode != Success {

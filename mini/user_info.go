@@ -18,7 +18,7 @@ func (s *SDK) GetPluginOpenPid(c context.Context, code string) (openpid *PluginO
 	openpid = &PluginOpenPid{}
 	body := make(bm.BodyMap)
 	body.Set("code", code)
-	if _, err = s.doRequestPost(c, path, body, openpid); err != nil {
+	if _, err = s.DoRequestPost(c, path, body, openpid); err != nil {
 		return nil, err
 	}
 	if openpid.Errcode != Success {
@@ -35,7 +35,7 @@ func (s *SDK) GetPluginOpenPid(c context.Context, code string) (openpid *PluginO
 func (s *SDK) GetPaidUnionid(c context.Context, openid, transactionId string) (unionid *PaidUnionId, err error) {
 	path := "/wxa/getpaidunionid?access_token=" + s.accessToken + "&openid=" + openid + "&transaction_id=" + transactionId
 	unionid = &PaidUnionId{}
-	if _, err = s.doRequestGet(c, path, unionid); err != nil {
+	if _, err = s.DoRequestGet(c, path, unionid); err != nil {
 		return nil, err
 	}
 	if unionid.Errcode != Success {
@@ -53,7 +53,7 @@ func (s *SDK) GetPaidUnionid(c context.Context, openid, transactionId string) (u
 func (s *SDK) GetPaidUnionidByTradeNo(c context.Context, openid, mchid, tradeNo string) (unionid *PaidUnionId, err error) {
 	path := "/wxa/getpaidunionid?access_token=" + s.accessToken + "&openid=" + openid + "&mch_id=" + mchid + "&out_trade_no=" + tradeNo
 	unionid = &PaidUnionId{}
-	if _, err = s.doRequestGet(c, path, unionid); err != nil {
+	if _, err = s.DoRequestGet(c, path, unionid); err != nil {
 		return nil, err
 	}
 	if unionid.Errcode != Success {
@@ -74,7 +74,7 @@ func (s *SDK) CheckEncryptedData(c context.Context, encryptedData string) (resul
 	body := make(bm.BodyMap)
 	body.Set("encrypted_msg_hash", hex.EncodeToString(h.Sum(nil)))
 	result = &CheckEncryptedResult{}
-	if _, err = s.doRequestPost(c, path, body, result); err != nil {
+	if _, err = s.DoRequestPost(c, path, body, result); err != nil {
 		return nil, err
 	}
 	if result.Errcode != Success {
@@ -95,7 +95,7 @@ func (s *SDK) GetUserEncryptKey(c context.Context, openid, signature, sigMethod 
 		Set("signature", signature).
 		Set("sig_method", sigMethod)
 	uek = &UserEncryptKey{}
-	if _, err = s.doRequestPost(c, path, body, uek); err != nil {
+	if _, err = s.DoRequestPost(c, path, body, uek); err != nil {
 		return nil, err
 	}
 	if uek.Errcode != Success {
@@ -113,7 +113,7 @@ func (s *SDK) GetPhoneNumber(c context.Context, code string) (pn *PhoneNumberRsp
 	pn = &PhoneNumberRsp{}
 	body := make(bm.BodyMap)
 	body.Set("code", code)
-	if _, err = s.doRequestPost(c, path, body, pn); err != nil {
+	if _, err = s.DoRequestPost(c, path, body, pn); err != nil {
 		return nil, err
 	}
 	if pn.Errcode != Success {

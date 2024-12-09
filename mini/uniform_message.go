@@ -15,10 +15,10 @@ import (
 func (s *SDK) UniformMessageSend(c context.Context, toUser string, mpMsg bm.BodyMap) (err error) {
 	path := "/cgi-bin/message/wxopen/template/uniform_send?access_token=" + s.accessToken
 	body := make(bm.BodyMap)
-	body.Set("touser", toUser)
-	body.Set("mp_template_msg", mpMsg)
+	body.Set("touser", toUser).
+		Set("mp_template_msg", mpMsg)
 	ec := &ErrorCode{}
-	if _, err = s.doRequestPost(c, path, body, ec); err != nil {
+	if _, err = s.DoRequestPost(c, path, body, ec); err != nil {
 		return err
 	}
 	if ec.Errcode != Success {

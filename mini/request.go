@@ -14,7 +14,7 @@ import (
 	"github.com/go-pay/xhttp"
 )
 
-func (s *SDK) doRequestGet(c context.Context, path string, ptr any) (res *http.Response, err error) {
+func (s *SDK) DoRequestGet(c context.Context, path string, ptr any) (res *http.Response, err error) {
 	uri := s.Host + path
 	if s.DebugSwitch == wechat.DebugOn {
 		s.logger.Debugf("Wechat_Mini_SDK_URI: %s", uri)
@@ -34,7 +34,7 @@ func (s *SDK) doRequestGet(c context.Context, path string, ptr any) (res *http.R
 	return res, nil
 }
 
-func (s *SDK) doRequestGetByte(c context.Context, path string) (bs []byte, err error) {
+func (s *SDK) DoRequestGetByte(c context.Context, path string) (bs []byte, err error) {
 	uri := s.Host + path
 	if s.DebugSwitch == wechat.DebugOn {
 		s.logger.Debugf("Wechat_Mini_SDK_URI: %s", uri)
@@ -56,7 +56,7 @@ func (s *SDK) doRequestGetByte(c context.Context, path string) (bs []byte, err e
 	return
 }
 
-func (s *SDK) doRequestPost(c context.Context, path string, body bm.BodyMap, ptr any) (res *http.Response, err error) {
+func (s *SDK) DoRequestPost(c context.Context, path string, body bm.BodyMap, ptr any) (res *http.Response, err error) {
 	uri := s.Host + path
 	if s.DebugSwitch == wechat.DebugOn {
 		s.logger.Debugf("Wechat_Mini_SDK_URI: %s", uri)
@@ -77,7 +77,7 @@ func (s *SDK) doRequestPost(c context.Context, path string, body bm.BodyMap, ptr
 	return
 }
 
-func (s *SDK) doRequestPostFile(ctx context.Context, path string, body bm.BodyMap, ptr any) (res *http.Response, err error) {
+func (s *SDK) DoRequestPostFile(ctx context.Context, path string, body bm.BodyMap, ptr any) (res *http.Response, err error) {
 	uri := s.Host + path
 	if s.DebugSwitch == wechat.DebugOn {
 		s.logger.Debugf("Wechat_Mini_SDK_URI: %s", uri)

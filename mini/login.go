@@ -12,7 +12,7 @@ import (
 func (s *SDK) Code2Session(c context.Context, wxCode string) (session *Code2Session, err error) {
 	path := "/sns/jscode2session?appid=" + s.Appid + "&secret=" + s.Secret + "&js_code=" + wxCode + "&grant_type=authorization_code"
 	session = &Code2Session{}
-	if _, err = s.doRequestGet(c, path, session); err != nil {
+	if _, err = s.DoRequestGet(c, path, session); err != nil {
 		return nil, err
 	}
 	if session.Errcode != Success {
