@@ -131,6 +131,18 @@ if err != nil {
 	* 新增图片素材：`sdk.CSMessageUploadTempMedia()`
 * <font color='#07C160' size='4'>统一服务消息</font>
 	* 发送统一服务消息：`sdk.UniformMessageSend()` 未完成
+* <font color='#07C160' size='4'>媒资上传</font>
+	* 单个文件上传：`sdk.MediaAssetSingleFileUpload()`
+	* 拉取上传：`sdk.MediaAssetPullUpload()`
+	* 查询任务：`sdk.MediaAssetGetTask()`
+	* 申请分片上传：`sdk.MediaAssetApplyUpload()`
+	* 上传分片：`sdk.MediaAssetUploadPart()`
+	* 确认上传：`sdk.MediaAssetCommitUpload()`
+* <font color='#07C160' size='4'>媒资管理</font>
+	* 获取媒资列表：`sdk.MediaAssetListMedia()`
+	* 获取媒资详细信息：`sdk.MediaAssetGetMedia()`
+	* 获取媒资播放链接：`sdk.MediaAssetGetMediaLink()`
+	* 删除媒资：`sdk.MediaAssetDeleteMedia()`
 
 ### 微信小程序 公共API
 
