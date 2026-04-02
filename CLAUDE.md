@@ -99,6 +99,6 @@ go mod verify
 ## 参考文档
 
 - 微信小程序服务端：https://developers.weixin.qq.com/miniprogram/dev/api-backend/
-- 微信公众号开发文档：https://developers.weixin.qq.com/doc/offiaccount/Getting_Started/Overview.html
+- 微信公众号开发文档：https://developers.weixin.qq.com/doc/subscription/api/
 - 微信开放平台文档：https://developers.weixin.qq.com/doc/oplatform/
 - 项目文档：`doc/mini.md`、`doc/public.md`、`doc/open.md`

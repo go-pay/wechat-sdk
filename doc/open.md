@@ -2,7 +2,7 @@
 
 - 已实现API列表附录：[API 列表附录](https://github.com/go-pay/wechat-sdk/blob/main/doc/public.md#%E9%99%84%E5%BD%95)
 
-- 微信开放平台：[官方文档](https://developers.weixin.qq.com/doc/oplatform/Mobile_App/Resource_Center_Homepage.html)
+- 微信开放平台：[官方文档](https://developers.weixin.qq.com/doc/oplatform/open/intro.html)
 
 ---
 
