@@ -143,6 +143,86 @@ if err != nil {
 	* 获取媒资详细信息：`sdk.MediaAssetGetMedia()`
 	* 获取媒资播放链接：`sdk.MediaAssetGetMediaLink()`
 	* 删除媒资：`sdk.MediaAssetDeleteMedia()`
+* <font color='#07C160' size='4'>订阅消息</font>
+	* 发送订阅消息：`sdk.SubscribeMessageSend()`
+	* 获取模板列表：`sdk.GetTemplateList()`
+	* 获取模板标题列表：`sdk.GetPubTemplateTitleList()`
+	* 添加模板：`sdk.AddTemplate()`
+	* 删除模板：`sdk.DeleteTemplate()`
+	* 获取类目：`sdk.GetCategory()`
+* <font color='#07C160' size='4'>小程序码</font>
+	* 获取小程序码（数量较少）：`sdk.GetWxaCode()`
+	* 获取小程序码（数量极多）：`sdk.GetWxaCodeUnlimit()`
+	* 获取小程序二维码：`sdk.CreateWxaQRCode()`
+* <font color='#07C160' size='4'>URL 跳转</font>
+	* 生成 URL Scheme：`sdk.GenerateScheme()`
+	* 查询 URL Scheme：`sdk.QueryScheme()`
+	* 生成 URL Link：`sdk.GenerateUrlLink()`
+	* 查询 URL Link：`sdk.QueryUrlLink()`
+	* 生成 Short Link：`sdk.GenerateShortLink()`
+* <font color='#07C160' size='4'>内容安全</font>
+	* 文本内容安全检测：`sdk.MsgSecCheck()`
+	* 图片内容安全检测：`sdk.ImgSecCheck()`
+	* 音视频异步检测：`sdk.MediaCheckAsync()`
+* <font color='#07C160' size='4'>数据分析</font>
+	* 获取用户访问数据概况：`sdk.GetDailySummary()`
+	* 获取访问数据日趋势：`sdk.GetDailyVisitTrend()`
+	* 获取访问数据周趋势：`sdk.GetWeeklyVisitTrend()`
+	* 获取访问数据月趋势：`sdk.GetMonthlyVisitTrend()`
+	* 获取用户日留存：`sdk.GetDailyRetain()`
+	* 获取用户周留存：`sdk.GetWeeklyRetain()`
+	* 获取用户月留存：`sdk.GetMonthlyRetain()`
+	* 获取访问页面数据：`sdk.GetVisitPage()`
+	* 获取用户画像分布：`sdk.GetUserPortrait()`
+	* 获取性能数据：`sdk.GetPerformanceData()`
+	* 获取访问分布数据：`sdk.GetVisitDistribution()`
+* <font color='#07C160' size='4'>图像处理</font>
+	* 图片智能裁剪：`sdk.AiCrop()`
+	* 条码/二维码识别：`sdk.ScanQRCode()`
+	* 图片高清化：`sdk.SuperResolution()`
+	* 身份证OCR识别：`sdk.OcrIdCard()`
+	* 银行卡OCR识别：`sdk.OcrBankCard()`
+	* 驾驶证OCR识别：`sdk.OcrDriving()`
+	* 行驶证OCR识别：`sdk.OcrVehicleLicense()`
+	* 营业执照OCR识别：`sdk.OcrBusinessLicense()`
+	* 通用印刷体OCR识别：`sdk.OcrCommon()`
+	* 车牌OCR识别：`sdk.OcrPlateNumber()`
+* <font color='#07C160' size='4'>即时配送</font>
+	* 拉取已绑定账号：`sdk.DeliveryGetAllAccount()`
+	* 配送单预下单：`sdk.DeliveryPreAddOrder()`
+	* 配送单下单：`sdk.DeliveryAddOrder()`
+	* 配送单增加小费：`sdk.DeliveryAddTips()`
+	* 配送单取消：`sdk.DeliveryCancelOrder()`
+	* 配送单查询：`sdk.DeliveryGetOrder()`
+	* 模拟配送公司更新配送单状态：`sdk.DeliveryMockUpdateOrder()`
+	* 异常件退回商家商圈：`sdk.DeliveryAbnormalConfirm()`
+* <font color='#07C160' size='4'>物流助手</font>
+	* 生成运单：`sdk.ExpressAddOrder()`
+	* 取消运单：`sdk.ExpressCancelOrder()`
+	* 获取所有绑定的物流账号：`sdk.ExpressGetAllAccount()`
+	* 获取电子面单余额：`sdk.ExpressGetQuota()`
+	* 查询运单轨迹：`sdk.ExpressGetPath()`
+	* 获取支持的快递公司列表：`sdk.ExpressGetAllDelivery()`
+	* 获取打印员：`sdk.ExpressGetPrinter()`
+	* 配置面单打印员：`sdk.ExpressUpdatePrinter()`
+	* 获取面单联系人信息：`sdk.ExpressGetContact()`
+* <font color='#07C160' size='4'>搜索</font>
+	* 提交小程序页面：`sdk.SearchSubmitPages()`
+	* 删除已提交的小程序页面：`sdk.SearchDeletePage()`
+* <font color='#07C160' size='4'>运维中心</font>
+	* 获取域名配置：`sdk.GetDomainInfo()`
+	* 修改服务器域名：`sdk.ModifyDomain()`
+	* 设置业务域名：`sdk.SetWebviewDomain()`
+	* 获取小程序码扫码打开的页面：`sdk.GetQrcodeJumppublish()`
+	* 设置小程序码扫码打开的页面：`sdk.SetQrcodeJump()`
+* <font color='#07C160' size='4'>小程序管理</font>
+	* 获取小程序基本信息：`sdk.GetAccountBasicInfo()`
+	* 获取已上传的代码的页面列表：`sdk.GetPage()`
+	* 获取授权小程序帐号的可选类目：`sdk.GetMiniCategory()`
+	* 获取小程序的第三方提交代码的页面配置：`sdk.GetExtConfig()`
+	* 设置小程序的第三方提交代码的页面配置：`sdk.SetExtConfig()`
+* <font color='#07C160' size='4'>服务市场</font>
+	* 调用服务平台提供的服务：`sdk.InvokeService()`
 
 ### 微信小程序 公共API
 

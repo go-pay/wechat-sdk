@@ -12,7 +12,7 @@ const (
 
 	HeaderRequestID = "Request-ID"
 
-	Version = "v1.1.7"
+	Version = "v1.1.8"
 )
 
 const (
