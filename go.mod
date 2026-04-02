@@ -1,6 +1,6 @@
 module github.com/go-pay/wechat-sdk
 
-go 1.21
+go 1.24.0
 
 require (
 	github.com/go-pay/bm v0.0.5
