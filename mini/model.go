@@ -1094,3 +1094,322 @@ type InvokeServiceRsp struct {
 	Errmsg  string `json:"errmsg"`
 	Data    string `json:"data"` // 服务返回的数据
 }
+
+// ==================== 虚拟支付相关 ====================
+
+// XpayQueryUserBalanceRsp 查询代币余额响应
+type XpayQueryUserBalanceRsp struct {
+	Errcode        int    `json:"errcode"`
+	Errmsg         string `json:"errmsg"`
+	Balance        int    `json:"balance"`         // 代币总余额
+	PresentBalance int    `json:"present_balance"` // 赠送代币余额
+	SumSave        int    `json:"sum_save"`        // 历史总充值金额
+	SumPresent     int    `json:"sum_present"`     // 历史总赠送金额
+	SumBalance     int    `json:"sum_balance"`     // 历史总增加代币数
+	SumCost        int    `json:"sum_cost"`        // 历史总消耗代币数
+	FirstSaveFlag  bool   `json:"first_save_flag"` // 首充活动资格标识
+}
+
+// XpayCurrencyPayRsp 扣减代币响应
+type XpayCurrencyPayRsp struct {
+	Errcode           int    `json:"errcode"`
+	Errmsg            string `json:"errmsg"`
+	OrderId           string `json:"order_id"`            // 订单号
+	Balance           int    `json:"balance"`             // 总余额（含付费和赠送）
+	UsedPresentAmount int    `json:"used_present_amount"` // 使用的赠送代币数量
+}
+
+// XpayQueryOrderRsp 查询创建的订单响应
+type XpayQueryOrderRsp struct {
+	Errcode int        `json:"errcode"`
+	Errmsg  string     `json:"errmsg"`
+	Order   *XpayOrder `json:"order"`
+}
+
+// XpayOrder 虚拟支付订单信息
+type XpayOrder struct {
+	OrderId    string `json:"order_id"`    // 订单号
+	Status     int    `json:"status"`      // 订单状态（0-10）
+	OrderType  int    `json:"order_type"`  // 订单类型：0-标准虚拟支付，1-退款，7-Apple iOS，8-Apple iOS退款
+	OrderFee   int    `json:"order_fee"`   // 订单金额（分）
+	PaidFee    int    `json:"paid_fee"`    // 用户支付金额
+	CreateTime int    `json:"create_time"` // 创建时间
+	UpdateTime int    `json:"update_time"` // 更新时间
+	PaidTime   int    `json:"paid_time"`   // 支付/退款时间（unix时间戳）
+	WxOrderId  string `json:"wx_order_id"` // 微信内部订单号
+	SettState  int    `json:"sett_state"`  // 结算状态（0-3）
+}
+
+// XpayCancelCurrencyPayRsp 代币支付退款响应
+type XpayCancelCurrencyPayRsp struct {
+	Errcode int    `json:"errcode"`
+	Errmsg  string `json:"errmsg"`
+	OrderId string `json:"order_id"` // 退款订单号
+}
+
+// XpayPresentCurrencyRsp 代币赠送响应
+type XpayPresentCurrencyRsp struct {
+	Errcode        int    `json:"errcode"`
+	Errmsg         string `json:"errmsg"`
+	Balance        int    `json:"balance"`         // 赠送后用户代币余额
+	OrderId        string `json:"order_id"`        // 赠送订单号
+	PresentBalance int    `json:"present_balance"` // 用户累计赠送代币数
+}
+
+// XpayDownloadBillRsp 下载小程序账单响应
+type XpayDownloadBillRsp struct {
+	Errcode int    `json:"errcode"`
+	Errmsg  string `json:"errmsg"`
+	Url     string `json:"url"` // 下载链接（30分钟有效）
+}
+
+// XpayRefundOrderRsp 启动订单退款任务响应
+type XpayRefundOrderRsp struct {
+	Errcode         int    `json:"errcode"`
+	Errmsg          string `json:"errmsg"`
+	RefundOrderId   string `json:"refund_order_id"`    // 退款订单号
+	RefundWxOrderId string `json:"refund_wx_order_id"` // 微信侧退款订单号
+	PayOrderId      string `json:"pay_order_id"`       // 关联的支付订单号
+	PayWxOrderId    string `json:"pay_wx_order_id"`    // 关联的微信侧支付订单号
+}
+
+// XpayCreateWithdrawOrderRsp 创建提现单响应
+type XpayCreateWithdrawOrderRsp struct {
+	Errcode      int    `json:"errcode"`
+	Errmsg       string `json:"errmsg"`
+	WithdrawNo   string `json:"withdraw_no"`    // 提现单号
+	WxWithdrawNo string `json:"wx_withdraw_no"` // 微信侧提现单号
+}
+
+// XpayQueryWithdrawOrderRsp 查询提现单响应
+type XpayQueryWithdrawOrderRsp struct {
+	Errcode                  int    `json:"errcode"`
+	Errmsg                   string `json:"errmsg"`
+	WithdrawNo               string `json:"withdraw_no"`                // 提现单号
+	Status                   int    `json:"status"`                     // 状态：1-处理中，2-成功，3-失败
+	WithdrawAmount           string `json:"withdraw_amount"`            // 提现金额
+	WxWithdrawNo             string `json:"wx_withdraw_no"`             // 微信侧提现单号
+	WithdrawSuccessTimestamp string `json:"withdraw_success_timestamp"` // 成功时间戳（秒）
+	CreateTime               string `json:"create_time"`                // 创建时间
+	FailReason               string `json:"fail_reason"`                // 失败原因
+}
+
+// XpayQueryUploadGoodsRsp 查询批量上传道具任务响应
+type XpayQueryUploadGoodsRsp struct {
+	Errcode    int              `json:"errcode"`
+	Errmsg     string           `json:"errmsg"`
+	UploadItem []*XpayGoodsItem `json:"upload_item"` // 上传道具列表
+	Status     int              `json:"status"`      // 任务状态：0-无任务，1-进行中，2-失败/部分失败，3-成功
+}
+
+// XpayGoodsItem 道具信息
+type XpayGoodsItem struct {
+	Id           string `json:"id"`            // 道具ID
+	Name         string `json:"name"`          // 道具名称
+	Price        int    `json:"price"`         // 价格（分）
+	Remark       string `json:"remark"`        // 备注
+	ItemUrl      string `json:"item_url"`      // 道具图片URL
+	UploadStatus int    `json:"upload_status"` // 状态：0-上传中，1-ID已存在，2-成功，3-失败
+	Errmsg       string `json:"errmsg"`        // 失败原因
+}
+
+// XpayQueryPublishGoodsRsp 查询批量发布道具任务响应
+type XpayQueryPublishGoodsRsp struct {
+	Errcode     int                `json:"errcode"`
+	Errmsg      string             `json:"errmsg"`
+	PublishItem []*XpayPublishItem `json:"publish_item"` // 发布道具列表
+	Status      int                `json:"status"`       // 任务状态：0-无任务，1-进行中，2-失败/部分失败，3-成功
+}
+
+// XpayPublishItem 发布道具信息
+type XpayPublishItem struct {
+	Id            string `json:"id"`             // 道具ID
+	PublishStatus int    `json:"publish_status"` // 状态：0-上传中，1-ID已存在，2-成功，3-失败
+	Errmsg        string `json:"errmsg"`         // 失败原因
+}
+
+// XpayQueryBizBalanceRsp 查询商家账户可提现余额响应
+type XpayQueryBizBalanceRsp struct {
+	Errcode          int                   `json:"errcode"`
+	Errmsg           string                `json:"errmsg"`
+	BalanceAvailable *XpayBalanceAvailable `json:"balance_available"` // 可提现余额信息
+}
+
+// XpayBalanceAvailable 可提现余额信息
+type XpayBalanceAvailable struct {
+	Amount       string `json:"amount"`        // 可提现金额（元）
+	CurrencyCode string `json:"currency_code"` // 货币代码（通常为CNY）
+}
+
+// XpayQueryTransferAccountRsp 查询广告金充值账户响应
+type XpayQueryTransferAccountRsp struct {
+	Errcode  int                    `json:"errcode"`
+	Errmsg   string                 `json:"errmsg"`
+	AcctList []*XpayTransferAccount `json:"acct_list"` // 充值账户列表
+}
+
+// XpayTransferAccount 广告金充值账户信息
+type XpayTransferAccount struct {
+	TransferAccountName       string `json:"transfer_account_name"`        // 充值账户名称
+	TransferAccountUid        int    `json:"transfer_account_uid"`         // 充值账户UID
+	TransferAccountAgencyId   int    `json:"transfer_account_agency_id"`   // 服务商账户ID
+	TransferAccountAgencyName string `json:"transfer_account_agency_name"` // 服务商账户名称
+	State                     int    `json:"state"`                        // 状态：0-待审核，1-通过，2-拒绝
+	BindResult                int    `json:"bind_result"`                  // 绑定结果：1-成功，2-失败
+	ErrorMsg                  string `json:"error_msg"`                    // 错误信息
+}
+
+// XpayQueryAdverFundsRsp 查询广告金发放记录响应
+type XpayQueryAdverFundsRsp struct {
+	Errcode        int              `json:"errcode"`
+	Errmsg         string           `json:"errmsg"`
+	AdverFundsList []*XpayAdverFund `json:"adver_funds_list"` // 发放记录列表
+	TotalPage      int              `json:"total_page"`       // 总页数
+}
+
+// XpayAdverFund 广告金发放记录
+type XpayAdverFund struct {
+	SettleBegin  int    `json:"settle_begin"`  // 结算周期开始时间（unix时间戳）
+	SettleEnd    int    `json:"settle_end"`    // 结算周期结束时间（unix时间戳）
+	TotalAmount  int    `json:"total_amount"`  // 发放金额（分）
+	RemainAmount int    `json:"remain_amount"` // 可用余额（分）
+	ExpireTime   int    `json:"expire_time"`   // 过期时间（unix时间戳）
+	FundType     int    `json:"fund_type"`     // 发放原因代码
+	FundId       string `json:"fund_id"`       // 发放ID
+}
+
+// XpayCreateFundsBillRsp 充值广告金响应
+type XpayCreateFundsBillRsp struct {
+	Errcode int    `json:"errcode"`
+	Errmsg  string `json:"errmsg"`
+	BillId  string `json:"bill_id"` // 充值单ID
+}
+
+// XpayQueryFundsBillRsp 查询广告金充值记录响应
+type XpayQueryFundsBillRsp struct {
+	Errcode   int              `json:"errcode"`
+	Errmsg    string           `json:"errmsg"`
+	BillList  []*XpayFundsBill `json:"bill_list"`  // 充值记录列表
+	TotalPage int              `json:"total_page"` // 总页数
+}
+
+// XpayFundsBill 广告金充值记录
+type XpayFundsBill struct {
+	BillId              string `json:"bill_id"`               // 充值单ID
+	OperTime            int    `json:"oper_time"`             // 充值时间（unix时间戳）
+	SettleBegin         int    `json:"settle_begin"`          // 结算周期开始时间
+	SettleEnd           int    `json:"settle_end"`            // 结算周期结束时间
+	FundId              string `json:"fund_id"`               // 广告金ID
+	TransferAccountName string `json:"transfer_account_name"` // 充值账户名称
+	TransferAccountUid  int    `json:"transfer_account_uid"`  // 充值账户UID
+	TransferAmount      int    `json:"transfer_amount"`       // 充值金额（分）
+	Status              int    `json:"status"`                // 状态：0-处理中，1-成功，2-失败
+	RequestId           string `json:"request_id"`            // 请求ID
+}
+
+// XpayQueryRecoverBillRsp 查询广告金回收记录响应
+type XpayQueryRecoverBillRsp struct {
+	Errcode   int                `json:"errcode"`
+	Errmsg    string             `json:"errmsg"`
+	BillList  []*XpayRecoverBill `json:"bill_list"`  // 回收记录列表
+	TotalPage int                `json:"total_page"` // 总页数
+}
+
+// XpayRecoverBill 广告金回收记录
+type XpayRecoverBill struct {
+	BillId             string   `json:"bill_id"`              // 回收单ID
+	RecoverTime        int      `json:"recover_time"`         // 回收时间（unix时间戳）
+	SettleBegin        int      `json:"settle_begin"`         // 结算周期开始时间
+	SettleEnd          int      `json:"settle_end"`           // 结算周期结束时间
+	FundId             string   `json:"fund_id"`              // 对应广告金发放ID
+	RecoverAccountName string   `json:"recover_account_name"` // 回收账户名称
+	RecoverAmount      int      `json:"recover_amount"`       // 回收金额（分）
+	RefundOrderList    []string `json:"refund_order_list"`    // 关联退款订单号列表
+}
+
+// XpayQuerySubscribeContractRsp 查询签约关系响应
+type XpayQuerySubscribeContractRsp struct {
+	Errcode            int    `json:"errcode"`
+	Errmsg             string `json:"errmsg"`
+	AuthorizationState string `json:"authorization_state"` // SIGNED-签约生效，TERMINATED-签约终止，UNBINDUSER-未签约
+}
+
+// XpayGetComplaintListRsp 获取投诉列表响应
+type XpayGetComplaintListRsp struct {
+	Errcode    int              `json:"errcode"`
+	Errmsg     string           `json:"errmsg"`
+	Total      int              `json:"total"`      // 总记录数
+	Complaints []*XpayComplaint `json:"complaints"` // 投诉列表
+}
+
+// XpayComplaint 投诉信息
+type XpayComplaint struct {
+	ComplaintId           string                `json:"complaint_id"`            // 投诉ID
+	ComplaintTime         string                `json:"complaint_time"`          // 投诉时间
+	ComplaintDetail       string                `json:"complaint_detail"`        // 投诉描述
+	ComplaintState        string                `json:"complaint_state"`         // 状态：PENDING、PROCESSING、PROCESSED
+	PayerPhone            string                `json:"payer_phone"`             // 投诉人电话
+	PayerOpenid           string                `json:"payer_openid"`            // 投诉人openid
+	ComplaintOrderInfo    []*XpayComplaintOrder `json:"complaint_order_info"`    // 关联订单信息
+	ComplaintFullRefunded bool                  `json:"complaint_full_refunded"` // 是否已全额退款
+	IncomingUserResponse  bool                  `json:"incoming_user_response"`  // 是否有待处理的用户回复
+	UserComplaintTimes    int                   `json:"user_complaint_times"`    // 用户投诉次数
+	ComplaintMediaList    []*XpayComplaintMedia `json:"complaint_media_list"`    // 附件媒体列表
+	ProblemDescription    string                `json:"problem_description"`     // 问题描述分类
+	ProblemType           string                `json:"problem_type"`            // 类型：REFUND、SERVICE_NOT_WORK、OTHERS
+	ApplyRefundAmount     int                   `json:"apply_refund_amount"`     // 申请退款金额（分）
+	UserTagList           []string              `json:"user_tag_list"`           // 用户标签（TRUSTED、HIGH_RISK等）
+	ServiceOrderInfo      []*XpayComplaintOrder `json:"service_order_info"`      // 关联服务订单信息
+}
+
+// XpayComplaintOrder 投诉关联订单
+type XpayComplaintOrder struct {
+	OrderId   string `json:"order_id"`
+	WxOrderId string `json:"wx_order_id"`
+}
+
+// XpayComplaintMedia 投诉媒体信息
+type XpayComplaintMedia struct {
+	MediaType string   `json:"media_type"` // 媒体类型：USER_COMPLAINT_IMAGE、OPERATION_IMAGE
+	MediaUrl  []string `json:"media_url"`  // 媒体URL列表
+}
+
+// XpayGetComplaintDetailRsp 获取投诉详情响应
+type XpayGetComplaintDetailRsp struct {
+	Errcode   int            `json:"errcode"`
+	Errmsg    string         `json:"errmsg"`
+	Complaint *XpayComplaint `json:"complaint"` // 投诉详情
+}
+
+// XpayGetNegotiationHistoryRsp 获取协商历史响应
+type XpayGetNegotiationHistoryRsp struct {
+	Errcode int                    `json:"errcode"`
+	Errmsg  string                 `json:"errmsg"`
+	Total   int                    `json:"total"`   // 总记录数
+	History []*XpayNegotiationItem `json:"history"` // 协商历史列表
+}
+
+// XpayNegotiationItem 协商历史记录
+type XpayNegotiationItem struct {
+	LogId              string                `json:"log_id"`               // 操作流水ID
+	Operator           string                `json:"operator"`             // 操作角色
+	OperateTime        string                `json:"operate_time"`         // 操作时间
+	OperateType        string                `json:"operate_type"`         // 操作类型
+	OperateDetails     string                `json:"operate_details"`      // 操作内容
+	ComplaintMediaList []*XpayComplaintMedia `json:"complaint_media_list"` // 附件媒体列表
+}
+
+// XpayUploadVpFileRsp 上传媒体文件响应
+type XpayUploadVpFileRsp struct {
+	Errcode int    `json:"errcode"`
+	Errmsg  string `json:"errmsg"`
+	FileId  string `json:"file_id"` // 文件ID
+}
+
+// XpayGetUploadFileSignRsp 获取上传文件签名响应
+type XpayGetUploadFileSignRsp struct {
+	Errcode int    `json:"errcode"`
+	Errmsg  string `json:"errmsg"`
+	Sign    string `json:"sign"`    // Authorization头部值
+	CosUrl  string `json:"cos_url"` // 转换后的URL（convert_cos=true时有效，30分钟有效）
+}

@@ -136,6 +136,40 @@
 ### 20. 服务市场 ⭐ 新增
 - ✅ InvokeService - 调用服务平台提供的服务
 
+### 21. 虚拟支付 ⭐ 新增
+- ✅ XpayQueryUserBalance - 查询代币余额
+- ✅ XpayCurrencyPay - 扣减代币
+- ✅ XpayQueryOrder - 查询创建的订单
+- ✅ XpayCancelCurrencyPay - 代币支付退款
+- ✅ XpayNotifyProvideGoods - 通知已发货完成
+- ✅ XpayPresentCurrency - 代币赠送
+- ✅ XpayDownloadBill - 下载小程序账单
+- ✅ XpayRefundOrder - 启动订单退款任务
+- ✅ XpayCreateWithdrawOrder - 创建提现单
+- ✅ XpayQueryWithdrawOrder - 查询提现单
+- ✅ XpayStartUploadGoods - 批量上传道具
+- ✅ XpayQueryUploadGoods - 查询批量上传道具任务
+- ✅ XpayStartPublishGoods - 启动批量发布道具任务
+- ✅ XpayQueryPublishGoods - 查询批量发布道具任务
+- ✅ XpayQueryBizBalance - 查询商家账户可提现余额
+- ✅ XpayQueryTransferAccount - 查询广告金充值账户
+- ✅ XpayQueryAdverFunds - 查询广告金发放记录
+- ✅ XpayCreateFundsBill - 充值广告金
+- ✅ XpayBindTransferAccount - 绑定广告金充值账户
+- ✅ XpayQueryFundsBill - 查询广告金充值记录
+- ✅ XpayQueryRecoverBill - 查询广告金回收记录
+- ✅ XpayQuerySubscribeContract - 查询签约关系
+- ✅ XpaySendSubscribePrePayment - 预通知扣款
+- ✅ XpaySubmitSubscribePayOrder - 发起订阅扣款
+- ✅ XpayCancelSubscribeContract - 商家解约
+- ✅ XpayGetComplaintList - 获取投诉列表
+- ✅ XpayGetComplaintDetail - 获取投诉详情
+- ✅ XpayGetNegotiationHistory - 获取协商历史
+- ✅ XpayResponseComplaint - 回复用户投诉
+- ✅ XpayCompleteComplaint - 完成投诉处理
+- ✅ XpayUploadVpFile - 上传媒体文件
+- ✅ XpayGetUploadFileSign - 获取上传文件签名
+
 ---
 
 ## ❌ 未实现且较少使用的模块
@@ -158,15 +192,7 @@
 - 分账相关
 - 提现相关
 
-### 4. 虚拟支付 (VirtualPayment)
-- 代币支付、退款
-- 订阅合约管理
-- 投诉处理
-- 广告金充值
-- 提现管理
-- 道具管理
-
-### 5. 付费能力 (charge)
+### 4. 付费能力 (charge)
 - 获取付费能力用量数据
 - 查询购买资源包用量
 
@@ -201,39 +227,3 @@
 ### 8. 广告
 - 获取广告金数据
 - 获取广告收入数据
-
----
-
-## 建议实现优先级
-
-### ✅ 高优先级（已完成）
-1. ✅ **订阅消息** - 小程序消息推送的主要方式
-2. ✅ **小程序码生成** - 分享、推广必备
-3. ✅ **URL Scheme/Link** - 外部跳转小程序
-4. ✅ **内容安全** - 用户生成内容审核
-5. ✅ **数据分析** - 运营数据统计
-
-### 🔶 中优先级（特定场景需要）
-1. **图像处理** - OCR、图片识别等
-2. **物流助手** - 电商场景
-3. **即时配送** - 外卖、跑腿等场景
-4. **搜索** - SEO优化
-5. **运维中心** - 域名配置等
-
-### 🔵 低优先级（特殊业务场景）
-1. **云开发** - 使用云开发的项目
-2. **城市服务** - 政务类小程序
-3. **B2B支付** - 企业支付场景
-4. **虚拟支付** - 游戏、虚拟商品
-5. **直播** - 直播电商场景
-
----
-
-## 下一步建议
-
-请告诉我你想优先实现哪些模块，我可以帮你：
-1. 从高优先级模块开始逐个实现
-2. 或者根据你的业务需求选择特定模块
-3. 或者我可以先实现最常用的 5-10 个接口
-
-你可以直接告诉我模块名称，比如："先实现订阅消息和小程序码生成"

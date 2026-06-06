@@ -87,7 +87,7 @@ func (s *SDK) SetMiniAccessToken(accessToken string) {
 // =====================================================================================================================
 
 // 获取 Access Token
-// 微信小程序文档：https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-access-token/getAccessToken.html
+// 微信小程序文档：https://developers.weixin.qq.com/miniprogram/dev/server/API/mp-access-token/api_getaccesstoken.html
 func GetAccessToken(c context.Context, appid, secret string) (at *AccessToken, err error) {
 	uri := HostDefault + "/cgi-bin/token?grant_type=client_credential&appid=" + appid + "&secret=" + secret
 	at = &AccessToken{}
@@ -101,7 +101,7 @@ func GetAccessToken(c context.Context, appid, secret string) (at *AccessToken, e
 }
 
 // 获取 Stable Access Token
-// 微信小程序文档：https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-access-token/getStableAccessToken.html
+// 微信小程序文档：https://developers.weixin.qq.com/miniprogram/dev/server/API/mp-access-token/api_getstableaccesstoken.html
 func GetStableAccessToken(c context.Context, appid, secret string, forceRefresh bool) (at *AccessToken, err error) {
 	url := HostDefault + "/cgi-bin/stable_token"
 	body := make(bm.BodyMap)
